@@ -1,6 +1,7 @@
 const admin = require("firebase-admin");
 const { cert } = require("firebase-admin/app");
-const firestore = require("firebase-admin/firestore");
+const { getFirestore } = require("firebase-admin/firestore");
+const { getAuth } = require("firebase-admin/auth");
 
 function createFirebaseApp() {
   if (admin.apps.length === 0) {
@@ -15,4 +16,5 @@ function createFirebaseApp() {
 }
 
 const app = createFirebaseApp();
-export const adminDB = firestore.getFirestore(app);
+export const adminDB = getFirestore(app);
+export const auth = getAuth(app);

@@ -1,28 +1,23 @@
 "use client";
 
-import { useFormState, useFormStatus } from "react-dom";
+import { getCurrentUser } from "@/lib/firebase/client";
+import LoginComponent from "../ui/login";
+import { getUidFromCookie } from "@/lib/session";
+import { useEffect } from "react";
 
 export default function Login() {
+  const user = getCurrentUser();
+  useEffect(() => {
+    const initialize = async () => {
+      const cookie = await getUidFromCookie();
+      console.log("cookie: ", cookie);
+    };
+    initialize();
+  });
   return (
-    <form>
-      <div>
-        <h1>ログインしてください</h1>
-      </div>
-      <div>
-        <label>ユーザID</label>
-      </div>
-      <div>
-        <input
-          id="id"
-          type="email"
-          name="id"
-          placeholder="IDを入力してください"
-          required
-        />
-      </div>
-      <div>
-        <button>ログイン</button>
-      </div>
-    </form>
+    <div>
+      <LoginComponent />
+      {user?.uid}
+    </div>
   );
 }
