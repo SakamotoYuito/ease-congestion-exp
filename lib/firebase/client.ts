@@ -1,5 +1,5 @@
 import { initializeApp, getApps, getApp, FirebaseError } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
+import { getAnalytics, isSupported } from "firebase/analytics";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 import {
@@ -11,7 +11,7 @@ import {
 import { getFunctions } from "firebase/functions";
 import { session, sessionLogout } from "../session";
 import { redirect, useRouter } from "next/navigation";
-import { use } from "react";
+import { unstable_noStore as noStore } from "next/cache";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_APIKEY,
@@ -21,16 +21,6 @@ const firebaseConfig = {
   messagingSenderId: process.env.NEXT_PUBLIC_MESSAGINGSENDERID,
   appId: process.env.NEXT_PUBLIC_APPID,
 };
-
-// if (typeof window !== "undefined" && !getApps()?.length) {
-//   initializeApp(firebaseConfig);
-// }
-
-// // export const analytics = getAnalytics();
-// export const db = getFirestore();
-// export const storage = getStorage();
-// export const auth = getAuth();
-// export const funcions = getFunctions();
 
 function createFirebaseApp(firebaseConfig: object) {
   if (!getApps().length) {
@@ -46,6 +36,15 @@ export const db = getFirestore(app);
 export const storage = getStorage(app);
 export const auth = getAuth(app);
 export const functions = getFunctions(app);
+
+const analyticsMock = {
+  logEvent: () => {},
+  setCurrentScreen: () => {},
+  setUserId: () => {},
+};
+
+// export const analytics =
+//   typeof window !== undefined ? getAnalytics(app) : undefined;
 
 export async function createUser(prevState: any, formData: FormData) {
   try {
@@ -67,6 +66,7 @@ export async function createUser(prevState: any, formData: FormData) {
 }
 
 export async function login(prevState: any, formData: FormData) {
+  noStore();
   try {
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
@@ -100,5 +100,6 @@ export async function logout() {
 }
 
 export function getCurrentUser() {
+  noStore();
   return auth.currentUser;
 }
