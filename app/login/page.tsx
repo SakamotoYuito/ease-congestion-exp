@@ -1,10 +1,11 @@
 "use client";
 
-import { getCurrentUser } from "@/lib/firebase/client";
+import { analytics, getCurrentUser } from "@/lib/firebase/client";
 import LoginComponent from "../ui/login";
 import { getUidFromCookie } from "@/lib/session";
 import { useEffect } from "react";
 import { auth } from "@/lib/firebase/client";
+import { logEvent } from "firebase/analytics";
 
 export default function Login() {
   const user = getCurrentUser();
@@ -15,6 +16,7 @@ export default function Login() {
       console.log("uid: ", uid);
       const cookie = await getUidFromCookie();
       console.log("cookie: ", cookie);
+      logEvent(analytics, "login_authStateReady");
     };
     initialize();
   });

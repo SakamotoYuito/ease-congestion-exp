@@ -5,11 +5,13 @@ import TestComponent from "../ui/test";
 import { useRouter } from "next/navigation";
 import { getUidFromCookie } from "@/lib/session";
 import { useEffect } from "react";
-import { auth } from "@/lib/firebase/client";
+import { analytics, auth } from "@/lib/firebase/client";
 import LogoutComponent from "../ui/logout";
+import { logEvent } from "firebase/analytics";
 
 export default function Test() {
   const router = useRouter();
+  logEvent(analytics, "test_start");
 
   useEffect(() => {
     const initialize = async () => {

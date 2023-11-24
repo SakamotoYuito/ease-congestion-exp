@@ -1,5 +1,5 @@
 import { initializeApp, getApps, getApp, FirebaseError } from "firebase/app";
-import { getAnalytics, isSupported } from "firebase/analytics";
+import { Analytics, getAnalytics, isSupported } from "firebase/analytics";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 import {
@@ -37,14 +37,12 @@ export const storage = getStorage(app);
 export const auth = getAuth(app);
 export const functions = getFunctions(app);
 
-const analyticsMock = {
-  logEvent: () => {},
-  setCurrentScreen: () => {},
-  setUserId: () => {},
-};
-
-// export const analytics =
-//   typeof window !== undefined ? getAnalytics(app) : undefined;
+export let analytics: Analytics;
+isSupported().then((supported) => {
+  if (supported) {
+    analytics = getAnalytics();
+  }
+});
 
 export async function createUser(prevState: any, formData: FormData) {
   try {
