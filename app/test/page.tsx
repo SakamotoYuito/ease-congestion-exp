@@ -80,12 +80,11 @@ export default function Test() {
     const _initialize = async () => {
       await auth.authStateReady();
       const uid = auth.currentUser?.uid;
-      // console.log("test: ", uid);
-      // const cookie = await getUidFromCookie();
+      console.log("test uid: ", uid);
+      const cookie = await getUidFromCookie();
       // logEvent(analytics, "test_authStateReady");
-      // console.log("cookie: ", cookie);
+      console.log("test cookie: ", cookie);
       if (!uid) {
-        console.log("test: undefined");
         router.push("/login");
       }
     };

@@ -34,7 +34,7 @@ export async function getUidFromCookie() {
   const sessionId = cookies().get("session");
   if (!sessionId) return;
   const decodedToken = await auth
-    .verifySessionCookie(sessionId?.value, true)
+    .verifySessionCookie(sessionId.value, true)
     .catch((error: Error) => console.log("getUidFromCookie", error));
   return decodedToken;
 }

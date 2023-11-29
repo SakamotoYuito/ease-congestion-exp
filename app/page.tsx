@@ -1,13 +1,20 @@
 import Image from "next/image";
 import { getUidFromCookie, sessionLogout } from "@/lib/session";
-import { auth } from "@/lib/firebase/server";
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
+import { auth } from "@/lib/firebase/client";
 
 export default async function Home() {
-  const user = await getUidFromCookie();
-  console.log("user: ", user?.uid);
-  if (!user) {
-    await sessionLogout();
+  await auth.authStateReady();
+  const email = auth.currentUser;
+  try {
+    const user = await getUidFromCookie();
+    if (!user) {
+      const sessionId = cookies().get("session");
+      !sessionId && (await sessionLogout());
+      redirect("/login");
+    }
+  } catch (error) {
     redirect("/login");
   }
 

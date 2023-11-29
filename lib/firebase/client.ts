@@ -55,8 +55,6 @@ export async function createUser(prevState: any, formData: FormData) {
       password
     );
     await sendEmailVerification(userCredential.user);
-    const id = await userCredential.user.getIdToken();
-    await session(id);
   } catch (error) {
     return {
       message: "すでに登録済みかパスワードが間違っています",
@@ -76,8 +74,7 @@ export async function login(prevState: any, formData: FormData) {
       email,
       password
     );
-    isEmailVerified = userCredential.user.emailVerified;
-    if (isEmailVerified) {
+    if (userCredential.user.emailVerified) {
       const id = await userCredential.user.getIdToken();
       await session(id);
       isEmailVerified = true;
@@ -90,7 +87,7 @@ export async function login(prevState: any, formData: FormData) {
       message: "パスワードが間違っているか、アカウントが存在しません",
     };
   }
-  isEmailVerified ? redirect("/test") : redirect("/verification");
+  return isEmailVerified ? redirect("/") : redirect("/verification");
 }
 
 export async function logout() {
@@ -121,4 +118,20 @@ export async function reSendEmailVerification() {
     };
   }
   return redirect("/verification");
+}
+
+export async function deleteUser() {
+  try {
+    const userCredential = auth.currentUser;
+    if (userCredential) {
+      await userCredential.delete();
+      redirect("/signup");
+    } else {
+      alert("ログインしていません");
+    }
+  } catch (error) {
+    return {
+      message: "アカウントの削除に失敗しました",
+    };
+  }
 }
