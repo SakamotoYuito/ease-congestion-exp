@@ -14,6 +14,7 @@ export default function Home() {
   // const cookie = await getUidFromCookie();
   // console.log("cookie: ", cookie);
   console.log("okamoto");
+  console.log("okamoto");
   const router = useRouter();
 
   useEffect(() => {
