@@ -1,37 +1,15 @@
-"use client";
-
 import Image from "next/image";
-import { getCurrentUser } from "@/lib/firebase/client";
-import { getUidFromCookie } from "@/lib/session";
-import { auth } from "@/lib/firebase/client";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { getUidFromCookie, sessionLogout } from "@/lib/session";
+import { auth } from "@/lib/firebase/server";
+import { redirect } from "next/navigation";
 
-export default function Home() {
-  // await auth.authStateReady();
-  // const user = getCurrentUser();
-  // console.log("user: ", user);
-  // const cookie = await getUidFromCookie();
-  // console.log("cookie: ", cookie);
-  console.log("okamoto");
-  console.log("okamoto");
-  const router = useRouter();
-
-  useEffect(() => {
-    const _initialize = async () => {
-      await auth.authStateReady();
-      const uid = auth.currentUser?.uid;
-      // console.log("test: ", uid);
-      // const cookie = await getUidFromCookie();
-      // logEvent(analytics, "test_authStateReady");
-      // console.log("cookie: ", cookie);
-      if (!uid) {
-        console.log("test: undefined");
-        router.push("/login");
-      }
-    };
-    _initialize();
-  });
+export default async function Home() {
+  const user = await getUidFromCookie();
+  console.log("user: ", user?.uid);
+  if (!user) {
+    await sessionLogout();
+    redirect("/login");
+  }
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">

@@ -11,7 +11,7 @@ import {
 } from "firebase/auth";
 import { getFunctions } from "firebase/functions";
 import { session, sessionLogout } from "../session";
-import { redirect, useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 import { unstable_noStore as noStore } from "next/cache";
 
 const firebaseConfig = {
@@ -62,7 +62,7 @@ export async function createUser(prevState: any, formData: FormData) {
       message: "すでに登録済みかパスワードが間違っています",
     };
   }
-  redirect("/verification");
+  return redirect("/verification");
 }
 
 export async function login(prevState: any, formData: FormData) {
@@ -97,16 +97,13 @@ export async function logout() {
   try {
     await signOut(auth);
     await sessionLogout();
-    console.log("logout");
   } catch (error) {
     if (error instanceof FirebaseError) {
       return {
         message: error.message,
       };
     }
-    console.log("logout error", error);
   }
-  redirect("/login");
 }
 
 export async function reSendEmailVerification() {
@@ -123,10 +120,5 @@ export async function reSendEmailVerification() {
       message: "認証メールの送信に失敗しました",
     };
   }
-  redirect("/verification");
-}
-
-export function getCurrentUser() {
-  noStore();
-  return auth.currentUser;
+  return redirect("/verification");
 }
