@@ -8,7 +8,6 @@ import { auth } from "@/lib/firebase/client";
 import { logEvent } from "firebase/analytics";
 
 export default function Login() {
-  const user = getCurrentUser();
   useEffect(() => {
     const initialize = async () => {
       await auth.authStateReady();
@@ -23,7 +22,6 @@ export default function Login() {
   return (
     <div>
       <LoginComponent />
-      {user?.uid}
     </div>
   );
 }

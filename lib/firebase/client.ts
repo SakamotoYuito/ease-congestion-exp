@@ -7,6 +7,7 @@ import {
   getAuth,
   signInWithEmailAndPassword,
   signOut,
+  sendEmailVerification,
 } from "firebase/auth";
 import { getFunctions } from "firebase/functions";
 import { session, sessionLogout } from "../session";
@@ -53,6 +54,7 @@ export async function createUser(prevState: any, formData: FormData) {
       email,
       password
     );
+    await sendEmailVerification(userCredential.user);
     const id = await userCredential.user.getIdToken();
     await session(id);
   } catch (error) {
@@ -60,7 +62,7 @@ export async function createUser(prevState: any, formData: FormData) {
       message: "すでに登録済みかパスワードが間違っています",
     };
   }
-  return redirect("/test");
+  return redirect("/verification");
 }
 
 export async function login(prevState: any, formData: FormData) {
@@ -87,6 +89,7 @@ export async function logout() {
   try {
     await signOut(auth);
     await sessionLogout();
+    console.log("logout");
     return redirect("/login");
   } catch (error) {
     if (error instanceof FirebaseError) {
@@ -94,6 +97,24 @@ export async function logout() {
         message: error.message,
       };
     }
+    console.log("logout error", error);
+  }
+}
+
+export async function reSendEmailVerification() {
+  try {
+    const userCredential = auth.currentUser;
+    if (userCredential) {
+      await sendEmailVerification(userCredential);
+      alert("認証メールを再送しました");
+      redirect("/verification");
+    } else {
+      alert("ユーザーがログインしていません");
+    }
+  } catch (error) {
+    return {
+      message: "認証メールの送信に失敗しました",
+    };
   }
 }
 

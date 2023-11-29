@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { redirect } from "next/navigation";
 import "./globals.css";
-import { cookies } from "next/headers";
 import { Analytics } from "@vercel/analytics/react";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -19,7 +17,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="jp">
-      <body className={inter.className}>
+      <head>
+        <link rel="manifest" href="/manifest.json" />
+        <link rel="apple-touch-icon" href="/icon.png"></link>
+        <meta name="theme-color" content="#b8e986" />
+      </head>
+      <body
+        className={`inter ${inter.className}`}
+        style={{ backgroundColor: "#b8e986" }}
+      >
         {children}
         <Analytics />
       </body>
