@@ -1,7 +1,7 @@
 {
   "theme_color": "#f69435",
   "background_color": "#f69435",
-  "display": "minimal-ui",
+  "display": "standalone",
   "scope": "/",
   "start_url": "/login",
   "name": "KSU\u6df7\u96d1\u5206\u6563",
