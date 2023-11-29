@@ -1,6 +1,6 @@
 "use client";
 
-import { analytics, getCurrentUser } from "@/lib/firebase/client";
+import { analytics } from "@/lib/firebase/client";
 import LoginComponent from "../ui/login";
 import { getUidFromCookie } from "@/lib/session";
 import { useEffect } from "react";
