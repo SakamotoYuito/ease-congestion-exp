@@ -13,6 +13,7 @@ export default function Home() {
   // console.log("user: ", user);
   // const cookie = await getUidFromCookie();
   // console.log("cookie: ", cookie);
+  console.log("test okamoto");
   const router = useRouter();
 
   useEffect(() => {
