@@ -62,11 +62,12 @@ export async function createUser(prevState: any, formData: FormData) {
       message: "すでに登録済みかパスワードが間違っています",
     };
   }
-  return redirect("/verification");
+  redirect("/verification");
 }
 
 export async function login(prevState: any, formData: FormData) {
   noStore();
+  let isEmailVerified = false;
   try {
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
@@ -75,14 +76,21 @@ export async function login(prevState: any, formData: FormData) {
       email,
       password
     );
-    const id = await userCredential.user.getIdToken();
-    await session(id);
+    isEmailVerified = userCredential.user.emailVerified;
+    if (isEmailVerified) {
+      const id = await userCredential.user.getIdToken();
+      await session(id);
+      isEmailVerified = true;
+    } else {
+      alert("メールアドレスを認証してください");
+      isEmailVerified = false;
+    }
   } catch (error) {
     return {
       message: "パスワードが間違っているか、アカウントが存在しません",
     };
   }
-  return redirect("/test");
+  isEmailVerified ? redirect("/test") : redirect("/verification");
 }
 
 export async function logout() {
@@ -90,7 +98,6 @@ export async function logout() {
     await signOut(auth);
     await sessionLogout();
     console.log("logout");
-    return redirect("/login");
   } catch (error) {
     if (error instanceof FirebaseError) {
       return {
@@ -99,6 +106,7 @@ export async function logout() {
     }
     console.log("logout error", error);
   }
+  redirect("/login");
 }
 
 export async function reSendEmailVerification() {
@@ -107,15 +115,15 @@ export async function reSendEmailVerification() {
     if (userCredential) {
       await sendEmailVerification(userCredential);
       alert("認証メールを再送しました");
-      redirect("/verification");
     } else {
-      alert("ユーザーがログインしていません");
+      alert("ログインしていません");
     }
   } catch (error) {
     return {
       message: "認証メールの送信に失敗しました",
     };
   }
+  redirect("/verification");
 }
 
 export function getCurrentUser() {
