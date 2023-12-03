@@ -18,16 +18,11 @@ export async function session(id: string) {
 }
 
 export async function sessionLogout() {
-  const sessionId = cookies().get("session");
-  if (!sessionId) return null;
-  const decodedToken = await auth
-    .verifySessionCookie(sessionId?.value, true)
-    .catch((error: Error) => console.log(error));
-
-  if (decodedToken) {
-    await auth.revokeRefreshTokens(decodedToken.sub);
-  }
-
+  const hasSession = cookies().has("session");
+  if (!hasSession) return null;
+  const session = cookies().get("session")?.value;
+  const decodedToken = await auth.verifySessionCookie(session, true);
+  if (decodedToken) await auth.revokeRefreshTokens(decodedToken.sub);
   cookies().delete("session");
 }
 
@@ -35,8 +30,7 @@ export async function getUidFromCookie() {
   const hasSession = cookies().has("session");
   if (!hasSession) return null;
   const sessionId = cookies().get("session");
-  const decodedToken = await auth
-    .verifySessionCookie(sessionId?.value, true)
-    .catch((error: Error) => console.log("getUidFromCookie", error));
+  const decodedToken = await auth.verifySessionCookie(sessionId?.value, true);
+  if (!decodedToken) return null;
   return decodedToken;
 }

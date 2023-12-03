@@ -53,7 +53,13 @@ export default function ForgetPasswordComponent() {
         <p className="text-red-500">{error?.message}</p>
       </form>
       <p>{alertModal}</p>
-      {alertModal && <AlertModalComponent />}
+      {alertModal && (
+        <AlertModalComponent
+          title="パスワードリセットを受け付けました。"
+          message="メールを確認して、パスワードをリセットしてください。"
+          handleOk={() => router.push("/login")}
+        />
+      )}
     </main>
   );
 }
