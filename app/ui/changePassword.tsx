@@ -3,8 +3,10 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useFormState } from "react-dom";
 import { useState, useEffect } from "react";
-import { changePassword } from "@/lib/firebase/client";
+import { changePassword } from "@/lib/authentication";
 import AlertModalComponent from "./alertModal";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
 const initialState = {
   message: "",
@@ -14,6 +16,10 @@ export default function ChangePasswordComponent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [alertModal, setAlertModal] = useState(false);
+  const [isOldPasswordView, setIsOldPasswordView] = useState(false);
+  const [isNewPasswordView, setIsNewPasswordView] = useState(false);
+  const [isNewPasswordConfirmView, setIsNewPasswordConfirmView] =
+    useState(false);
   const [error, action] = useFormState(changePassword, initialState);
 
   useEffect(() => {
@@ -33,42 +39,80 @@ export default function ChangePasswordComponent() {
           <label htmlFor="email" className="mb-2">
             現在のパスワード:
           </label>
-          <input
-            id="oldPassword"
-            type="password"
-            name="oldPassword"
-            placeholder="Enter your current password"
-            required
-            className="appearance-none rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          />
+          <div className="relative">
+            <input
+              id="oldPassword"
+              type={isOldPasswordView ? "text" : "password"}
+              name="oldPassword"
+              placeholder="現在のパスワードを入力"
+              required
+              className="appearance-none rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            />
+            <span
+              onClick={() => setIsOldPasswordView((prevState) => !prevState)}
+              className="absolute right-0 top-0 mt-2 mr-2 cursor-pointer"
+            >
+              {isOldPasswordView ? (
+                <FontAwesomeIcon icon={faEye} />
+              ) : (
+                <FontAwesomeIcon icon={faEyeSlash} />
+              )}
+            </span>
+          </div>
         </div>
         <div className="flex flex-col">
           <label htmlFor="password" className="mb-2">
             新しいパスワード:
           </label>
-          <input
-            id="newPassword"
-            type="password"
-            name="newPassword"
-            placeholder="Enter your new password"
-            required
-            minLength={6}
-            className="appearance-none rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          />
+          <div className="relative">
+            <input
+              id="newPassword"
+              type={isNewPasswordView ? "text" : "password"}
+              name="newPassword"
+              placeholder="新しいパスワードを入力"
+              required
+              minLength={6}
+              className="appearance-none rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            />
+            <span
+              onClick={() => setIsNewPasswordView((prevState) => !prevState)}
+              className="absolute right-0 top-0 mt-2 mr-2 cursor-pointer"
+            >
+              {isNewPasswordView ? (
+                <FontAwesomeIcon icon={faEye} />
+              ) : (
+                <FontAwesomeIcon icon={faEyeSlash} />
+              )}
+            </span>
+          </div>
         </div>
         <div className="flex flex-col">
           <label htmlFor="password" className="mb-2">
-            新しいパスワード(再入力):
+            新しいパスワード(確認用):
           </label>
-          <input
-            id="newPasswordConfirm"
-            type="password"
-            name="newPasswordConfirm"
-            placeholder="Enter your new password again"
-            required
-            minLength={6}
-            className="appearance-none rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          />
+          <div className="relative">
+            <input
+              id="newPasswordConfirm"
+              type={isNewPasswordConfirmView ? "text" : "password"}
+              name="newPasswordConfirm"
+              placeholder="新しいパスワードを入力(確認用)"
+              required
+              minLength={6}
+              className="appearance-none rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            />
+            <span
+              onClick={() =>
+                setIsNewPasswordConfirmView((prevState) => !prevState)
+              }
+              className="absolute right-0 top-0 mt-2 mr-2 cursor-pointer"
+            >
+              {isNewPasswordConfirmView ? (
+                <FontAwesomeIcon icon={faEye} />
+              ) : (
+                <FontAwesomeIcon icon={faEyeSlash} />
+              )}
+            </span>
+          </div>
         </div>
         <div className="flex justify-between">
           <button

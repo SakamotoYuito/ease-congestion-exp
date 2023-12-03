@@ -1,5 +1,5 @@
 import { useRouter } from "next/navigation";
-import { reSendEmailVerification, deleteUser } from "@/lib/firebase/client";
+import { reSendEmailVerification, deleteUser } from "@/lib/authentication";
 
 export default function VerificationComponent(props: { email: string }) {
   const router = useRouter();

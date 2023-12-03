@@ -7,7 +7,6 @@ import HeaderComponent from "@/app/ui/header";
 export default async function Home() {
   await auth.authStateReady();
   try {
-    console.log("/");
     const user = await getUidFromCookie();
     if (!user) {
       const sessionId = cookies().get("session");

@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { logout } from "@/lib/firebase/client";
+import { logout } from "@/lib/authentication";
 
 export default function MenuComponent() {
   const [menuOpen, setMenuOpen] = useState(false);

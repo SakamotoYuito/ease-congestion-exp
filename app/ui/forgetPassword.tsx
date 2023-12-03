@@ -1,6 +1,5 @@
 import { useFormState } from "react-dom";
-// import { resetPassword } from "@/lib/firebase/client";
-import { resetPassword } from "@/lib/firebase/client";
+import { resetPassword } from "@/lib/authentication";
 import { useState } from "react";
 import AlertModalComponent from "./alertModal";
 import { useRouter } from "next/navigation";
