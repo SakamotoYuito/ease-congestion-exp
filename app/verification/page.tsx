@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { auth, login } from "@/lib/firebase/client";
+import { auth } from "@/lib/firebase/client";
 import { session } from "@/lib/session";
 import VerificationComponent from "@/app/ui/verification";
 import { getIdToken } from "firebase/auth";

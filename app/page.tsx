@@ -6,7 +6,6 @@ import { auth } from "@/lib/firebase/client";
 
 export default async function Home() {
   await auth.authStateReady();
-  const email = auth.currentUser;
   try {
     const user = await getUidFromCookie();
     if (!user) {

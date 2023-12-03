@@ -8,6 +8,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
   sendEmailVerification,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 import { getFunctions } from "firebase/functions";
 import { session, sessionLogout } from "../session";
@@ -134,4 +135,16 @@ export async function deleteUser() {
       message: "アカウントの削除に失敗しました",
     };
   }
+}
+
+export async function resetPassword(prevState: any, formData: FormData) {
+  try {
+    const email = formData.get("email") as string;
+    await sendPasswordResetEmail(auth, email);
+  } catch (error) {
+    return {
+      message: "メールアドレスが間違っているか、アカウントが存在しません",
+    };
+  }
+  return;
 }

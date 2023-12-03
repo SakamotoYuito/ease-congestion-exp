@@ -8,6 +8,7 @@ export async function session(id: string) {
   const sessionCookie = await auth.createSessionCookie(id, { expiresIn });
 
   const option = {
+    maxAge: expiresIn,
     secure: true,
     httpOnly: true,
     path: "/",
@@ -31,10 +32,11 @@ export async function sessionLogout() {
 }
 
 export async function getUidFromCookie() {
+  const hasSession = cookies().has("session");
+  if (!hasSession) return null;
   const sessionId = cookies().get("session");
-  if (!sessionId) return;
   const decodedToken = await auth
-    .verifySessionCookie(sessionId.value, true)
+    .verifySessionCookie(sessionId?.value, true)
     .catch((error: Error) => console.log("getUidFromCookie", error));
   return decodedToken;
 }
