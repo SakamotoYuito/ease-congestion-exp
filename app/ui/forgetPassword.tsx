@@ -1,5 +1,5 @@
 import { useFormState } from "react-dom";
-import { resetPassword } from "@/lib/authentication";
+import { sendEmailToResetPassword } from "@/lib/authentication";
 import { useState } from "react";
 import AlertModalComponent from "./alertModal";
 import { useRouter } from "next/navigation";
@@ -11,7 +11,7 @@ const initialState = {
 export default function ForgetPasswordComponent() {
   const router = useRouter();
   const [alertModal, setAlertModal] = useState(false);
-  const [error, action] = useFormState(resetPassword, initialState);
+  const [error, action] = useFormState(sendEmailToResetPassword, initialState);
 
   return (
     <main className="flex flex-col items-center justify-center min-h-screen py-2">

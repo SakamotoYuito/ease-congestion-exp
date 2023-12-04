@@ -8,6 +8,8 @@ import {
   EmailAuthProvider,
   updatePassword,
   reauthenticateWithCredential,
+  verifyPasswordResetCode,
+  confirmPasswordReset,
 } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
 import { session, sessionLogout } from "./session";
@@ -162,7 +164,10 @@ export async function deleteUser() {
   }
 }
 
-export async function resetPassword(prevState: any, formData: FormData) {
+export async function sendEmailToResetPassword(
+  prevState: any,
+  formData: FormData
+) {
   const pattern = /^[\u0021-\u007e]+$/u;
   const schema = z.object({
     email: z.string().email("メールアドレスを入力してください").regex(pattern),
@@ -252,4 +257,55 @@ export async function changePassword(prevState: any, formData: FormData) {
   isPasswordChanged
     ? redirect("/changepassword?modal=true")
     : redirect("/changepassword?modal=false");
+}
+
+export async function setNewPassword(prevState: any, formData: FormData) {
+  const schema = z
+    .object({
+      newPassword: z
+        .string()
+        .min(8, "パスワードは8文字以上で入力してください")
+        .regex(
+          /^(?=.*?[a-z])(?=.*?\d)[a-z\d]{8,100}$/i,
+          "パスワードは半角英数字混合で入力してください"
+        ),
+      newPasswordConfirm: z
+        .string()
+        .min(8, "確認用のパスワードを入力してください"),
+      oobCode: z.string(),
+    })
+    .superRefine(({ newPassword, newPasswordConfirm }, ctx) => {
+      if (newPassword !== newPasswordConfirm) {
+        ctx.addIssue({
+          path: ["newPasswordConfirm"],
+          code: "custom",
+          message: "パスワードが一致しません",
+        });
+      }
+    });
+
+  let isPasswordReset = false;
+  try {
+    const { newPassword, oobCode } = schema.parse({
+      newPassword: formData.get("newPassword"),
+      newPasswordConfirm: formData.get("newPasswordConfirm"),
+      oobCode: formData.get("oobCode"),
+    } as z.infer<typeof schema>);
+
+    await verifyPasswordResetCode(auth, oobCode);
+    await confirmPasswordReset(auth, oobCode, newPassword);
+    isPasswordReset = true;
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return {
+        message: error.issues[0].message,
+      };
+    }
+    return {
+      message: "パスワードのリセットに失敗しました。",
+    };
+  }
+  isPasswordReset
+    ? redirect("/setnewpassword?modal=true")
+    : redirect("/setnewpassword?modal=false");
 }
