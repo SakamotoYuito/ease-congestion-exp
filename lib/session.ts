@@ -26,11 +26,24 @@ export async function sessionLogout() {
   cookies().delete("session");
 }
 
-export async function getUidFromCookie() {
+export async function getUserFromCookie(): Promise<any | null> {
   const hasSession = cookies().has("session");
   if (!hasSession) return null;
   const sessionId = cookies().get("session");
   const decodedToken = await auth.verifySessionCookie(sessionId?.value, true);
   if (!decodedToken) return null;
   return decodedToken;
+}
+
+export async function verifyExistUser() {
+  try {
+    const user = await getUserFromCookie();
+    if (!user) {
+      await sessionLogout();
+      return false;
+    }
+    return true;
+  } catch (error) {
+    return false;
+  }
 }

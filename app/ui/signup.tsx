@@ -22,13 +22,13 @@ export default function SignUpComponent() {
       <form action={action} className="w-full max-w-xs space-y-4">
         <div className="flex flex-col">
           <label htmlFor="email" className="mb-2">
-            メールアドレス:
+            大学メールアドレス:
           </label>
           <input
             id="email"
             type="email"
             name="email"
-            placeholder="メールアドレスを入力"
+            placeholder="大学のメールアドレスを入力"
             required
             className="appearance-none rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />

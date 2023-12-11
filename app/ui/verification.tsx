@@ -20,7 +20,7 @@ export default function VerificationComponent(props: { email: string }) {
               }}
               className="px-4 py-2 bg-white text-blue-500 border border-blue-500 rounded hover:bg-blue-500 hover:text-white"
             >
-              ログイン画面へ戻る
+              新規登録画面へ戻る
             </button>
             <button
               onClick={reSendEmailVerification}

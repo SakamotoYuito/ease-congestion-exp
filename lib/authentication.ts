@@ -16,14 +16,16 @@ import { session, sessionLogout } from "./session";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 
+const EMAIL_PATTERN = /^[\u0021-\u007e]+@cc\.kyoto-su\.ac\.jp+$/u;
+const URL = "http://localhost:3000/";
+
 export async function createUser(prevState: any, formData: FormData) {
-  const pattern = /^[\u0021-\u007e]+$/u;
   const schema = z
     .object({
       email: z
         .string()
-        .email("メールアドレスを入力してください")
-        .regex(pattern),
+        .email("大学のメールアドレスを入力してください")
+        .regex(EMAIL_PATTERN, "大学のメールアドレスを入力してください"),
       password: z
         .string()
         .min(8, "パスワードは8文字以上で入力してください")
@@ -306,6 +308,6 @@ export async function setNewPassword(prevState: any, formData: FormData) {
     };
   }
   isPasswordReset
-    ? redirect("/setnewpassword?modal=true")
-    : redirect("/setnewpassword?modal=false");
+    ? redirect("/firebaseEmail?modal=true")
+    : redirect("/firebaseEmail?modal=false");
 }
