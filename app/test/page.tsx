@@ -3,7 +3,7 @@
 import { sample } from "@/lib/actions";
 import TestComponent from "../ui/test";
 import { useRouter } from "next/navigation";
-import { getUidFromCookie } from "@/lib/session";
+import { getUserFromCookie } from "@/lib/session";
 import { useState, useEffect } from "react";
 import { analytics, auth } from "@/lib/firebase/client";
 import LogoutComponent from "../ui/logout";
@@ -80,12 +80,11 @@ export default function Test() {
     const _initialize = async () => {
       await auth.authStateReady();
       const uid = auth.currentUser?.uid;
-      // console.log("test: ", uid);
-      // const cookie = await getUidFromCookie();
+      console.log("test uid: ", uid);
+      const cookie = await getUserFromCookie();
       // logEvent(analytics, "test_authStateReady");
-      // console.log("cookie: ", cookie);
+      console.log("test cookie: ", cookie);
       if (!uid) {
-        console.log("test: undefined");
         router.push("/login");
       }
     };

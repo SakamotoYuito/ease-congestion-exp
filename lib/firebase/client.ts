@@ -1,18 +1,9 @@
-import { initializeApp, getApps, getApp, FirebaseError } from "firebase/app";
+import { initializeApp, getApps, getApp } from "firebase/app";
 import { Analytics, getAnalytics, isSupported } from "firebase/analytics";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
-import {
-  createUserWithEmailAndPassword,
-  getAuth,
-  signInWithEmailAndPassword,
-  signOut,
-  sendEmailVerification,
-} from "firebase/auth";
+import { getAuth } from "firebase/auth";
 import { getFunctions } from "firebase/functions";
-import { session, sessionLogout } from "../session";
-import { redirect } from "next/navigation";
-import { unstable_noStore as noStore } from "next/cache";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_APIKEY,
@@ -44,81 +35,3 @@ isSupported().then((supported) => {
     analytics = getAnalytics();
   }
 });
-
-export async function createUser(prevState: any, formData: FormData) {
-  try {
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
-    const userCredential = await createUserWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
-    await sendEmailVerification(userCredential.user);
-    const id = await userCredential.user.getIdToken();
-    await session(id);
-  } catch (error) {
-    return {
-      message: "すでに登録済みかパスワードが間違っています",
-    };
-  }
-  return redirect("/verification");
-}
-
-export async function login(prevState: any, formData: FormData) {
-  noStore();
-  let isEmailVerified = false;
-  try {
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
-    const userCredential = await signInWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
-    isEmailVerified = userCredential.user.emailVerified;
-    if (isEmailVerified) {
-      const id = await userCredential.user.getIdToken();
-      await session(id);
-      isEmailVerified = true;
-    } else {
-      alert("メールアドレスを認証してください");
-      isEmailVerified = false;
-    }
-  } catch (error) {
-    return {
-      message: "パスワードが間違っているか、アカウントが存在しません",
-    };
-  }
-  isEmailVerified ? redirect("/test") : redirect("/verification");
-}
-
-export async function logout() {
-  try {
-    await signOut(auth);
-    await sessionLogout();
-  } catch (error) {
-    if (error instanceof FirebaseError) {
-      return {
-        message: error.message,
-      };
-    }
-  }
-}
-
-export async function reSendEmailVerification() {
-  try {
-    const userCredential = auth.currentUser;
-    if (userCredential) {
-      await sendEmailVerification(userCredential);
-      alert("認証メールを再送しました");
-    } else {
-      alert("ログインしていません");
-    }
-  } catch (error) {
-    return {
-      message: "認証メールの送信に失敗しました",
-    };
-  }
-  return redirect("/verification");
-}
