@@ -50,11 +50,15 @@ export default function ForgetPasswordComponent() {
       </form>
       <p>{alertModal}</p>
       {alertModal && (
-        <AlertModalComponent
-          title="パスワードリセットを受け付けました。"
-          message="メールを確認して、パスワードをリセットしてください。"
-          handleOk={() => router.push("/login")}
-        />
+        <>
+          {!error && (
+            <AlertModalComponent
+              title="パスワードリセットを受け付けました。"
+              message="メールを確認して、パスワードをリセットしてください。"
+              handleOk={() => router.push("/login")}
+            />
+          )}
+        </>
       )}
     </main>
   );

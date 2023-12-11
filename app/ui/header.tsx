@@ -1,10 +1,10 @@
 import MenuComponent from "./menu";
-import { verifyExistUser } from "@/lib/session";
+import { getUserFromCookie } from "@/lib/session";
 import { redirect } from "next/navigation";
 
 export default async function HeaderComponent() {
-  const isExistUser = await verifyExistUser();
-  isExistUser || redirect("/login");
+  const user = await getUserFromCookie();
+  !user && redirect("/login");
 
   return (
     <div className="flex justify-between shadow-md fixed top-0 w-full">
