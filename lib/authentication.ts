@@ -76,9 +76,11 @@ export async function createUser(prevState: any, formData: FormData) {
 export async function login(prevState: any, formData: FormData) {
   let isEmailVerified = false;
 
-  const pattern = /^[\u0021-\u007e]+$/u;
   const schema = z.object({
-    email: z.string().email("メールアドレスを入力してください").regex(pattern),
+    email: z
+      .string()
+      .email("メールアドレスを入力してください")
+      .regex(EMAIL_PATTERN, "大学のメールアドレスを入力してください"),
     password: z
       .string()
       .min(8, "パスワードは8文字以上で入力してください")
@@ -170,9 +172,11 @@ export async function sendEmailToResetPassword(
   prevState: any,
   formData: FormData
 ) {
-  const pattern = /^[\u0021-\u007e]+$/u;
   const schema = z.object({
-    email: z.string().email("メールアドレスを入力してください").regex(pattern),
+    email: z
+      .string()
+      .email("メールアドレスを入力してください")
+      .regex(EMAIL_PATTERN, "大学のメールアドレスを入力してください"),
   });
 
   try {
