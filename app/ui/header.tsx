@@ -7,7 +7,7 @@ export default async function HeaderComponent() {
   !user && redirect("/login");
 
   return (
-    <div className="flex justify-between shadow-md fixed top-0 w-full">
+    <div className="flex justify-between shadow-md fixed top-0 w-full z-100 bg-[#b8e986]">
       <div className="p-4 font-mono text-xl">
         <h1>KSU 混雑分散実験</h1>
       </div>

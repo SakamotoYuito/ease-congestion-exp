@@ -24,7 +24,7 @@ export default function RootLayout({
       </head>
       <body
         className={`inter ${inter.className}`}
-        style={{ backgroundColor: "#b8e986" }}
+        style={{ backgroundColor: "#b8e986", zIndex: 0 }}
       >
         {children}
         <Analytics />
