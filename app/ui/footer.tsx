@@ -16,7 +16,7 @@ export default function FooterComponent() {
   const currentPath = usePathname();
 
   const icons = [faHouseUser, faCamera, faImage, faTimeline, faBell];
-  const paths = ["/", "/qrreader", "/upload", "/timeline", "/notification"];
+  const paths = ["/", "/qrreader", "/photoalbum", "/timeline", "/notification"];
 
   const selectedIndex = paths.indexOf(currentPath);
   const [selectedIcon, setSelectedIcon] = useState(selectedIndex);
@@ -35,8 +35,8 @@ export default function FooterComponent() {
             <FontAwesomeIcon
               icon={icon}
               style={{
-                width: "30px",
-                height: "30px",
+                width: "25px",
+                height: "25px",
                 color: selectedIcon === index ? "green" : "black",
               }}
             />
