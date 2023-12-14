@@ -4,15 +4,15 @@ import { useState } from "react";
 import { storage } from "@/lib/firebase/client";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import imageCompression from "browser-image-compression";
-import { useSearchParams } from "next/navigation";
-import { db, auth } from "@/lib/firebase/client";
-import { addDoc, collection } from "firebase/firestore";
+import { useSearchParams, useRouter } from "next/navigation";
 import { faPlusSquare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function UploadImage() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const [photo, setPhoto] = useState<File | null>(null);
+  const [error, setError] = useState("");
   const [createObjectURL, setCreateObjectURL] = useState("");
 
   const uploadToClient = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,20 +37,23 @@ export default function UploadImage() {
       const hashName = Math.random().toString(36).slice(-8);
       const fullPath = "/images/" + hashName + "." + ext;
       const uploadRef = ref(storageRef, fullPath);
+      const place = searchParams.get("place") || "";
       const result = await uploadBytes(uploadRef, photo);
       const uploadUrl = await getDownloadURL(uploadRef);
-      const place = searchParams.get("place") || "A";
-
-      const currentUser = auth.currentUser;
-      if (currentUser === null) return;
       const postData = {
         date: new Date(result.metadata.timeCreated),
-        fav: 0,
-        uid: currentUser.uid,
         url: uploadUrl,
         place: place,
+        fullpath: fullPath,
       };
-      await addDoc(collection(db, "photos"), postData);
+      const res = await fetch("/api/postPhoto", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ postData }),
+      });
+      res.ok ? router.push("/photoalbum") : setError("投稿に失敗しました");
     }
   };
 
@@ -91,6 +94,9 @@ export default function UploadImage() {
             name="myImage"
             onChange={uploadToClient}
           />
+        </div>
+        <div className="flex justify-center items-center w-full p-5">
+          {error !== "" && <p className="text-red-500">{error}</p>}
         </div>
       </div>
     </main>
