@@ -44,7 +44,7 @@ export default function UploadImage() {
         date: new Date(result.metadata.timeCreated),
         url: uploadUrl,
         place: place,
-        fullpath: fullPath,
+        fullPath: fullPath,
       };
       const res = await fetch("/api/postPhoto", {
         method: "POST",
