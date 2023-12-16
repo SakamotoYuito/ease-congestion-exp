@@ -4,6 +4,7 @@ import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 import { getAuth } from "firebase/auth";
 import { getFunctions } from "firebase/functions";
+import { logEvent } from "firebase/analytics";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_APIKEY,
@@ -35,3 +36,7 @@ isSupported().then((supported) => {
     analytics = getAnalytics();
   }
 });
+
+export function postLogEvent(title: string, options?: object) {
+  logEvent(analytics, title, options);
+}

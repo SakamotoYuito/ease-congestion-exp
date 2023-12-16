@@ -3,6 +3,7 @@ import { faHeart as blackHeart } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as whiteHeart } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { patchUserLikesPhoto, patchPhotoFavNum } from "@/lib/dbActions";
+import { postLogEvent } from "@/lib/firebase/client";
 
 export default function PhotoDetailsCardComponent({
   photo,
@@ -26,11 +27,13 @@ export default function PhotoDetailsCardComponent({
       newLikes = likes.filter((id) => id !== photoId);
       onSetLikes(newLikes);
       photo.fav--;
+      postLogEvent("いいね取り消し");
     } else {
       // いいねボタンがクリックされたらlikesにその画像のidを追加する
       newLikes = [...likes, photoId];
       onSetLikes(newLikes);
       photo.fav++;
+      postLogEvent("いいね");
     }
     const isPatchUsersOk = await patchUserLikesPhoto(newLikes);
     const isPatchPhotosOk = await patchPhotoFavNum(photoId, photo.fav);

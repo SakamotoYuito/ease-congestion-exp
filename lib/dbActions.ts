@@ -80,3 +80,23 @@ export async function patchPhotoFavNum(photoId: string, newFavNum: number) {
     return false;
   }
 }
+
+export async function postLog(title: string, place: string, state: string) {
+  const user = await getUserFromCookie();
+  if (!user) return false;
+  const uid = user.uid;
+  const logData = {
+    title: title,
+    place: place,
+    state: state,
+    date: new Date(),
+    uid: uid,
+  };
+  await adminDB
+    .collection("logs")
+    .add(logData)
+    .catch((error: Error) => {
+      return false;
+    });
+  return true;
+}
