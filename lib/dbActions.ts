@@ -19,7 +19,6 @@ export async function fetchPhotosInfo() {
       const nickName = userInfoMatchUid.data().nickName;
       const currentDate = new Date();
       const postDate = photoData.date.toDate();
-      console.log("postData: ", postDate);
 
       const setPostDateString = (postDate: Date) => {
         const diffDate = currentDate.getTime() - postDate.getTime();
@@ -48,4 +47,36 @@ export async function fetchPhotosInfo() {
     })
   );
   return photosPathList;
+}
+
+export async function fetchLikesPhoto() {
+  const user = await getUserFromCookie();
+  if (!user) return null;
+  const uid = user.uid;
+  const userRef = await adminDB.collection("users").doc(uid).get();
+  const likes = userRef.data().likes;
+  return likes;
+}
+
+export async function patchUserLikesPhoto(likes: string[]) {
+  const user = await getUserFromCookie();
+  if (!user) return false;
+  const uid = user.uid;
+  await adminDB
+    .collection("users")
+    .doc(uid)
+    .set({ likes: likes }, { merge: true })
+    .catch((error: Error) => {
+      return false;
+    });
+  return true;
+}
+
+export async function patchPhotoFavNum(photoId: string, newFavNum: number) {
+  try {
+    await adminDB.collection("photos").doc(photoId).update({ fav: newFavNum });
+    return true;
+  } catch (error) {
+    return false;
+  }
 }
