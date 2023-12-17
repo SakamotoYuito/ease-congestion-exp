@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useZxing } from "react-zxing";
 import { useRouter } from "next/navigation";
-import { postLogEvent } from "@/lib/firebase/client";
+import { postCollectionInLogs } from "@/lib/dbActions";
 
 export default function BarcodeScanner() {
   const router = useRouter();
@@ -15,7 +15,17 @@ export default function BarcodeScanner() {
   });
 
   useEffect(() => {
-    postLogEvent("QRコード読み取り成功", { url: result });
+    console.log("result: ", result);
+    if (result === "") return;
+    const url = new URL(result);
+    const params = new URLSearchParams(url.search);
+    const title = params.get("title") || "";
+    const place = params.get("place") || "";
+    const state = "QRコード読み取り";
+    console.log("params: ", params);
+    (async () => {
+      await postCollectionInLogs(title, place, state);
+    })();
     router.push(result);
   }, [result]);
 

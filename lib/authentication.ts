@@ -15,6 +15,7 @@ import { FirebaseError } from "firebase/app";
 import { session, sessionLogout } from "./session";
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import { postUserInfo } from "./dbActions";
 
 const EMAIL_PATTERN = /^[\u0021-\u007e]+@cc\.kyoto-su\.ac\.jp+$/u;
 
@@ -59,6 +60,9 @@ export async function createUser(prevState: any, formData: FormData) {
       password
     );
     await sendEmailVerification(userCredential.user);
+    const uid = auth.currentUser?.uid || "";
+    const nickName = email.split("@")[0] + "さん";
+    await postUserInfo(uid, nickName);
     postLogEvent("認証メール送信成功");
   } catch (error) {
     postLogEvent("新規登録失敗");

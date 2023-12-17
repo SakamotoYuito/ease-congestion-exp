@@ -2,6 +2,7 @@
 
 import { adminDB } from "@/lib/firebase/server";
 import { getUserFromCookie } from "@/lib/session";
+import { z } from "zod";
 
 export async function fetchPhotosInfo() {
   const photosCollection = await adminDB
@@ -16,20 +17,18 @@ export async function fetchPhotosInfo() {
         .collection("users")
         .doc(photoData.uid)
         .get();
-      const nickName = userInfoMatchUid.data().nickName;
+      const nickName = userInfoMatchUid.data().settings.nickName;
       const currentDate = new Date();
       const postDate = photoData.date.toDate();
 
       const setPostDateString = (postDate: Date) => {
         const diffDate = currentDate.getTime() - postDate.getTime();
-        if (diffDate < 86400000) {
-          return `${Math.floor(
-            (currentDate.getTime() - postDate.getTime()) / 3600000
-          )}時間前`;
+        if (diffDate < 3600000) {
+          return `${Math.floor(diffDate / 60000)}分前`;
+        } else if (diffDate < 86400000) {
+          return `${Math.floor(diffDate / 3600000)}時間前`;
         } else if (diffDate < 604800000) {
-          return `${Math.floor(
-            (currentDate.getTime() - postDate.getTime()) / 86400000
-          )}日前`;
+          return `${Math.floor(diffDate / 86400000)}日前`;
         }
         return `${postDate.getFullYear()}年${postDate.getMonth()}月${postDate.getDate()}日`;
       };
@@ -81,9 +80,13 @@ export async function patchPhotoFavNum(photoId: string, newFavNum: number) {
   }
 }
 
-export async function postLog(title: string, place: string, state: string) {
+export async function postCollectionInLogs(
+  title: string,
+  place: string,
+  state: string
+) {
   const user = await getUserFromCookie();
-  if (!user) return false;
+  if (!user) throw new Error("ログインしてください");
   const uid = user.uid;
   const logData = {
     title: title,
@@ -96,7 +99,137 @@ export async function postLog(title: string, place: string, state: string) {
     .collection("logs")
     .add(logData)
     .catch((error: Error) => {
-      return false;
+      throw new Error(error.message);
     });
-  return true;
+}
+
+export async function postUserInfo(uid: string, nickName: string) {
+  const userInfo = {
+    likes: [],
+    createdAt: new Date(),
+    reward: 0,
+    currentPlace: "none",
+    notification: {
+      isNotify: false,
+      id: "",
+      createdAt: new Date(),
+    },
+    settings: {
+      nickName: nickName,
+      modeOfTransportation: "",
+      departureTime: {
+        date0110: null,
+        date0111: null,
+        date0112: null,
+      },
+    },
+  };
+  await adminDB
+    .collection("users")
+    .doc(uid)
+    .set(userInfo)
+    .catch((error: Error) => {
+      throw new Error(error.message);
+    });
+}
+
+export async function postUserSettings(prevState: any, formData: FormData) {
+  const user = await getUserFromCookie();
+  if (!user) throw new Error("ログインしてください");
+  const uid = user.uid;
+
+  const schema = z.object({
+    departureTime0110: z
+      .string()
+      .min(5, "hh:mm形式で入力してください")
+      .max(5, "hh:mm形式で入力してください")
+      .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "hh:mm形式で入力してください"),
+    departureTime0111: z
+      .string()
+      .min(5, "hh:mm形式で入力してください")
+      .max(5, "hh:mm形式で入力してください")
+      .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "hh:mm形式で入力してください"),
+    departureTime0112: z
+      .string()
+      .min(5, "hh:mm形式で入力してください")
+      .max(5, "hh:mm形式で入力してください")
+      .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "hh:mm形式で入力してください"),
+  });
+
+  const { departureTime0110, departureTime0111, departureTime0112 } =
+    schema.parse({
+      departureTime0110: formData.get("departureTime-10"),
+      departureTime0111: formData.get("departureTime-11"),
+      departureTime0112: formData.get("departureTime-12"),
+    } as z.infer<typeof schema>);
+
+  const dateOfDepartureTime = getDateOfDepartureTime(
+    departureTime0110,
+    departureTime0111,
+    departureTime0112
+  );
+  const settings = {
+    nickName: formData.get("nickName")?.toString() || "",
+    modeOfTransportation:
+      formData.get("modeOfTransportation")?.toString() || "",
+    departureTime: {
+      date0110: dateOfDepartureTime[0],
+      date0111: dateOfDepartureTime[1],
+      date0112: dateOfDepartureTime[2],
+    },
+  };
+  await adminDB
+    .collection("users")
+    .doc(uid)
+    .set({ settings }, { merge: true })
+    .catch((error: Error) => {
+      return {
+        message: "設定の保存に失敗しました",
+      };
+    });
+  return {
+    message: "success",
+  };
+}
+
+export async function fetchUserSettings() {
+  const user = await getUserFromCookie();
+  if (!user) return null;
+  const uid = user.uid;
+  const userRef = await adminDB.collection("users").doc(uid).get();
+  const settings = userRef.data().settings;
+  const departureTime = [
+    settings.departureTime.date0110?.toDate(),
+    settings.departureTime.date0111?.toDate(),
+    settings.departureTime.date0112?.toDate(),
+  ];
+  if (!departureTime[0] || !departureTime[1] || !departureTime[2]) return null;
+  const timeStringList = departureTime.map((time) => {
+    const hours = time?.getHours();
+    const minutes = time?.getMinutes();
+    const timeString = `${hours.toString().padStart(2, "0")}:${minutes
+      .toString()
+      .padStart(2, "0")}`;
+    return timeString;
+  });
+
+  const newSettings = settings as any;
+  newSettings.departureTime.date0110 = timeStringList[0];
+  newSettings.departureTime.date0111 = timeStringList[1];
+  newSettings.departureTime.date0112 = timeStringList[2];
+
+  return newSettings;
+}
+
+function getDateOfDepartureTime(time1: string, time2: string, time3: string) {
+  const departureTime = [time1, time2, time3];
+  const dateOfDepartureTime = departureTime.map((time, index) => {
+    const day = 10 + index;
+    const [hours, minutes] = time.split(":");
+    const date = new Date(2024, 0, day);
+    date.setHours(Number(hours));
+    date.setMinutes(Number(minutes));
+    return date;
+  });
+  return dateOfDepartureTime;
 }

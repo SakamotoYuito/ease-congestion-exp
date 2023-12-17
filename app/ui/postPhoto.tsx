@@ -7,7 +7,7 @@ import imageCompression from "browser-image-compression";
 import { useSearchParams, useRouter } from "next/navigation";
 import { faPlusSquare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { postLog } from "@/lib/dbActions";
+import { postCollectionInLogs } from "@/lib/dbActions";
 import { postLogEvent } from "@/lib/firebase/client";
 
 export default function UploadImage() {
@@ -58,12 +58,11 @@ export default function UploadImage() {
       if (resPostPhoto.ok) {
         const title = "写真を投稿しました";
         const state = "postPhoto";
-        const isPostLogOk = await postLog(title, place, state);
-        isPostLogOk
-          ? postLogEvent("写真投稿成功")
-          : postLogEvent("写真投稿失敗");
+        await postCollectionInLogs(title, place, state);
+        postLogEvent("写真投稿成功");
         router.push("/photoalbum");
       } else {
+        postLogEvent("写真投稿失敗");
         setError("投稿に失敗しました");
       }
     }
