@@ -17,10 +17,11 @@ export default function Verification() {
       }
       await auth.currentUser?.reload();
       if (auth.currentUser?.emailVerified) {
+        console.log("currentUser: ", auth.currentUser);
         const id = await getIdToken(auth.currentUser, true);
         await session(id);
         clearInterval(interval);
-        router.push("/");
+        router.push("/settings?first=true");
       }
     }, 2000);
   } catch (error) {

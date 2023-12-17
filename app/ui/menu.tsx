@@ -35,7 +35,7 @@ export default function MenuComponent() {
   }, [menuRef]);
 
   return (
-    <div className="relative inline-block text-left" ref={menuRef}>
+    <div className="relative inline-block text-left z-20" ref={menuRef}>
       <button
         onClick={() => setMenuOpen(!menuOpen)}
         type="button"

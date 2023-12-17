@@ -1,4 +1,4 @@
-import { auth } from "@/lib/firebase/client";
+import { auth, postLogEvent } from "@/lib/firebase/client";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -15,9 +15,9 @@ import { FirebaseError } from "firebase/app";
 import { session, sessionLogout } from "./session";
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import { postUserInfo } from "./dbActions";
 
 const EMAIL_PATTERN = /^[\u0021-\u007e]+@cc\.kyoto-su\.ac\.jp+$/u;
-const URL = "http://localhost:3000/";
 
 export async function createUser(prevState: any, formData: FormData) {
   const schema = z
@@ -60,7 +60,12 @@ export async function createUser(prevState: any, formData: FormData) {
       password
     );
     await sendEmailVerification(userCredential.user);
+    const uid = auth.currentUser?.uid || "";
+    const nickName = email.split("@")[0] + "さん";
+    await postUserInfo(uid, nickName);
+    postLogEvent("認証メール送信成功");
   } catch (error) {
+    postLogEvent("新規登録失敗");
     if (error instanceof z.ZodError) {
       return {
         message: error.issues[0].message,
@@ -109,7 +114,9 @@ export async function login(prevState: any, formData: FormData) {
       alert("メールアドレスを認証してください");
       isEmailVerified = false;
     }
+    postLogEvent("ログイン成功");
   } catch (error) {
+    postLogEvent("ログイン失敗");
     if (error instanceof z.ZodError) {
       return {
         message: error.issues[0].message,
@@ -126,7 +133,9 @@ export async function logout() {
   try {
     await signOut(auth);
     await sessionLogout();
+    postLogEvent("ログアウト成功");
   } catch (error) {
+    postLogEvent("ログアウト失敗");
     if (error instanceof FirebaseError) {
       return {
         message: error.message,
@@ -144,7 +153,9 @@ export async function reSendEmailVerification() {
     } else {
       alert("ログインしていません");
     }
+    postLogEvent("認証メール再送成功");
   } catch (error) {
+    postLogEvent("認証メール再送失敗");
     return {
       message: "認証メールの送信に失敗しました",
     };
@@ -161,7 +172,9 @@ export async function deleteUser() {
     } else {
       alert("ログインしていません");
     }
+    postLogEvent("アカウント削除成功");
   } catch (error) {
+    postLogEvent("アカウント削除失敗");
     return {
       message: "アカウントの削除に失敗しました",
     };
@@ -184,7 +197,9 @@ export async function sendEmailToResetPassword(
       email: formData.get("email"),
     } as z.infer<typeof schema>);
     await sendPasswordResetEmail(auth, email);
+    postLogEvent("パスワードリセットメール送信成功");
   } catch (error) {
+    postLogEvent("パスワードリセットメール送信失敗");
     if (error instanceof z.ZodError) {
       return {
         message: error.issues[0].message,
@@ -249,7 +264,9 @@ export async function changePassword(prevState: any, formData: FormData) {
     );
     await updatePassword(userCredential.user, newPassword);
     isPasswordChanged = true;
+    postLogEvent("パスワード変更成功");
   } catch (error) {
+    postLogEvent("パスワード変更失敗");
     if (error instanceof z.ZodError) {
       return {
         message: error.issues[0].message,
@@ -301,7 +318,9 @@ export async function setNewPassword(prevState: any, formData: FormData) {
     await verifyPasswordResetCode(auth, oobCode);
     await confirmPasswordReset(auth, oobCode, newPassword);
     isPasswordReset = true;
+    postLogEvent("パスワードリセット成功");
   } catch (error) {
+    postLogEvent("パスワードリセット失敗");
     if (error instanceof z.ZodError) {
       return {
         message: error.issues[0].message,
