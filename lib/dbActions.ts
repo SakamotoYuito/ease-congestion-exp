@@ -267,7 +267,6 @@ export async function patchCheckinProgramIds(programId: string) {
   if (!user) return;
   const uid = user.uid;
   try {
-    console.log("programId", programId);
     const userRef = await adminDB.collection("users").doc(uid).get();
     const checkinProgramIds = userRef.data().checkinProgramIds || [];
     checkinProgramIds.push(programId);

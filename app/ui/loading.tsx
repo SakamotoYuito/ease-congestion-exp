@@ -22,7 +22,6 @@ export default function LoadingComponent() {
   useEffect(() => {
     (async () => {
       const qrId = searchParams.get("id") || "";
-      console.log("qrId: ", qrId);
       const qrInfo = await fetchQrInfo(qrId);
       const programTitle = await fetchProgramInfo(`${qrInfo.programId}`);
       setTitle(programTitle.title);
