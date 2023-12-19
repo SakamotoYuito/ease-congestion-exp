@@ -5,7 +5,7 @@ import { getStorage } from "firebase/storage";
 import { getAuth } from "firebase/auth";
 import { getFunctions } from "firebase/functions";
 import { logEvent } from "firebase/analytics";
-import { getMessaging, getToken } from "firebase/messaging";
+// import { getMessaging, getToken } from "firebase/messaging";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_APIKEY,
@@ -30,7 +30,7 @@ export const db = getFirestore(app);
 export const storage = getStorage(app);
 export const auth = getAuth(app);
 export const functions = getFunctions(app);
-export const messaging = getMessaging(app);
+// export const messaging = getMessaging(app);
 
 export let analytics: Analytics;
 isSupported().then((supported) => {
@@ -43,24 +43,24 @@ export function postLogEvent(title: string, options?: object) {
   logEvent(analytics, title, options);
 }
 
-export async function requestNotificationPermission(uid: string) {
-  // const firestore = getFirestore(app);
-  // const messaging = getMessaging(app);
+// export async function requestNotificationPermission(uid: string) {
+//   // const firestore = getFirestore(app);
+//   // const messaging = getMessaging(app);
 
-  try {
-    const token = await getToken(messaging, {
-      vapidKey: process.env.NEXT_PUBLIC_FIREBASE_WEBPUSH_KEY,
-    });
+//   try {
+//     const token = await getToken(messaging, {
+//       vapidKey: process.env.NEXT_PUBLIC_FIREBASE_WEBPUSH_KEY,
+//     });
 
-    if (token) {
-      console.log(`Notification token: ${token}`);
-      await setDoc(doc(db, "users", uid), { token: token }, { merge: true });
-    } else {
-      console.log(
-        "No registration token available. Request permission to generate one."
-      );
-    }
-  } catch (error) {
-    console.error("An error occurred while retrieving token. ", error);
-  }
-}
+//     if (token) {
+//       console.log(`Notification token: ${token}`);
+//       await setDoc(doc(db, "users", uid), { token: token }, { merge: true });
+//     } else {
+//       console.log(
+//         "No registration token available. Request permission to generate one."
+//       );
+//     }
+//   } catch (error) {
+//     console.error("An error occurred while retrieving token. ", error);
+//   }
+// }
