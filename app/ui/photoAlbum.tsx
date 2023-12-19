@@ -30,9 +30,11 @@ export default function PhotoAlbumComponent() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-0 text-center">
       <div className="justify-center mt-24 w-full h-full">
-        <h1 className="text-2xl font-bold mb-10 sticky top-24">アルバム</h1>
+        <h1 className="block text-2xl font-bold mb-10 sticky top-24">
+          アルバム
+        </h1>
         <div
-          className="fixed grid grid-cols-3 gap-0 p-1 w-full overflow-auto"
+          className="grid grid-cols-3 gap-0 p-1 w-full overflow-auto pb-20"
           style={{ maxHeight: "calc(100vh - 192px)" }}
         >
           {/* 写真のデータをループして表示する */}
