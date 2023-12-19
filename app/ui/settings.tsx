@@ -15,6 +15,7 @@ export default function SettingsComponent() {
   const [error, action] = useFormState(postUserSettings, initialState);
   const [settings, setSettings] = useState<UserSettings | null>(null);
   const [selected, setSelected] = useState("");
+  const [canNotification, setCanNotification] = useState(true);
   const router = useRouter();
 
   const options = [
@@ -56,6 +57,32 @@ export default function SettingsComponent() {
     <main className="flex flex-col items-center justify-center min-h-screen py-2">
       <h1 className="text-2xl font-bold mb-4">設定</h1>
       <form action={action} className="w-full max-w-xs space-y-4">
+        <div className="flex flex-row justify-between items-center">
+          <label htmlFor="notification" className="mr-2 text-lg font-bold">
+            プッシュ通知許可:
+          </label>
+          <input
+            id="notification"
+            type="hidden"
+            value={canNotification ? "true" : "false"}
+            name="notification"
+          />
+          {canNotification ? (
+            <span
+              className="bg-green-500 px-4 py-2 text-white rounded hover:bg-green-700"
+              onClick={() => setCanNotification(false)}
+            >
+              許可しています
+            </span>
+          ) : (
+            <span
+              className="bg-white px-4 py-2 text-black rounded hover:bg-gray-400"
+              onClick={() => setCanNotification(true)}
+            >
+              許可していません
+            </span>
+          )}
+        </div>
         <div className="flex flex-col">
           <label htmlFor="nickName" className="mb-2 text-lg font-bold">
             ニックネーム:
