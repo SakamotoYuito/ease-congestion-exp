@@ -9,7 +9,7 @@ export default async function HeaderComponent() {
   return (
     <div className="flex justify-between shadow-md fixed top-0 w-full z-10 bg-[#b8e986]">
       <div className="p-4 font-mono text-xl">
-        <h1>KSU 混雑分散実験</h1>
+        <h1>Enre</h1>
       </div>
       <div className="p-4 font-mono text-sm">
         <MenuComponent />

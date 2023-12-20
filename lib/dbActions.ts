@@ -233,3 +233,68 @@ function getDateOfDepartureTime(time1: string, time2: string, time3: string) {
   });
   return dateOfDepartureTime;
 }
+
+export async function fetchQrInfo(qrId: string) {
+  const qrRef = await adminDB.collection("QR").doc(qrId).get();
+  const qrInfo = qrRef.data();
+  return qrInfo;
+}
+
+export async function fetchProgramInfo(programId: string) {
+  const programRef = await adminDB.collection("program").doc(programId).get();
+  const programInfo = programRef.data();
+  return programInfo;
+}
+
+export async function patchReward(rewardPoint: string, rewardField?: string) {
+  const user = await getUserFromCookie();
+  if (!user) return;
+  const uid = user.uid;
+  try {
+    const userRef = await adminDB.collection("users").doc(uid).get();
+    const curretReward = userRef.data().reward;
+    await adminDB
+      .collection("users")
+      .doc(uid)
+      .set({ reward: curretReward + Number(rewardPoint) }, { merge: true });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function patchCheckinProgramIds(programId: string) {
+  const user = await getUserFromCookie();
+  if (!user) return;
+  const uid = user.uid;
+  try {
+    const userRef = await adminDB.collection("users").doc(uid).get();
+    const checkinProgramIds = userRef.data().checkinProgramIds || [];
+    checkinProgramIds.push(programId);
+    const newCheckinProgramIds = [...new Set(checkinProgramIds)];
+    await adminDB
+      .collection("users")
+      .doc(uid)
+      .set({ checkinProgramIds: newCheckinProgramIds }, { merge: true });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function patchCheckoutProgramIds(programId: string) {
+  const user = await getUserFromCookie();
+  if (!user) return;
+  const uid = user.uid;
+  try {
+    const userRef = await adminDB.collection("users").doc(uid).get();
+    const checkinProgramIds = userRef.data().checkinProgramIds || [];
+    const newCheckinProgramIds = checkinProgramIds.filter(
+      (id: string) => id !== programId
+    );
+    await adminDB
+      .collection("users")
+      .doc(uid)
+      .set({ checkinProgramIds: newCheckinProgramIds }, { merge: true });
+  } catch (error) {
+    console.log(error);
+  }
+}

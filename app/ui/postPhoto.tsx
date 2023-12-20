@@ -7,7 +7,11 @@ import imageCompression from "browser-image-compression";
 import { useSearchParams, useRouter } from "next/navigation";
 import { faPlusSquare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { postCollectionInLogs } from "@/lib/dbActions";
+import {
+  postCollectionInLogs,
+  fetchProgramInfo,
+  patchReward,
+} from "@/lib/dbActions";
 import { postLogEvent } from "@/lib/firebase/client";
 
 export default function UploadImage() {
@@ -57,6 +61,9 @@ export default function UploadImage() {
         body: JSON.stringify({ postData }),
       });
       if (resPostPhoto.ok) {
+        const programId = searchParams.get("programId") || "";
+        const programInfo = await fetchProgramInfo(`${programId}`);
+        await patchReward(`${programInfo.rewardPoint}`);
         const title = "写真を投稿しました";
         const state = "postPhoto";
         await postCollectionInLogs(title, place, state);
