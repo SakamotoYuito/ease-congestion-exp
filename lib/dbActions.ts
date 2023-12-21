@@ -246,17 +246,25 @@ export async function fetchProgramInfo(programId: string) {
   return programInfo;
 }
 
+export async function fetchReward() {
+  const user = await getUserFromCookie();
+  if (!user) return;
+  const uid = user.uid;
+  const userRef = await adminDB.collection("users").doc(uid).get();
+  const currentReward = userRef.data().reward;
+  return currentReward;
+}
+
 export async function patchReward(rewardPoint: string, rewardField?: string) {
   const user = await getUserFromCookie();
   if (!user) return;
   const uid = user.uid;
   try {
-    const userRef = await adminDB.collection("users").doc(uid).get();
-    const curretReward = userRef.data().reward;
+    const currentReward = await fetchReward();
     await adminDB
       .collection("users")
       .doc(uid)
-      .set({ reward: curretReward + Number(rewardPoint) }, { merge: true });
+      .set({ reward: currentReward + Number(rewardPoint) }, { merge: true });
   } catch (error) {
     console.log(error);
   }
