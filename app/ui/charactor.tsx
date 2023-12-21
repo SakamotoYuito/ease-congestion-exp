@@ -1,27 +1,16 @@
-"use client";
-
 import Image from "next/image";
-import { useState, useEffect } from "react";
 import { fetchReward } from "@/lib/dbActions";
 import ProgressBar from "react-bootstrap/ProgressBar";
 
-export default function CharactorComponent() {
-  const [reward, setReward] = useState(0);
-  const [quote, setQuote] = useState("おはよ");
-
-  const quoteList = ["おはよ", "寒いね", "お腹すいた"];
-
+export default async function CharactorComponent() {
   const handleCharactorClick = () => {
+    const quoteList = ["おはよ", "寒いね", "お腹すいた"];
     const randomIndex = Math.floor(Math.random() * quoteList.length);
-    setQuote(quoteList[randomIndex]);
+    return quoteList[randomIndex];
   };
 
-  useEffect(() => {
-    (async () => {
-      const currentReward = await fetchReward();
-      setReward(currentReward);
-    })();
-  });
+  const quote = handleCharactorClick();
+  const reward = await fetchReward();
 
   return (
     <div className="w-full">
@@ -42,8 +31,8 @@ export default function CharactorComponent() {
           <text
             x="50%"
             y="50%"
-            dominant-baseline="middle"
-            text-anchor="middle"
+            dominantBaseline="middle"
+            textAnchor="middle"
             fill="white"
             className="text-4xl font-bold"
           >
@@ -59,7 +48,7 @@ export default function CharactorComponent() {
               width={400}
               height={400}
               alt="charactor"
-              onClick={handleCharactorClick}
+              priority
             />
           )}
           {30 <= reward && reward < 60 && (
@@ -68,7 +57,7 @@ export default function CharactorComponent() {
               width={400}
               height={400}
               alt="charactor"
-              onClick={handleCharactorClick}
+              priority
             />
           )}
         </div>

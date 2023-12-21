@@ -105,6 +105,7 @@ export async function postCollectionInLogs(
 
 export async function postUserInfo(uid: string, nickName: string) {
   const userInfo = {
+    checkinProgramIds: [],
     likes: [],
     createdAt: new Date(),
     reward: 0,
@@ -129,7 +130,7 @@ export async function postUserInfo(uid: string, nickName: string) {
     .doc(uid)
     .set(userInfo)
     .catch((error: Error) => {
-      throw new Error(error.message);
+      console.log(error);
     });
 }
 
@@ -302,6 +303,35 @@ export async function patchCheckoutProgramIds(programId: string) {
       .collection("users")
       .doc(uid)
       .set({ checkinProgramIds: newCheckinProgramIds }, { merge: true });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function fetchCheckinProgramIds() {
+  const user = await getUserFromCookie();
+  if (!user) return;
+  const uid = user.uid;
+  try {
+    const userRef = await adminDB.collection("users").doc(uid).get();
+    const checkinProgramIds = userRef.data().checkinProgramIds || [];
+    return checkinProgramIds;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function fetchAllOnlinePrograms() {
+  try {
+    const programRef = await adminDB
+      .collection("program")
+      .where("isOpen", "==", true)
+      .get();
+    const programList = programRef.docs.map((program: any) => {
+      const programData = program.data();
+      return programData;
+    });
+    return programList;
   } catch (error) {
     console.log(error);
   }
