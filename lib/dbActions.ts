@@ -310,14 +310,15 @@ export async function patchCheckoutProgramIds(programId: string) {
 
 export async function fetchCheckinProgramIds() {
   const user = await getUserFromCookie();
-  if (!user) return;
+  if (!user) return [];
   const uid = user.uid;
   try {
     const userRef = await adminDB.collection("users").doc(uid).get();
-    const checkinProgramIds = userRef.data().checkinProgramIds || [];
+    const checkinProgramIds: any[] = userRef.data().checkinProgramIds || [];
     return checkinProgramIds;
   } catch (error) {
     console.log(error);
+    throw new Error("プログラムの取得に失敗しました");
   }
 }
 
@@ -327,12 +328,13 @@ export async function fetchAllOnlinePrograms() {
       .collection("program")
       .where("isOpen", "==", true)
       .get();
-    const programList = programRef.docs.map((program: any) => {
+    const programList: any[] = programRef.docs.map((program: any) => {
       const programData = program.data();
       return programData;
     });
     return programList;
   } catch (error) {
     console.log(error);
+    throw new Error("プログラムの取得に失敗しました");
   }
 }
