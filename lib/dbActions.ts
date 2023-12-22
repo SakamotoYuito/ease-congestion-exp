@@ -139,25 +139,39 @@ export async function postUserSettings(prevState: any, formData: FormData) {
   if (!user) throw new Error("ログインしてください");
   const uid = user.uid;
 
-  const settings = {
-    notification: formData.get("notification") === "true" ? true : false,
-    nickName: formData.get("nickName")?.toString() || "",
-    modeOfTransportation:
-      formData.get("modeOfTransportation")?.toString() || "",
-    timeTable: JSON.parse(formData.get("timeTable") as string),
-  };
-  await adminDB
-    .collection("users")
-    .doc(uid)
-    .set({ settings }, { merge: true })
-    .catch((error: Error) => {
+  const schema = z.object({
+    nickName: z.string().max(10, "ニックネームは10文字以内で入力してください"),
+  });
+
+  try {
+    const { nickName } = schema.parse({
+      nickName: formData.get("nickName"),
+    } as z.infer<typeof schema>);
+
+    const settings = {
+      notification: formData.get("notification") === "true" ? true : false,
+      nickName: nickName,
+      modeOfTransportation:
+        formData.get("modeOfTransportation")?.toString() || "",
+      timeTable: JSON.parse(formData.get("timeTable") as string),
+    };
+    await adminDB
+      .collection("users")
+      .doc(uid)
+      .set({ settings }, { merge: true });
+    return {
+      message: "success",
+    };
+  } catch (error) {
+    if (error instanceof z.ZodError) {
       return {
-        message: "設定の保存に失敗しました",
+        message: error.issues[0].message,
       };
-    });
-  return {
-    message: "success",
-  };
+    }
+    return {
+      message: "パスワードが間違っているか、アカウントが存在しません",
+    };
+  }
 }
 
 export async function fetchUserSettings() {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, ChangeEvent, useCallback } from "react";
+import { useState, useEffect, ChangeEvent } from "react";
 import { useFormState } from "react-dom";
 import { postUserSettings } from "@/lib/dbActions";
 import { useRouter } from "next/navigation";
@@ -153,6 +153,7 @@ export default function SettingsComponent() {
           value={JSON.stringify(selectedCells)}
           name="timeTable"
         />
+        <p className="text-red-500 text-center">{error?.message}</p>
         <div className="flex justify-center">
           <button
             type="submit"
@@ -161,7 +162,6 @@ export default function SettingsComponent() {
             保存
           </button>
         </div>
-        <p className="text-red-500 text-center">{error?.message}</p>
       </form>
     </main>
   );
