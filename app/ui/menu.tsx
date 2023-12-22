@@ -3,22 +3,13 @@
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { logout } from "@/lib/authentication";
-import { fetchUserSettings } from "@/lib/dbActions";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-export default function MenuComponent() {
-  const [nickName, setNickName] = useState("");
+export default function MenuComponent({ nickName }: { nickName: string }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const router = useRouter();
   const menuRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    (async () => {
-      const userSettings = await fetchUserSettings();
-      setNickName(userSettings.nickName);
-    })();
-  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
