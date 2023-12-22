@@ -12,6 +12,14 @@ export default function MenuComponent({ nickName }: { nickName: string }) {
   const menuRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    (async () => {
+      const response = await fetch("/api/getIP");
+      const data = await response.json();
+      console.log("ipAddress: ", data.ip_address);
+    })();
+  }, []);
+
+  useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setMenuOpen(false);

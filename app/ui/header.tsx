@@ -1,5 +1,5 @@
 import MenuComponent from "./menu";
-import { getUserFromCookie } from "@/lib/session";
+import { getUserFromCookie, getIPAddress } from "@/lib/session";
 import { redirect } from "next/navigation";
 import { fetchUserSettings } from "@/lib/dbActions";
 
@@ -8,6 +8,8 @@ export default async function HeaderComponent() {
   !user && redirect("/login");
   const userSettings = await fetchUserSettings();
   const nickName = userSettings.nickName;
+  const ipAddress = await getIPAddress();
+  console.log("ipAddress: ", ipAddress);
 
   return (
     <div className="flex justify-between shadow-md fixed top-0 w-full z-10 bg-[#b8e986]">
