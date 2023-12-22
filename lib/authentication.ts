@@ -15,13 +15,14 @@ import { FirebaseError } from "firebase/app";
 import { session, sessionLogout } from "./session";
 import { redirect } from "next/navigation";
 import { z } from "zod";
-import { postUserInfo } from "./dbActions";
+import { postUserInfo, postSignature } from "./dbActions";
 
 const EMAIL_PATTERN = /^[\u0021-\u007e]+@cc\.kyoto-su\.ac\.jp+$/u;
 
 export async function createUser(prevState: any, formData: FormData) {
   const schema = z
     .object({
+      sign: z.string().min(1, "署名を入力してください"),
       email: z
         .string()
         .email("大学のメールアドレスを入力してください")
@@ -48,12 +49,14 @@ export async function createUser(prevState: any, formData: FormData) {
     });
 
   try {
-    const { email, password } = schema.parse({
+    const { sign, email, password } = schema.parse({
+      sign: formData.get("sign"),
       email: formData.get("email"),
       password: formData.get("password"),
       passwordConfirm: formData.get("passwordConfirm"),
     } as z.infer<typeof schema>);
 
+    await postSignature(sign);
     const userCredential = await createUserWithEmailAndPassword(
       auth,
       email,

@@ -1,6 +1,6 @@
 export default function ConcentFormComponent() {
   return (
-    <main className="p-3">
+    <main className="p-3 text-black">
       <p className="font-bold">1．研究計画の概要に関する事項</p>
       <p className="mb-5">
         本実験は、Webアプリケーションを介した環境活動に関する情報推薦が，環境への関心を高めるのかを調査するために，実際にWebアプリケーションに登録してもらい，環境イベントの情報を確認し，参加したいと思えた場合に参加してもらいます．イベントの参加・不参加は自由です．実験後は簡単なアンケートへの回答もお願いします．実験では環境イベントへの参加状況、アンケートの回答内容を実験データとして収集します．
