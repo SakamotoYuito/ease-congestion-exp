@@ -302,9 +302,11 @@ export async function postSignature(sign: string) {
   }
 }
 
-export async function fetchPlace() {
+export async function fetchPlace(docId?: string) {
   try {
-    const placeRef = await adminDB.collection("place").get();
+    const placeRef = docId
+      ? await adminDB.collection("place").doc(docId).get()
+      : await adminDB.collection("place").get();
     const placeList = placeRef.docs.map((place: any) => {
       const placeData: Place = place.data();
       return placeData;
