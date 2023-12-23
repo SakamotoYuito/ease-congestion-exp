@@ -42,13 +42,15 @@ export default async function CheckinDetailComponent() {
           <h1>イベントはありません</h1>
         ) : (
           <>
-            {spotsInfo.map((spotInfo) => {
+            {spotsInfo.map((spotInfo, index) => {
               return (
-                <DetailCardComponent
-                  spotInfo={spotInfo}
-                  thema="white"
-                  textColor="dark"
-                />
+                <div key={index}>
+                  <DetailCardComponent
+                    spotInfo={spotInfo}
+                    thema="white"
+                    textColor="dark"
+                  />
+                </div>
               );
             })}
           </>
