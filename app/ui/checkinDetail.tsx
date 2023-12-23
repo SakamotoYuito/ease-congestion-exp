@@ -15,9 +15,7 @@ export default async function CheckinDetailComponent() {
     })
   );
   const spotsInfo = checkinProgramList.map((item) => {
-    // const place = allPlaceList.find((p: { id: string }) => p.id === item.place);
     if (item.link !== null) {
-      console.log("item.link: ", item.link);
       return {
         title: item.title,
         content: item.content,
@@ -29,7 +27,6 @@ export default async function CheckinDetailComponent() {
       content: item.content,
     };
   });
-  console.log("spotsInfo: ", spotsInfo);
 
   return (
     <div className="grid row-start-2 h-hull overflow-auto w-full px-5 justify-center">

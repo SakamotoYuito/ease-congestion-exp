@@ -27,7 +27,6 @@ export default function DetailCardComponent({
   const [displayContent, setDisplayContent] = useState(spotInfo.content);
 
   useEffect(() => {
-    console.log("link: ", spotInfo.link);
     if (spotInfo.content.length > 20 && !isExpanded) {
       setDisplayContent(`${spotInfo.content.substring(0, 20)}...`);
     } else {

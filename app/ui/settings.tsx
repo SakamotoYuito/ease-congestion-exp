@@ -57,7 +57,7 @@ export default function SettingsComponent() {
       })();
       router.push("/");
     }
-  }, [error]);
+  }, [router, error]);
 
   const days = [10, 11, 12];
   const periods = ["1限", "2限", "昼休", "3限", "4限", "5限"];

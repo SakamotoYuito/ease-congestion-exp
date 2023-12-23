@@ -40,29 +40,32 @@ export default function GoogleMapComponent({ spotsCenter, spotsInfo }: Spots) {
   });
 
   const mapRef = useRef<Map>();
-  const onLoad = useCallback((map: Map) => {
-    mapRef.current = map;
-    const bounds = new window.google.maps.LatLngBounds();
-    spotsCenter.forEach((spot, index) => {
-      const marker = new window.google.maps.Marker({
-        position: {
-          lat: spot.lat,
-          lng: spot.lng,
-        },
-        map,
+  const onLoad = useCallback(
+    (map: Map) => {
+      mapRef.current = map;
+      const bounds = new window.google.maps.LatLngBounds();
+      spotsCenter.forEach((spot, index) => {
+        const marker = new window.google.maps.Marker({
+          position: {
+            lat: spot.lat,
+            lng: spot.lng,
+          },
+          map,
+        });
+        const infoWindow = new window.google.maps.InfoWindow({
+          content: `<p>${spotsInfo[index].title}</p>`,
+        });
+        marker.addListener("click", () => {
+          map.panTo(spot);
+          setSpotInfo(spotsInfo[index]);
+          infoWindow.open(map, marker);
+        });
+        bounds.extend(spot);
       });
-      const infoWindow = new window.google.maps.InfoWindow({
-        content: `<p>${spotsInfo[index].title}</p>`,
-      });
-      marker.addListener("click", () => {
-        map.panTo(spot);
-        setSpotInfo(spotsInfo[index]);
-        infoWindow.open(map, marker);
-      });
-      bounds.extend(spot);
-    });
-    spotsCenter.length > 2 && map.fitBounds(bounds, 100);
-  }, []);
+      spotsCenter.length > 2 && map.fitBounds(bounds, 100);
+    },
+    [spotsCenter, spotsInfo]
+  );
 
   return (
     <>
