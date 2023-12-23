@@ -1,18 +1,21 @@
-"use client";
+import DetailCardComponent from "./detailCard";
+import GoogleMapComponent from "./googleMap";
 
-import { useRouter } from "next/navigation";
-
-export default function EventDetailComponent() {
-  const router = useRouter();
-
+export default async function EventDetailComponent() {
   return (
-    <div className="absolute top-0 left-0 w-full h-full bg-gray-700 bg-opacity-90 flex flex-col items-center justify-center overflow-auto">
-      <button
-        onClick={() => router.push("/")}
-        className="absolute top-20 right-0 text-lg text-white p-3"
-      >
-        閉じる
-      </button>
+    <div className="grid row-start-2 h-hull w-full overflow-hidden">
+      <div className="grid grid-rows-5">
+        <div className="absolute z-10 p-1 w-full md:w-5/12 items-center">
+          <DetailCardComponent
+            title="タイトル"
+            content="コンテンツsssssssssssssssssssssssssssss"
+            place="14号館"
+          />
+        </div>
+        <div className="">
+          <GoogleMapComponent />
+        </div>
+      </div>
     </div>
   );
 }

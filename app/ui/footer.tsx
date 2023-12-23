@@ -22,7 +22,7 @@ export default function FooterComponent() {
   const [selectedIcon, setSelectedIcon] = useState(selectedIndex);
 
   return (
-    <div className="fixed bottom-0 w-full border-t border-gray-300 z-10 bg-[#f5ffec]">
+    <div className="fixed bottom-0 w-full border-t border-gray-300 z-10 bg-[#f5ffec] h-20">
       <div className="flex justify-around p-4">
         {icons.map((icon, index) => (
           <button

@@ -12,7 +12,7 @@ export default async function HeaderComponent() {
   console.log("ipAddress: ", ipAddress);
 
   return (
-    <div className="flex justify-between shadow-md fixed top-0 w-full z-10 bg-[#b8e986]">
+    <div className="flex justify-between shadow-md fixed top-0 w-full z-10 bg-[#b8e986] h-20">
       <div className="p-4 font-mono text-xl">
         <h1>Enre</h1>
       </div>

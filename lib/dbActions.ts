@@ -3,6 +3,7 @@
 import { adminDB } from "@/lib/firebase/server";
 import { getUserFromCookie } from "@/lib/session";
 import { z } from "zod";
+import type { Place } from "@/lib/type";
 
 export async function fetchPhotosInfo() {
   const photosCollection = await adminDB
@@ -296,6 +297,19 @@ export async function postSignature(sign: string) {
       date: new Date(),
     });
     return signatureRef.id;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function fetchPlace() {
+  try {
+    const placeRef = await adminDB.collection("place").get();
+    const placeList = placeRef.docs.map((place: any) => {
+      const placeData: Place = place.data();
+      return placeData;
+    });
+    return placeList;
   } catch (error) {
     console.log(error);
   }
