@@ -26,30 +26,31 @@ export default function SignUpComponent() {
       <div className="relative overflow-auto h-[250px] bg-white mb-5 w-11/12">
         <ConcentFormComponent />
       </div>
-      <div className="flex justify-between items-center text-center pb-5 mb-5 border-b-2 border-black border-dotted">
-        <label htmlFor="checkbox" className="text-lg">
-          署名:
-        </label>
-        <input
-          id="myname"
-          type="text"
-          required
-          placeholder="氏名を入力"
-          className="appearance-none rounded w-1/2 py-1 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        />
-        <div>
-          <input
-            type="checkbox"
-            className="mr-2"
-            checked={isChecked}
-            onChange={(e) => setIsChecked(e.target.checked)}
-          />
-          <label htmlFor="checkbox" className="text-lg">
-            同意する
-          </label>
-        </div>
-      </div>
       <form action={action} className="w-full max-w-xs space-y-4">
+        <div className="flex justify-between items-center text-center pb-5 mb-5 border-b-2 border-black border-dotted">
+          <label htmlFor="checkbox" className="text-lg">
+            署名:
+          </label>
+          <input
+            id="sign"
+            type="text"
+            name="sign"
+            required
+            placeholder="氏名を入力"
+            className="appearance-none rounded w-1/2 py-1 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          />
+          <div>
+            <input
+              type="checkbox"
+              className="mr-2"
+              checked={isChecked}
+              onChange={(e) => setIsChecked(e.target.checked)}
+            />
+            <label htmlFor="checkbox" className="text-lg">
+              同意する
+            </label>
+          </div>
+        </div>
         <div className="flex flex-col">
           <label htmlFor="email" className="mb-2">
             大学メールアドレス:

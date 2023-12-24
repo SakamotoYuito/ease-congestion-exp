@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/react";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,8 +24,8 @@ export default function RootLayout({
         <meta name="theme-color" content="#b8e986" />
       </head>
       <body
-        className={`inter ${inter.className}`}
-        style={{ backgroundColor: "#b8e986", zIndex: 0 }}
+        className={`inter ${inter.className} grid`}
+        style={{ backgroundColor: "#b8e986" }}
       >
         {children}
         <Analytics />

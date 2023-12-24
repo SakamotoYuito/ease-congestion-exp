@@ -10,18 +10,20 @@ import {
   reauthenticateWithCredential,
   verifyPasswordResetCode,
   confirmPasswordReset,
+  getIdToken,
 } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
 import { session, sessionLogout } from "./session";
 import { redirect } from "next/navigation";
 import { z } from "zod";
-import { postUserInfo } from "./dbActions";
+import { postUserInfo, postSignature } from "./dbActions";
 
 const EMAIL_PATTERN = /^[\u0021-\u007e]+@cc\.kyoto-su\.ac\.jp+$/u;
 
 export async function createUser(prevState: any, formData: FormData) {
   const schema = z
     .object({
+      sign: z.string().min(1, "署名を入力してください"),
       email: z
         .string()
         .email("大学のメールアドレスを入力してください")
@@ -48,18 +50,21 @@ export async function createUser(prevState: any, formData: FormData) {
     });
 
   try {
-    const { email, password } = schema.parse({
+    const { sign, email, password } = schema.parse({
+      sign: formData.get("sign"),
       email: formData.get("email"),
       password: formData.get("password"),
       passwordConfirm: formData.get("passwordConfirm"),
     } as z.infer<typeof schema>);
 
+    await postSignature(sign);
     const userCredential = await createUserWithEmailAndPassword(
       auth,
       email,
       password
     );
-    await sendEmailVerification(userCredential.user);
+    const id = await getIdToken(userCredential.user, true);
+    await session(id);
     const uid = auth.currentUser?.uid || "";
     const nickName = email.split("@")[0] + "さん";
     await postUserInfo(uid, nickName);
@@ -75,12 +80,10 @@ export async function createUser(prevState: any, formData: FormData) {
       message: "すでに登録済みのメールアドレスです",
     };
   }
-  redirect("/verification");
+  redirect("/settings");
 }
 
 export async function login(prevState: any, formData: FormData) {
-  let isEmailVerified = false;
-
   const schema = z.object({
     email: z
       .string()
@@ -106,14 +109,8 @@ export async function login(prevState: any, formData: FormData) {
       email,
       password
     );
-    if (userCredential.user.emailVerified) {
-      const id = await userCredential.user.getIdToken();
-      await session(id);
-      isEmailVerified = true;
-    } else {
-      alert("メールアドレスを認証してください");
-      isEmailVerified = false;
-    }
+    const id = await userCredential.user.getIdToken();
+    await session(id);
     postLogEvent("ログイン成功");
   } catch (error) {
     postLogEvent("ログイン失敗");
@@ -126,7 +123,7 @@ export async function login(prevState: any, formData: FormData) {
       message: "パスワードが間違っているか、アカウントが存在しません",
     };
   }
-  isEmailVerified ? redirect("/") : redirect("/verification");
+  redirect("/");
 }
 
 export async function logout() {

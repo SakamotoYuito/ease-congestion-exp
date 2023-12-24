@@ -1,6 +1,6 @@
 "use server";
 
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { auth } from "./firebase/server";
 import { redirect } from "next/navigation";
 
@@ -50,4 +50,10 @@ export async function getUserFromCookie(): Promise<any | null> {
   } catch (error) {
     return null;
   }
+}
+
+export async function getIPAddress() {
+  const headersList = headers();
+  const ip = headersList.get("x-forwarded-for");
+  return ip;
 }

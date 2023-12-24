@@ -1,3 +1,5 @@
+import type { GeoPoint } from "@firebase/firestore-types";
+
 export type Photo = {
   date: Date;
   url: string;
@@ -15,4 +17,12 @@ export type UserSettings = {
     date0111: string | null;
     date0112: string | null;
   };
+};
+
+export type Place = {
+  name: string;
+  congestion: number;
+  center: GeoPoint;
+  latitude: number;
+  longitude: number;
 };

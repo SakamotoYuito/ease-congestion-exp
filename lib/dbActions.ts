@@ -3,6 +3,7 @@
 import { adminDB } from "@/lib/firebase/server";
 import { getUserFromCookie } from "@/lib/session";
 import { z } from "zod";
+import type { Place } from "@/lib/type";
 
 export async function fetchPhotosInfo() {
   const photosCollection = await adminDB
@@ -104,7 +105,11 @@ export async function postCollectionInLogs(
 }
 
 export async function postUserInfo(uid: string, nickName: string) {
+  const initialTimeTable: { [key: number]: boolean[] } = Object.fromEntries(
+    Array.from({ length: 6 }, (_, i) => [i, Array(3).fill(false)])
+  );
   const userInfo = {
+    checkinProgramIds: [],
     likes: [],
     createdAt: new Date(),
     reward: 0,
@@ -117,19 +122,17 @@ export async function postUserInfo(uid: string, nickName: string) {
     settings: {
       nickName: nickName,
       modeOfTransportation: "",
-      departureTime: {
-        date0110: null,
-        date0111: null,
-        date0112: null,
-      },
+      timeTable: initialTimeTable,
     },
+    dev: false,
+    university: false,
   };
   await adminDB
     .collection("users")
     .doc(uid)
     .set(userInfo)
     .catch((error: Error) => {
-      throw new Error(error.message);
+      console.log(error);
     });
 }
 
@@ -139,57 +142,38 @@ export async function postUserSettings(prevState: any, formData: FormData) {
   const uid = user.uid;
 
   const schema = z.object({
-    departureTime0110: z
-      .string()
-      .min(5, "hh:mm形式で入力してください")
-      .max(5, "hh:mm形式で入力してください")
-      .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "hh:mm形式で入力してください"),
-    departureTime0111: z
-      .string()
-      .min(5, "hh:mm形式で入力してください")
-      .max(5, "hh:mm形式で入力してください")
-      .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "hh:mm形式で入力してください"),
-    departureTime0112: z
-      .string()
-      .min(5, "hh:mm形式で入力してください")
-      .max(5, "hh:mm形式で入力してください")
-      .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "hh:mm形式で入力してください"),
+    nickName: z.string().max(10, "ニックネームは10文字以内で入力してください"),
   });
 
-  const { departureTime0110, departureTime0111, departureTime0112 } =
-    schema.parse({
-      departureTime0110: formData.get("departureTime-10"),
-      departureTime0111: formData.get("departureTime-11"),
-      departureTime0112: formData.get("departureTime-12"),
+  try {
+    const { nickName } = schema.parse({
+      nickName: formData.get("nickName"),
     } as z.infer<typeof schema>);
 
-  const dateOfDepartureTime = getDateOfDepartureTime(
-    departureTime0110,
-    departureTime0111,
-    departureTime0112
-  );
-  const settings = {
-    nickName: formData.get("nickName")?.toString() || "",
-    modeOfTransportation:
-      formData.get("modeOfTransportation")?.toString() || "",
-    departureTime: {
-      date0110: dateOfDepartureTime[0],
-      date0111: dateOfDepartureTime[1],
-      date0112: dateOfDepartureTime[2],
-    },
-  };
-  await adminDB
-    .collection("users")
-    .doc(uid)
-    .set({ settings }, { merge: true })
-    .catch((error: Error) => {
+    const settings = {
+      notification: formData.get("notification") === "true" ? true : false,
+      nickName: nickName,
+      modeOfTransportation:
+        formData.get("modeOfTransportation")?.toString() || "",
+      timeTable: JSON.parse(formData.get("timeTable") as string),
+    };
+    await adminDB
+      .collection("users")
+      .doc(uid)
+      .set({ settings }, { merge: true });
+    return {
+      message: "success",
+    };
+  } catch (error) {
+    if (error instanceof z.ZodError) {
       return {
-        message: "設定の保存に失敗しました",
+        message: error.issues[0].message,
       };
-    });
-  return {
-    message: "success",
-  };
+    }
+    return {
+      message: "パスワードが間違っているか、アカウントが存在しません",
+    };
+  }
 }
 
 export async function fetchUserSettings() {
@@ -198,40 +182,9 @@ export async function fetchUserSettings() {
   const uid = user.uid;
   const userRef = await adminDB.collection("users").doc(uid).get();
   const settings = userRef.data().settings;
-  const departureTime = [
-    settings.departureTime.date0110?.toDate(),
-    settings.departureTime.date0111?.toDate(),
-    settings.departureTime.date0112?.toDate(),
-  ];
-  if (!departureTime[0] || !departureTime[1] || !departureTime[2]) return null;
-  const timeStringList = departureTime.map((time) => {
-    const hours = time?.getHours();
-    const minutes = time?.getMinutes();
-    const timeString = `${hours.toString().padStart(2, "0")}:${minutes
-      .toString()
-      .padStart(2, "0")}`;
-    return timeString;
-  });
 
   const newSettings = settings as any;
-  newSettings.departureTime.date0110 = timeStringList[0];
-  newSettings.departureTime.date0111 = timeStringList[1];
-  newSettings.departureTime.date0112 = timeStringList[2];
-
   return newSettings;
-}
-
-function getDateOfDepartureTime(time1: string, time2: string, time3: string) {
-  const departureTime = [time1, time2, time3];
-  const dateOfDepartureTime = departureTime.map((time, index) => {
-    const day = 10 + index;
-    const [hours, minutes] = time.split(":");
-    const date = new Date(2024, 0, day);
-    date.setHours(Number(hours));
-    date.setMinutes(Number(minutes));
-    return date;
-  });
-  return dateOfDepartureTime;
 }
 
 export async function fetchQrInfo(qrId: string) {
@@ -246,17 +199,25 @@ export async function fetchProgramInfo(programId: string) {
   return programInfo;
 }
 
+export async function fetchReward() {
+  const user = await getUserFromCookie();
+  if (!user) return;
+  const uid = user.uid;
+  const userRef = await adminDB.collection("users").doc(uid).get();
+  const currentReward = userRef.data().reward;
+  return currentReward;
+}
+
 export async function patchReward(rewardPoint: string, rewardField?: string) {
   const user = await getUserFromCookie();
   if (!user) return;
   const uid = user.uid;
   try {
-    const userRef = await adminDB.collection("users").doc(uid).get();
-    const curretReward = userRef.data().reward;
+    const currentReward = await fetchReward();
     await adminDB
       .collection("users")
       .doc(uid)
-      .set({ reward: curretReward + Number(rewardPoint) }, { merge: true });
+      .set({ reward: currentReward + Number(rewardPoint) }, { merge: true });
   } catch (error) {
     console.log(error);
   }
@@ -294,6 +255,79 @@ export async function patchCheckoutProgramIds(programId: string) {
       .collection("users")
       .doc(uid)
       .set({ checkinProgramIds: newCheckinProgramIds }, { merge: true });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function fetchCheckinProgramIds() {
+  const user = await getUserFromCookie();
+  if (!user) return [];
+  const uid = user.uid;
+  try {
+    const userRef = await adminDB.collection("users").doc(uid).get();
+    const checkinProgramIds: any[] = userRef.data().checkinProgramIds || [];
+    return checkinProgramIds;
+  } catch (error) {
+    console.log(error);
+    throw new Error("プログラムの取得に失敗しました");
+  }
+}
+
+export async function fetchAllOnlinePrograms() {
+  try {
+    const programRef = await adminDB
+      .collection("program")
+      .where("isOpen", "==", true)
+      .get();
+    const programList: any[] = programRef.docs.map((program: any) => {
+      const programData = program.data();
+      return programData;
+    });
+    return programList;
+  } catch (error) {
+    console.log(error);
+    throw new Error("プログラムの取得に失敗しました");
+  }
+}
+
+export async function postSignature(sign: string) {
+  try {
+    const signatureRef = await adminDB.collection("signature").add({
+      sign: sign,
+      date: new Date(),
+    });
+    return signatureRef.id;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function fetchPlace(docId?: string) {
+  try {
+    const placeRef = docId
+      ? await adminDB.collection("place").doc(docId).get()
+      : await adminDB.collection("place").get();
+    const placeList = placeRef.docs.map((place: any) => {
+      const placeData: Place = place.data();
+      return placeData;
+    });
+    return placeList;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function fetchMode(uid: string) {
+  try {
+    const modeRef = await adminDB.collection("mode").doc("mode").get();
+    const modeDev = modeRef.data().dev;
+    const userRef = await adminDB.collection("users").doc(uid).get();
+    const userMode = userRef.data().dev;
+    return {
+      webMode: modeDev,
+      userMode: userMode,
+    };
   } catch (error) {
     console.log(error);
   }

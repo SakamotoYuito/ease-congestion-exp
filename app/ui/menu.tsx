@@ -3,23 +3,13 @@
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { logout } from "@/lib/authentication";
-import { getUserFromCookie } from "@/lib/session";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-export default function MenuComponent() {
-  const [user, setUser] = useState("");
+export default function MenuComponent({ nickName }: { nickName: string }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const router = useRouter();
   const menuRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    (async () => {
-      const user = await getUserFromCookie();
-      if (user !== null) {
-        const email = user.email;
-        setUser(email?.split("@")[0] || "");
-      }
-    })();
-  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -54,8 +44,16 @@ export default function MenuComponent() {
             aria-labelledby="options-menu"
           >
             <p className="block px-4 py-2 text-sm text-gray-700 text-right">
-              ログイン中: {user}
+              <FontAwesomeIcon icon={faUser} className="mr-2" />
+              <span>{nickName}</span>
             </p>
+            <button
+              onClick={() => router.push("/settings")}
+              className="inline-block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-right"
+              role="menuitem"
+            >
+              設定
+            </button>
             <button
               onClick={() => router.push("/changepassword")}
               className="inline-block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-right"
