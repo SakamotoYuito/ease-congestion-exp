@@ -126,6 +126,10 @@ export async function postUserInfo(uid: string, nickName: string) {
     },
     dev: false,
     university: false,
+    form: {
+      1: false,
+      2: false,
+    },
   };
   await adminDB
     .collection("users")
