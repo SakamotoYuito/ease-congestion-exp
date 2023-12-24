@@ -3,7 +3,7 @@
   "background_color": "#b8e986",
   "display": "standalone",
   "scope": "/ease-congestion-exp/",
-  "start_url": "/ease-congestion-exp/",
+  "start_url": "/",
   "name": "Enre",
   "short_name": "Enre",
   "description": "Enre",
