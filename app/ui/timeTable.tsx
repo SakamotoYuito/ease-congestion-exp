@@ -1,7 +1,7 @@
 import React from "react";
 
 type Props = {
-  days: number[];
+  days: string[];
   periods: string[];
   selectedCells: { [key: number]: boolean[] };
   onCellToggle: (periodIndex: number, dayIndex: number) => void;
@@ -27,7 +27,7 @@ export default function TimeTableComponent({
             key={day}
             className="border p-4 border-white bg-green-400 rounded-sm m-0.5"
           >
-            {`${day}日`}
+            {`${day}`}
           </div>
         ))}
         {periods.map((period, periodIndex) => (

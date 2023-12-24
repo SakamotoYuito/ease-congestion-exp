@@ -3,10 +3,10 @@
   "background_color": "#b8e986",
   "display": "standalone",
   "scope": "/ease-congestion-exp/",
-  "start_url": "/",
+  "start_url": "/?source=pwa",
   "name": "Enre",
   "short_name": "Enre",
-  "description": "Enre",
+  "description": "京都産業大学グリーンインフラプロジェクト",
   "icons": [
     {
       "src": "/icon1.png",

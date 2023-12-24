@@ -59,7 +59,7 @@ export default function SettingsComponent() {
     }
   }, [router, error]);
 
-  const days = [10, 11, 12];
+  const days = ["1/10", "1/11", "1/12"];
   const periods = ["1限", "2限", "昼休", "3限", "4限", "5限"];
   const [selectedCells, setSelectedCells] = useState(initialTimeTable);
 
@@ -91,14 +91,14 @@ export default function SettingsComponent() {
               className="bg-green-500 px-4 py-2 text-white rounded hover:bg-green-700"
               onClick={() => setCanNotification(false)}
             >
-              許可しています
+              ON
             </span>
           ) : (
             <span
               className="bg-white px-4 py-2 text-black rounded hover:bg-gray-400"
               onClick={() => setCanNotification(true)}
             >
-              許可していません
+              OFF
             </span>
           )}
         </div>
