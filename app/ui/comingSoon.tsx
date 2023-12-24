@@ -19,6 +19,7 @@ export default async function ComingSoonComponent() {
             ホーム画面に追加してお待ちください。
           </p>
           <p>アプリケーション公開予定日: 1月上旬</p>
+          <p>実験期間: 1/10(水)〜1/12(金)</p>
         </div>
         <p className="font-bold text-xl text-center">
           アプリケーションを
