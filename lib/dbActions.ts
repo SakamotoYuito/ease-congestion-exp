@@ -124,6 +124,8 @@ export async function postUserInfo(uid: string, nickName: string) {
       modeOfTransportation: "",
       timeTable: initialTimeTable,
     },
+    dev: false,
+    university: false,
   };
   await adminDB
     .collection("users")
@@ -311,6 +313,21 @@ export async function fetchPlace(docId?: string) {
       return placeData;
     });
     return placeList;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function fetchMode(uid: string) {
+  try {
+    const modeRef = await adminDB.collection("mode").doc("mode").get();
+    const modeDev = modeRef.data().dev;
+    const userRef = await adminDB.collection("users").doc(uid).get();
+    const userMode = userRef.data().dev;
+    return {
+      webMode: modeDev,
+      userMode: userMode,
+    };
   } catch (error) {
     console.log(error);
   }

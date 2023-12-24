@@ -84,8 +84,6 @@ export async function createUser(prevState: any, formData: FormData) {
 }
 
 export async function login(prevState: any, formData: FormData) {
-  let isEmailVerified = false;
-
   const schema = z.object({
     email: z
       .string()
@@ -111,14 +109,8 @@ export async function login(prevState: any, formData: FormData) {
       email,
       password
     );
-    if (userCredential.user.emailVerified) {
-      const id = await userCredential.user.getIdToken();
-      await session(id);
-      isEmailVerified = true;
-    } else {
-      alert("メールアドレスを認証してください");
-      isEmailVerified = false;
-    }
+    const id = await userCredential.user.getIdToken();
+    await session(id);
     postLogEvent("ログイン成功");
   } catch (error) {
     postLogEvent("ログイン失敗");
@@ -131,7 +123,7 @@ export async function login(prevState: any, formData: FormData) {
       message: "パスワードが間違っているか、アカウントが存在しません",
     };
   }
-  isEmailVerified ? redirect("/") : redirect("/verification");
+  redirect("/");
 }
 
 export async function logout() {

@@ -9,7 +9,6 @@ export default async function HeaderComponent() {
   const userSettings = await fetchUserSettings();
   const nickName = userSettings.nickName;
   const ipAddress = await getIPAddress();
-  console.log("ipAddress: ", ipAddress);
 
   return (
     <div className="flex justify-between shadow-md fixed top-0 w-full z-10 bg-[#b8e986] h-20">
