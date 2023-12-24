@@ -10,6 +10,7 @@ import {
   patchCheckoutProgramIds,
   postCollectionInLogs,
 } from "@/lib/dbActions";
+import { LoadingAnimation } from "./skeletons";
 
 export default function LoadingComponent() {
   const router = useRouter();
@@ -49,7 +50,7 @@ export default function LoadingComponent() {
     <main className="flex flex-col items-center justify-center min-h-screen py-2">
       {!checkin && !checkout && (
         <div className="flex min-h-screen flex-col items-center justify-between pb-20">
-          <h1 className="text-3xl font-bold text-center mb-10">Loading...</h1>
+          <LoadingAnimation />
         </div>
       )}
       {checkin && (

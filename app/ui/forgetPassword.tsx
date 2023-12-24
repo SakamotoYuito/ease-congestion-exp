@@ -1,3 +1,5 @@
+"use client";
+
 import { useFormState } from "react-dom";
 import { sendEmailToResetPassword } from "@/lib/authentication";
 import { useState } from "react";

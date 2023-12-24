@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import PhotoDetailsCardComponent from "./photoDetailsCard";
 import { fetchPhotosInfo, fetchLikesPhoto } from "@/lib/dbActions";
@@ -21,7 +21,12 @@ export default function PhotoAlbumComponent() {
   useEffect(() => {
     (async () => {
       const photos = await fetchPhotosInfo();
-      setPhotosList(photos);
+      if (photos.length < 9) {
+        const nonPhotos = new Array(9 - photos.length).fill("");
+        setPhotosList([...photos, ...nonPhotos]);
+      } else {
+        setPhotosList(photos);
+      }
       const currentLikes = await fetchLikesPhoto();
       setLikes(currentLikes);
     })();
@@ -39,24 +44,31 @@ export default function PhotoAlbumComponent() {
         >
           {/* 写真のデータをループして表示する */}
           {photosList.map((photo, index) => (
-            <span key={photo.id} className="border border-gray-300 z-0">
-              <div
-                className="relative overflow-scroll w-full h-0 pb-[100%]"
-                onClick={() => handlePhotoClick(photo)}
-              >
-                <Image
-                  src={photo.url}
-                  alt={`写真${index + 1}`}
-                  fill
-                  style={{
-                    objectFit: "cover",
-                  }}
-                  sizes="100%"
-                  priority
-                  className="absolute top-0 left-0 w-full h-full"
-                />
-              </div>
-            </span>
+            <div key={index} className="border border-gray-700 z-0">
+              {photo !== "" ? (
+                <div
+                  className="relative overflow-scroll w-full h-0 pb-[100%] border border-white"
+                  onClick={() => handlePhotoClick(photo)}
+                >
+                  <Image
+                    src={photo.url}
+                    alt={`写真${index + 1}`}
+                    fill
+                    style={{
+                      objectFit: "cover",
+                    }}
+                    sizes="100%"
+                    priority
+                    className="absolute top-0 left-0 w-full h-full"
+                  />
+                </div>
+              ) : (
+                <div
+                  key={index}
+                  className="relative overflow-scroll w-full h-0 pb-[100%] bg-gray-200 opacity-70 border border-white"
+                ></div>
+              )}
+            </div>
           ))}
         </div>
         <PhotoDetailsCardComponent

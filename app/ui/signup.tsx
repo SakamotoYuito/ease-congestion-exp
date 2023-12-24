@@ -1,3 +1,5 @@
+"use client";
+
 import { useFormState } from "react-dom";
 import { useState } from "react";
 import SubmitButton from "./submitButton";

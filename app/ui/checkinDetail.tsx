@@ -31,7 +31,7 @@ export default async function CheckinDetailComponent() {
   return (
     <div className="grid row-start-2 h-hull overflow-auto w-full px-5 justify-center">
       <div className="mt-5">
-        <h1 className="text-2xl font-bold text-center mb-10">
+        <h1 className="text-xl font-bold text-center mb-10">
           チェックイン中のイベント
         </h1>
         <p className="text-right">{spotsInfo.length}件</p>
