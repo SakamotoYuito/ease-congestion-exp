@@ -29,10 +29,10 @@ export default function InstallMethodComponent() {
           Android
         </button>
       </div>
-      <div className="col-start-1 col-end-4 px-3">
+      <div className="col-start-1 col-end-4">
         {os === "iOS" ? (
           <div>
-            <ol>
+            <ol className="ml-4">
               <li className="text-lg list-decimal mb-3">
                 iOS 16.4以降をお使いください
               </li>
@@ -61,7 +61,7 @@ export default function InstallMethodComponent() {
           </div>
         ) : (
           <div>
-            <ol>
+            <ol className="ml-4">
               <li className="text-lg list-decimal mb-3">
                 Chromeでアプリケーションを開く
               </li>

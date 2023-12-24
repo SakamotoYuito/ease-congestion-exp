@@ -4,6 +4,7 @@ import { GoogleMap } from "@react-google-maps/api";
 import { useJsApiLoader } from "@react-google-maps/api";
 import { useCallback, useState, useRef } from "react";
 import DetailCardComponent from "./detailCard";
+import { LoadingAnimation } from "./skeletons";
 
 type Map = google.maps.Map;
 
@@ -95,7 +96,7 @@ export default function GoogleMapComponent({ spotsCenter, spotsInfo }: Spots) {
           )}
         </>
       ) : (
-        "loading"
+        <LoadingAnimation />
       )}
     </>
   );

@@ -31,9 +31,9 @@ export default function MenuComponent({ nickName }: { nickName: string }) {
         type="button"
         className="z-10 space-y-2"
       >
-        <div className="w-8 h-0.5 bg-gray-600" />
-        <div className="w-8 h-0.5 bg-gray-600" />
-        <div className="w-8 h-0.5 bg-gray-600" />
+        <div className="w-8 h-0.5 bg-black" />
+        <div className="w-8 h-0.5 bg-black" />
+        <div className="w-8 h-0.5 bg-black" />
       </button>
       {menuOpen && (
         <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-sky-100 ring-1 ring-black ring-opacity-5">

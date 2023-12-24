@@ -100,21 +100,14 @@ export default function UploadImage() {
         </div>
         <div className="text-black">
           {createObjectURL && (
-            // <div className="pt-10 pb-10 pr-5 pl-5 bg-gray-800 justify-center items-center w-full h-0">
             <Image
               src={createObjectURL}
               alt="Uploaded image"
-              width={100} // ここに希望の幅を設定します
-              height={100} // ここに希望の高さを設定します
-              // objectFit="cover"
-              // style={{
-              //   objectFit: "cover",
-              // }}
-              // sizes="100%"
+              width={100}
+              height={100}
               priority
               className="bg-gray-800 w-full pt-10 pb-10 pr-5 pl-5"
             />
-            // </div>
           )}
           <label
             htmlFor="file-input"
