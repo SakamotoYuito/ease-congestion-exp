@@ -105,6 +105,9 @@ export async function postCollectionInLogs(
 }
 
 export async function postUserInfo(uid: string, nickName: string) {
+  const initialTimeTable: { [key: number]: boolean[] } = Object.fromEntries(
+    Array.from({ length: 6 }, (_, i) => [i, Array(3).fill(false)])
+  );
   const userInfo = {
     checkinProgramIds: [],
     likes: [],
@@ -119,11 +122,7 @@ export async function postUserInfo(uid: string, nickName: string) {
     settings: {
       nickName: nickName,
       modeOfTransportation: "",
-      departureTime: {
-        date0110: null,
-        date0111: null,
-        date0112: null,
-      },
+      timeTable: initialTimeTable,
     },
   };
   await adminDB

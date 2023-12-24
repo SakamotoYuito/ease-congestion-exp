@@ -10,6 +10,7 @@ import {
   reauthenticateWithCredential,
   verifyPasswordResetCode,
   confirmPasswordReset,
+  getIdToken,
 } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
 import { session, sessionLogout } from "./session";
@@ -62,7 +63,8 @@ export async function createUser(prevState: any, formData: FormData) {
       email,
       password
     );
-    await sendEmailVerification(userCredential.user);
+    const id = await getIdToken(userCredential.user, true);
+    await session(id);
     const uid = auth.currentUser?.uid || "";
     const nickName = email.split("@")[0] + "さん";
     await postUserInfo(uid, nickName);
@@ -78,7 +80,7 @@ export async function createUser(prevState: any, formData: FormData) {
       message: "すでに登録済みのメールアドレスです",
     };
   }
-  redirect("/verification");
+  redirect("/settings");
 }
 
 export async function login(prevState: any, formData: FormData) {
