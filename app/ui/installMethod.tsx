@@ -31,8 +31,8 @@ export default function InstallMethodComponent() {
       </div>
       <div className="col-start-1 col-end-4">
         {os === "iOS" ? (
-          <div>
-            <ol className="ml-4">
+          <div className="ml-5">
+            <ol>
               <li className="text-lg list-decimal mb-3">
                 iOS 16.4以降をお使いください
               </li>
@@ -60,8 +60,8 @@ export default function InstallMethodComponent() {
             </ol>
           </div>
         ) : (
-          <div>
-            <ol className="ml-4">
+          <div className="ml-5">
+            <ol>
               <li className="text-lg list-decimal mb-3">
                 Chromeでアプリケーションを開く
               </li>
