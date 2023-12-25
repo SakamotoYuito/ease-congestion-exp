@@ -49,6 +49,13 @@ export default function MenuComponent({ nickName }: { nickName: string }) {
               <span>{nickName}</span>
             </p>
             <button
+              onClick={() => router.push("/about")}
+              className="inline-block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-right"
+              role="menuitem"
+            >
+              アプリについて
+            </button>
+            <button
               onClick={() => router.push("/settings")}
               className="inline-block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-right"
               role="menuitem"
