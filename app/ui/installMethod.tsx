@@ -66,7 +66,10 @@ export default function InstallMethodComponent() {
                 Chromeでアプリケーションを開く
               </li>
               <li className="text-lg list-decimal mb-3">
-                [インストール]をタップ
+                右上のメニューをタップ
+              </li>
+              <li className="text-lg list-decimal mb-3">
+                ホーム画面に追加をタップ
               </li>
               <li className="text-lg list-decimal">画面の指示に従って追加</li>
             </ol>

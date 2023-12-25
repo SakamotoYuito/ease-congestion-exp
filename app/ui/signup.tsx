@@ -4,17 +4,16 @@ import { useFormState } from "react-dom";
 import { useState } from "react";
 import SubmitButton from "./submitButton";
 import { createUser } from "@/lib/authentication";
-import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import ConcentFormComponent from "./consentForm";
+import Link from "next/link";
 
 const initialState = {
   message: "",
 };
 
 export default function SignUpComponent() {
-  const router = useRouter();
   const [isPasswordView, setIsPasswordView] = useState(false);
   const [isPasswordConfirmView, setIsPasswordConfirmView] = useState(false);
   const [error, action] = useFormState(createUser, initialState);
@@ -131,17 +130,15 @@ export default function SignUpComponent() {
               新規登録
             </button>
           )}
-          {/* <SubmitButton title="新規登録" /> */}
           <p className="text-red-500">{error?.message}</p>
         </div>
       </form>
       <div className="mt-4">
-        <button
-          onClick={() => router.push("/login")}
-          className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
-        >
-          既に登録済みの方はこちら
-        </button>
+        <Link href="/login">
+          <button className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
+            既に登録済みの方はこちら
+          </button>
+        </Link>
       </div>
     </main>
   );

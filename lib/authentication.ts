@@ -15,6 +15,7 @@ import {
 import { FirebaseError } from "firebase/app";
 import { session, sessionLogout } from "./session";
 import { redirect } from "next/navigation";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { z } from "zod";
 import { postUserInfo, postSignature, postCollectionInLogs } from "./dbActions";
 
@@ -57,7 +58,6 @@ export async function createUser(prevState: any, formData: FormData) {
       passwordConfirm: formData.get("passwordConfirm"),
     } as z.infer<typeof schema>);
 
-    await postSignature(sign);
     const userCredential = await createUserWithEmailAndPassword(
       auth,
       email,
@@ -65,6 +65,7 @@ export async function createUser(prevState: any, formData: FormData) {
     );
     const id = await getIdToken(userCredential.user, true);
     await session(id);
+    await postSignature(sign);
     const uid = auth.currentUser?.uid || "";
     const nickName = email.split("@")[0] + "さん";
     await postUserInfo(uid, nickName);
@@ -132,7 +133,6 @@ export async function logout() {
   try {
     await signOut(auth);
     await sessionLogout();
-    await postCollectionInLogs("ログアウト", "ログアウト", "ログアウト成功");
     postLogEvent("ログアウト成功");
   } catch (error) {
     postLogEvent("ログアウト失敗");

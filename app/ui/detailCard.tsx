@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Card from "react-bootstrap/Card";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 type Spots = {
   title: string;
@@ -22,7 +22,6 @@ export default function DetailCardComponent({
   thema,
   textColor,
 }: Props) {
-  const router = useRouter();
   const [isExpanded, setIsExpanded] = useState(false);
   const [displayContent, setDisplayContent] = useState(spotInfo.content);
 
@@ -60,12 +59,11 @@ export default function DetailCardComponent({
           </footer>
           {spotInfo.link && (
             <div className="flex justify-center items-center mt-3">
-              <button
-                className="text-lg bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg m-2"
-                onClick={() => router.push(spotInfo.link || "/")}
-              >
-                イベントに参加
-              </button>
+              <Link href={spotInfo.link || "/"}>
+                <button className="text-lg bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg m-2">
+                  イベントに参加
+                </button>
+              </Link>
             </div>
           )}
         </blockquote>

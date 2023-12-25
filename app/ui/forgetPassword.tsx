@@ -5,6 +5,7 @@ import { sendEmailToResetPassword } from "@/lib/authentication";
 import { useState } from "react";
 import AlertModalComponent from "./alertModal";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const initialState = {
   message: "",
@@ -33,13 +34,15 @@ export default function ForgetPasswordComponent() {
           />
         </div>
         <div className="flex justify-between">
-          <button
-            onClick={() => router.push("/login")}
-            type="button"
-            className="px-4 py-2 bg-gray-200 text-black rounded hover:bg-gray-700"
-          >
-            ログイン画面へ戻る
-          </button>
+          <Link href="/login">
+            <button
+              onClick={() => router.push("/login")}
+              type="button"
+              className="px-4 py-2 bg-gray-200 text-black rounded hover:bg-gray-700"
+            >
+              ログイン画面へ戻る
+            </button>
+          </Link>
           <button
             onClick={() => setAlertModal(true)}
             type="submit"

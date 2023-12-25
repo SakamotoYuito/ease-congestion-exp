@@ -15,14 +15,17 @@ export default async function AllEventsCardComponent() {
           <p className="mt-2 text-gray-500">{text}</p>
           {isContentExist ? (
             <Link href="/detail/allevents">
-              <span className="mt-2 px-4 py-1 text-white font-semibold bg-blue-500 rounded inline-block">
+              <button className="mt-2 px-4 py-1 text-white font-semibold bg-blue-500 rounded inline-block">
                 詳細
-              </span>
+              </button>
             </Link>
           ) : (
-            <span className="mt-2 px-4 py-1 text-white font-semibold bg-gray-500 rounded inline-block">
+            <button
+              aria-disabled
+              className="mt-2 px-4 py-1 text-white font-semibold bg-gray-500 rounded inline-block"
+            >
               詳細
-            </span>
+            </button>
           )}
         </div>
       </div>

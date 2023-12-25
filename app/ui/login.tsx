@@ -7,6 +7,7 @@ import { login } from "@/lib/authentication";
 import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import Link from "next/link";
 
 const initialState = {
   message: "",
@@ -71,20 +72,18 @@ export default function LoginComponent() {
         </div>
       </form>
       <div className="mt-4">
-        <button
-          onClick={() => router.push("/signup")}
-          className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
-        >
-          新規登録画面はこちら
-        </button>
+        <Link href="/signup">
+          <button className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
+            新規登録画面はこちら
+          </button>
+        </Link>
       </div>
       <div className="mt-4">
-        <button
-          onClick={() => router.push("/forgetpassword")}
-          className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
-        >
-          パスワードを忘れた方はこちら
-        </button>
+        <Link href="/forgetpassword">
+          <button className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
+            パスワードを忘れた方はこちら
+          </button>
+        </Link>
       </div>
     </main>
   );
