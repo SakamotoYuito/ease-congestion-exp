@@ -42,12 +42,14 @@ export default function BiomeComponent() {
           />
         </Link>
       </div>
-      <button
-        className="m-5 p-10 bg-green-600 w-32 h-32 flex items-center justify-center text-white font-bold text-2xl hover:bg-green-500 py-2 px-4 border-b-8 hover:border-none border-green-700 hover:border-green-500 rounded-full"
-        onClick={() => setIsPressed(true)}
-      >
-        投稿
-      </button>
+      <Link href="/postbiome">
+        <button
+          className="m-5 p-10 bg-green-600 w-32 h-32 flex items-center justify-center text-white font-bold text-2xl hover:bg-green-500 py-2 px-4 border-b-8 hover:border-none border-green-700 hover:border-green-500 rounded-full"
+          onClick={() => setIsPressed(true)}
+        >
+          投稿
+        </button>
+      </Link>
     </main>
   );
 }
