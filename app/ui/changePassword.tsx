@@ -7,6 +7,7 @@ import { changePassword } from "@/lib/authentication";
 import AlertModalComponent from "./alertModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import Link from "next/link";
 
 const initialState = {
   message: "",
@@ -115,13 +116,14 @@ export default function ChangePasswordComponent() {
           </div>
         </div>
         <div className="flex justify-between">
-          <button
-            onClick={() => router.push("/")}
-            type="button"
-            className="px-4 py-2 bg-gray-200 text-black rounded hover:bg-gray-700"
-          >
-            戻る
-          </button>
+          <Link href="/">
+            <button
+              type="button"
+              className="px-4 py-2 bg-gray-200 text-black rounded hover:bg-gray-700"
+            >
+              戻る
+            </button>
+          </Link>
           <button
             type="submit"
             className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"

@@ -1,14 +1,13 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { logout } from "@/lib/authentication";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Link from "next/link";
 
 export default function MenuComponent({ nickName }: { nickName: string }) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const router = useRouter();
   const menuRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -29,8 +28,9 @@ export default function MenuComponent({ nickName }: { nickName: string }) {
       <button
         onClick={() => setMenuOpen(!menuOpen)}
         type="button"
-        className="z-10 space-y-2"
+        className="flex flex-col z-10 space-y-2 text-center items-center"
       >
+        <a>Menu</a>
         <div className="w-8 h-0.5 bg-black" />
         <div className="w-8 h-0.5 bg-black" />
         <div className="w-8 h-0.5 bg-black" />
@@ -47,20 +47,30 @@ export default function MenuComponent({ nickName }: { nickName: string }) {
               <FontAwesomeIcon icon={faUser} className="mr-2" />
               <span>{nickName}</span>
             </p>
-            <button
-              onClick={() => router.push("/settings")}
-              className="inline-block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-right"
-              role="menuitem"
-            >
-              設定
-            </button>
-            <button
-              onClick={() => router.push("/changepassword")}
-              className="inline-block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-right"
-              role="menuitem"
-            >
-              パスワード変更
-            </button>
+            <Link href="/about" className="text-right">
+              <button
+                className="inline-block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-right"
+                role="menuitem"
+              >
+                アプリについて
+              </button>
+            </Link>
+            <Link href="/settings" className="text-right">
+              <button
+                className="inline-block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-right"
+                role="menuitem"
+              >
+                設定
+              </button>
+            </Link>
+            <Link href="/changepassword" className="text-right">
+              <button
+                className="inline-block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-right"
+                role="menuitem"
+              >
+                パスワード変更
+              </button>
+            </Link>
             <button
               onClick={() => logout()}
               className="inline-block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-right"

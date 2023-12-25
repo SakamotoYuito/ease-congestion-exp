@@ -11,6 +11,7 @@ import {
   postCollectionInLogs,
 } from "@/lib/dbActions";
 import { LoadingAnimation } from "./skeletons";
+import Link from "next/link";
 
 export default function LoadingComponent() {
   const router = useRouter();
@@ -19,20 +20,22 @@ export default function LoadingComponent() {
   const [checkout, setCheckout] = useState(false);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [link, setLink] = useState("");
 
   useEffect(() => {
     (async () => {
       const qrId = searchParams.get("id") || "";
       const qrInfo = await fetchQrInfo(qrId);
-      const programTitle = await fetchProgramInfo(`${qrInfo.programId}`);
-      setTitle(programTitle.title);
-      setContent(programTitle.content);
+      const programInfo = await fetchProgramInfo(`${qrInfo.programId}`);
+      setTitle(programInfo.title);
+      setContent(programInfo.content);
       const place = `${qrInfo.placeId}-${qrInfo.placeNumber}`;
-      await postCollectionInLogs(programTitle.title, place, "QRコード読み取り");
+      await postCollectionInLogs(programInfo.title, place, "QRコード読み取り");
       if (qrInfo.type === "checkin") {
         await patchReward(`${qrInfo.rewardPoint}`);
         await patchCheckinProgramIds(`${qrInfo.programId}`);
         setCheckin(true);
+        setLink(programInfo.link === null ? "/" : programInfo.link);
       } else if (qrInfo.type === "checkout") {
         await patchReward(`${qrInfo.rewardPoint}`);
         await patchCheckoutProgramIds(`${qrInfo.programId}`);
@@ -66,6 +69,9 @@ export default function LoadingComponent() {
             ホーム画面からいつでも確認できます
           </h1>
           <p className="text-sm text-center mb-10">{content}</p>
+          <Link href={link}>
+            <button>イベント詳細</button>
+          </Link>
         </div>
       )}
       {checkout && (

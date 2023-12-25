@@ -15,8 +15,9 @@ import {
 import { FirebaseError } from "firebase/app";
 import { session, sessionLogout } from "./session";
 import { redirect } from "next/navigation";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { z } from "zod";
-import { postUserInfo, postSignature } from "./dbActions";
+import { postUserInfo, postSignature, postCollectionInLogs } from "./dbActions";
 
 const EMAIL_PATTERN = /^[\u0021-\u007e]+@cc\.kyoto-su\.ac\.jp+$/u;
 
@@ -57,7 +58,6 @@ export async function createUser(prevState: any, formData: FormData) {
       passwordConfirm: formData.get("passwordConfirm"),
     } as z.infer<typeof schema>);
 
-    await postSignature(sign);
     const userCredential = await createUserWithEmailAndPassword(
       auth,
       email,
@@ -65,9 +65,11 @@ export async function createUser(prevState: any, formData: FormData) {
     );
     const id = await getIdToken(userCredential.user, true);
     await session(id);
+    await postSignature(sign);
     const uid = auth.currentUser?.uid || "";
     const nickName = email.split("@")[0] + "さん";
     await postUserInfo(uid, nickName);
+    await postCollectionInLogs("新規登録", "新規登録", "新規登録成功");
     postLogEvent("認証メール送信成功");
   } catch (error) {
     postLogEvent("新規登録失敗");
@@ -111,6 +113,7 @@ export async function login(prevState: any, formData: FormData) {
     );
     const id = await userCredential.user.getIdToken();
     await session(id);
+    await postCollectionInLogs("ログイン", "ログイン", "ログイン成功");
     postLogEvent("ログイン成功");
   } catch (error) {
     postLogEvent("ログイン失敗");

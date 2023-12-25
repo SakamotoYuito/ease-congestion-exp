@@ -9,10 +9,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 
 export default function FooterComponent() {
-  const router = useRouter();
   const currentPath = usePathname();
 
   const icons = [faHouseUser, faQrcode, faImage, faTimeline, faBell];
@@ -26,31 +26,32 @@ export default function FooterComponent() {
     <div className="fixed bottom-0 w-full border-t border-gray-300 z-10 bg-[#f5ffec] h-20">
       <div className="flex justify-around pt-2 pb-3 mx-4">
         {icons.map((icon, index) => (
-          <button
-            key={index}
-            onClick={() => {
-              setSelectedIcon(index);
-              router.push(paths[index]);
-            }}
-          >
-            <FontAwesomeIcon
-              icon={icon}
-              style={{
-                width: "25px",
-                height: "25px",
-                color: selectedIcon === index ? "green" : "black",
+          <Link href={paths[index]} key={index}>
+            <button
+              key={index}
+              onClick={() => {
+                setSelectedIcon(index);
               }}
-            />
-            <div
-              className={`text-xs mb-2 ${
-                selectedIcon === index
-                  ? "text-green-600 font-bold"
-                  : "text-black"
-              }`}
             >
-              {title[index]}
-            </div>
-          </button>
+              <FontAwesomeIcon
+                icon={icon}
+                style={{
+                  width: "25px",
+                  height: "25px",
+                  color: selectedIcon === index ? "green" : "black",
+                }}
+              />
+              <div
+                className={`text-xs mb-2 ${
+                  selectedIcon === index
+                    ? "text-green-600 font-bold"
+                    : "text-black"
+                }`}
+              >
+                {title[index]}
+              </div>
+            </button>
+          </Link>
         ))}
       </div>
     </div>
