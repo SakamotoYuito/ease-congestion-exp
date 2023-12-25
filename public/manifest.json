@@ -3,7 +3,7 @@
   "background_color": "#b8e986",
   "display": "standalone",
   "scope": "https://ease-congestion-exp.vercel.app/",
-  "start_url": "https://ease-congestion-exp.vercel.app/",
+  "start_url": "https://ease-congestion-exp.vercel.app/?pwa=true",
   "name": "Enre",
   "short_name": "Enre",
   "description": "京都産業大学グリーンインフラプロジェクト",
