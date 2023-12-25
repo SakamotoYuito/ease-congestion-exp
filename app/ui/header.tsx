@@ -11,9 +11,9 @@ export default async function HeaderComponent() {
   const ipAddress = await getIPAddress();
 
   return (
-    <div className="flex justify-between shadow-md fixed top-0 w-full z-10 bg-[#b8e986] h-20">
+    <div className="flex justify-between shadow-md fixed top-0 w-full z-10 bg-[#b8e986] h-20 items-center">
       <div className="p-4 font-mono text-xl">
-        <h1>Enre</h1>
+        <h1 className="m-0">Enre</h1>
       </div>
       <div className="p-4 font-mono text-sm">
         <MenuComponent nickName={nickName} />

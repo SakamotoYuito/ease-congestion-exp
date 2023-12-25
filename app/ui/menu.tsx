@@ -29,8 +29,9 @@ export default function MenuComponent({ nickName }: { nickName: string }) {
       <button
         onClick={() => setMenuOpen(!menuOpen)}
         type="button"
-        className="z-10 space-y-2"
+        className="flex flex-col z-10 space-y-2 text-center items-center"
       >
+        <a>Menu</a>
         <div className="w-8 h-0.5 bg-black" />
         <div className="w-8 h-0.5 bg-black" />
         <div className="w-8 h-0.5 bg-black" />
