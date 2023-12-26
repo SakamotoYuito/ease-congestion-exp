@@ -5,10 +5,12 @@ import { logout } from "@/lib/authentication";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
+import packageJson from "../../package.json";
 
 export default function MenuComponent({ nickName }: { nickName: string }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
+  const version = packageJson.version;
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -43,7 +45,10 @@ export default function MenuComponent({ nickName }: { nickName: string }) {
             aria-orientation="vertical"
             aria-labelledby="options-menu"
           >
-            <p className="block px-4 py-2 text-sm text-black text-right">
+            <p className="block m-0 px-4 py-2 text-sm text-black text-right">
+              <span>ver {version}</span>
+            </p>
+            <p className="block m-0 px-4 py-2 text-sm text-black text-right">
               <FontAwesomeIcon icon={faUser} className="mr-2" />
               <span>{nickName}</span>
             </p>
