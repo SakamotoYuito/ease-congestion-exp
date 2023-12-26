@@ -9,7 +9,7 @@ export default async function ComingSoonComponent() {
         <h1 className="text-4xl text-center mt-5">Coming Soon...</h1>
         <div className="text-lg text-center">
           <p>アプリケーション公開予定日: 1月上旬</p>
-          <p>実験期間: 1/10(水)〜1/12(金)</p>
+          <p>実験期間: 1/10(水)〜1/31(水)</p>
           <p className="text-xl font-bold underline text-red-500">
             本アプリケーションをスマートフォンの
             ホーム画面に追加してお待ちください

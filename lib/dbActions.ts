@@ -221,7 +221,13 @@ export async function patchReward(rewardPoint: string, rewardField?: string) {
     await adminDB
       .collection("users")
       .doc(uid)
-      .set({ reward: currentReward + Number(rewardPoint) }, { merge: true });
+      .set(
+        {
+          reward: currentReward + Number(rewardPoint),
+          prevReward: currentReward,
+        },
+        { merge: true }
+      );
   } catch (error) {
     console.log(error);
   }

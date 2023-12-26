@@ -65,7 +65,13 @@ export default async function CharactorComponent() {
       <div className="flex justify-center items-center p-2 w-full">
         <label className="text-sm font-bold pr-3">ポイント</label>
         <div className="w-9/12">
-          <ProgressBar animated now={reward} max={400} label={`${reward}`} />
+          <ProgressBar
+            animated
+            now={reward}
+            max={400}
+            label={`${reward}`}
+            aria-label={`${reward}`}
+          />
         </div>
       </div>
     </div>
