@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import ConcentFormComponent from "./consentForm";
 import Link from "next/link";
+import Image from "next/image";
 
 const initialState = {
   message: "",
@@ -20,9 +21,16 @@ export default function SignUpComponent() {
   const [isChecked, setIsChecked] = useState(false);
 
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen py-2">
-      <h1 className="text-2xl font-bold mb-4">Enre</h1>
-      <h1 className="text-2xl font-bold mb-4">新規登録</h1>
+    <main className="flex flex-col items-center justify-center min-h-screen py-2 pb-20 overflow-auto">
+      <div className="grid grid-cols-3 items-center shadow-md fixed top-0 w-full z-10 bg-white h-20">
+        <div className="col-start-2 font-mono text-xl place-content-center text-center w-full">
+          <Image src="/title.jpg" width={160} height={65} alt="title" />
+        </div>
+        <div className="col-start-3 font-mono text-sm justify-self-end mr-3">
+          <div className="text-lg"></div>
+        </div>
+      </div>
+      <h1 className="text-2xl font-bold mt-24 mb-4">新規登録</h1>
       <h1 className="text-lg">同意書</h1>
       <div className="relative overflow-auto h-[250px] bg-white mb-5 w-11/12">
         <ConcentFormComponent />

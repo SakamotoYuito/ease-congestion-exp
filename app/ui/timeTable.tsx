@@ -21,11 +21,11 @@ export default function TimeTableComponent({
         タップしてください
       </h1>
       <div className="grid grid-cols-4 text-center text-xs">
-        <div className="border p-4 border-white rounded-sm m-0.5 bg-green-400"></div>
+        <div className="border p-4 border-white rounded-sm m-0.5 bg-green-600"></div>
         {days.map((day) => (
           <div
             key={day}
-            className="border p-4 border-white bg-green-400 rounded-sm m-0.5"
+            className="border p-4 border-white bg-green-600 text-white font-bold rounded-sm m-0.5"
           >
             {`${day}`}
           </div>
@@ -34,7 +34,7 @@ export default function TimeTableComponent({
           <React.Fragment key={period}>
             <div
               key={period}
-              className="border p-4 border-white bg-green-400 rounded-sm m-0.5"
+              className="border p-4 border-white bg-green-600 text-white font-bold rounded-sm m-0.5"
             >
               {`${period}`}
             </div>

@@ -77,7 +77,7 @@ export default function LoadingComponent() {
           </h1>
           <p className="text-sm text-center mb-10">{content}</p>
           <Link href={link} className="no-underline">
-            <button className="flex justify-center items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            <button className="flex justify-center items-center bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded">
               イベント詳細
             </button>
           </Link>

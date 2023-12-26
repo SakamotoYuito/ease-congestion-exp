@@ -22,13 +22,13 @@ export default function ModalComponent({ info }: Props) {
         <div className="flex space-x-4">
           <button
             onClick={info.leftOnClick}
-            className="px-4 py-2 bg-white text-blue-500 border border-blue-500 rounded hover:bg-blue-500 hover:text-white"
+            className="px-4 py-2 bg-white text-blue-500 border border-blue-500 rounded hover:bg-green-700 hover:text-white"
           >
             {info.leftTitle}
           </button>
           <button
             onClick={info.rightOnClick}
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+            className="px-4 py-2 bg-green-700 text-white rounded hover:bg-green-900"
           >
             {info.rightTitle}
           </button>

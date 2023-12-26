@@ -10,7 +10,7 @@ export default async function CharactorComponent() {
   };
 
   const quote = handleCharactorClick();
-  const reward = await fetchReward();
+  const { currentReward, prevReward } = await fetchReward();
 
   return (
     <div className="w-full">
@@ -23,17 +23,17 @@ export default async function CharactorComponent() {
           xmlns="http://www.w3.org/2000/svg"
           className="w-7/12 h-auto max-h-14 pl-20"
         >
-          <rect width="305" height="127" rx="10" fill="#348DE0" />
+          <rect width="305" height="127" rx="10" fill="#ffffff" />
           <path
             d="M69.118 138.921L55.0857 124.844L82.7964 124.5L69.118 138.921Z"
-            fill="#348DE0"
+            fill="#ffffff"
           />
           <text
             x="50%"
             y="50%"
             dominantBaseline="middle"
             textAnchor="middle"
-            fill="white"
+            fill="black"
             className="text-4xl font-bold"
           >
             {quote}
@@ -42,7 +42,7 @@ export default async function CharactorComponent() {
       </div>
       <div className="px-20 flex justify-center items-center">
         <div className="max-w-xs">
-          {reward < 30 && (
+          {currentReward < 30 && (
             <Image
               src="/icon1.png"
               width={400}
@@ -51,7 +51,7 @@ export default async function CharactorComponent() {
               priority
             />
           )}
-          {30 <= reward && reward < 60 && (
+          {30 <= currentReward && currentReward < 60 && (
             <Image
               src="/icon2.png"
               width={400}
@@ -63,15 +63,24 @@ export default async function CharactorComponent() {
         </div>
       </div>
       <div className="flex justify-center items-center p-2 w-full">
-        <label className="text-sm font-bold pr-3">ポイント</label>
         <div className="w-9/12">
-          <ProgressBar
-            animated
-            now={reward}
-            max={400}
-            label={`${reward}`}
-            aria-label={`${reward}`}
-          />
+          <ProgressBar variant="success" now={currentReward} max={400} />
+        </div>
+      </div>
+      <div className="grid grid-rows-2 grid-cols-2 justify-items-center items-center p-2 bg-white rounded-xl shadow-md">
+        <div className="row-start-1 col-start-1 text-sm">合計獲得ポイント</div>
+        <div className="row-start-2 col-start-1 text-xl font-bold">
+          {currentReward}pt
+        </div>
+        <div className="row-start-1 col-start-2 text-sm">直近獲得ポイント</div>
+        <div className="row-start-2 col-start-2 text-lg font-bold pl-3">
+          {currentReward - prevReward > 0 ? (
+            <span className="text-red-500">
+              +{currentReward - prevReward}pt
+            </span>
+          ) : (
+            <span className="text-black">±0pt</span>
+          )}
         </div>
       </div>
     </div>

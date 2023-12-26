@@ -5,10 +5,12 @@ import { logout } from "@/lib/authentication";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
+import packageJson from "../../package.json";
 
 export default function MenuComponent({ nickName }: { nickName: string }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
+  const version = packageJson.version;
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -28,28 +30,31 @@ export default function MenuComponent({ nickName }: { nickName: string }) {
       <button
         onClick={() => setMenuOpen(!menuOpen)}
         type="button"
-        className="flex flex-col z-10 space-y-2 text-center items-center"
+        className="flex flex-col z-10 space-y-2 text-center items-center text-green-700 font-bold focus:outline-none"
       >
-        <a>Menu</a>
-        <div className="w-8 h-0.5 bg-black" />
-        <div className="w-8 h-0.5 bg-black" />
-        <div className="w-8 h-0.5 bg-black" />
+        Menu
+        <div className="w-8 h-0.5 bg-green-800" />
+        <div className="w-8 h-0.5 bg-green-800" />
+        <div className="w-8 h-0.5 bg-green-800" />
       </button>
       {menuOpen && (
-        <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-sky-100 ring-1 ring-black ring-opacity-5">
+        <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-[#f5ffec] ring-1 ring-black ring-opacity-5">
           <div
             className="py-1 flex flex-col justify-end"
             role="menu"
             aria-orientation="vertical"
             aria-labelledby="options-menu"
           >
-            <p className="block px-4 py-2 text-sm text-gray-700 text-right">
+            <p className="block m-0 px-4 py-2 text-sm text-black text-right">
+              <span>ver {version}</span>
+            </p>
+            <p className="block m-0 px-4 py-2 text-sm text-black text-right">
               <FontAwesomeIcon icon={faUser} className="mr-2" />
               <span>{nickName}</span>
             </p>
             <Link href="/about" className="text-right">
               <button
-                className="inline-block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-right"
+                className="inline-block px-4 py-2 text-sm text-black hover:bg-white text-right"
                 role="menuitem"
               >
                 アプリについて
@@ -57,7 +62,7 @@ export default function MenuComponent({ nickName }: { nickName: string }) {
             </Link>
             <Link href="/settings" className="text-right">
               <button
-                className="inline-block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-right"
+                className="inline-block px-4 py-2 text-sm text-black hover:bg-white text-right"
                 role="menuitem"
               >
                 設定
@@ -65,7 +70,7 @@ export default function MenuComponent({ nickName }: { nickName: string }) {
             </Link>
             <Link href="/changepassword" className="text-right">
               <button
-                className="inline-block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-right"
+                className="inline-block px-4 py-2 text-sm text-black hover:bg-white text-right"
                 role="menuitem"
               >
                 パスワード変更
@@ -73,7 +78,7 @@ export default function MenuComponent({ nickName }: { nickName: string }) {
             </Link>
             <button
               onClick={() => logout()}
-              className="inline-block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-right"
+              className="inline-block px-4 py-2 text-sm text-black hover:bg-white text-right"
               role="menuitem"
             >
               ログアウト

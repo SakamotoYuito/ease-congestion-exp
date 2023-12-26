@@ -3,6 +3,7 @@ import FooterComponent from "@/app/ui/footer";
 import CharactorComponent from "./ui/charactor";
 import AllEventsCardComponent from "./ui/allEventsCard";
 import CheckinEventsCardComponent from "./ui/checkinEventsCard";
+import WatchCardComponent from "./ui/watchCard";
 import { fetchMode } from "@/lib/dbActions";
 import ComingSoonComponent from "./ui/comingSoon";
 import { getUserFromCookie } from "@/lib/session";
@@ -22,22 +23,30 @@ export default async function Home() {
   return (
     <>
       {(mode?.webMode && mode?.userMode) || !mode?.webMode ? (
-        <main className="grid grid-rows-base-layout h-screen w-full">
+        <main className="grid grid-rows-base-layout min-h-screen w-full pb-40 overflow-auto justify-items-center items-center pl-2 pr-2">
           <Suspense fallback={<HeaderSkeleton />}>
             <HeaderComponent />
           </Suspense>
           <div className="row-start-2 pt-2">
-            <Suspense fallback={<CharacterSkeleton />}>
-              <CharactorComponent />
-            </Suspense>
-            <div className="flex items-center justify-center w-full mt-3">
-              <Suspense fallback={<CardSkeleton />}>
-                <AllEventsCardComponent />
-              </Suspense>
-              <div className="w-4"></div>
-              <Suspense fallback={<CardSkeleton />}>
-                <CheckinEventsCardComponent />
-              </Suspense>
+            <div className="grid grid-rows-max-content-layout-3 grid-cols-2 gap-2 w-full">
+              <div className="row-start-1 col-start-1 col-end-3">
+                <Suspense fallback={<CharacterSkeleton />}>
+                  <CharactorComponent />
+                </Suspense>
+              </div>
+              <div className="row-start-2 col-start-1 items-center justify-items-center">
+                <Suspense fallback={<CardSkeleton />}>
+                  <AllEventsCardComponent />
+                </Suspense>
+              </div>
+              <div className="row-start-2 col-start-2 items-center justify-items-center">
+                <Suspense fallback={<CardSkeleton />}>
+                  <CheckinEventsCardComponent />
+                </Suspense>
+              </div>
+              <div className="row-start-3 col-start-1 col-end-3">
+                <WatchCardComponent />
+              </div>
             </div>
           </div>
           <FooterComponent />

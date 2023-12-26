@@ -155,7 +155,7 @@ export default function PostBiomeComponent() {
                 setIsPushButton(true);
                 uploadToServer();
               }}
-              className="flex justify-center items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              className="flex justify-center items-center bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded"
             >
               投稿
             </button>

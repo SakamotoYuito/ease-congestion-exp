@@ -16,6 +16,11 @@ const config: Config = {
       },
       gridTemplateRows: {
         "base-layout": "80px 1fr 80px",
+        "max-content-layout-2": "max-content max-content",
+        "max-content-layout-3": "max-content max-content max-content",
+      },
+      gridTemplateColumns: {
+        "max-content-layout-2": "max-content 1fr",
       },
     },
   },

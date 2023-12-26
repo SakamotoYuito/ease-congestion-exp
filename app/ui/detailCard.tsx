@@ -60,7 +60,7 @@ export default function DetailCardComponent({
           {spotInfo.link && (
             <div className="flex justify-center items-center mt-3">
               <Link href={spotInfo.link || "/"}>
-                <button className="text-lg bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg m-2">
+                <button className="text-lg bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded-lg m-2">
                   イベントに参加
                 </button>
               </Link>
