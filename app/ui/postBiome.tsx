@@ -7,9 +7,15 @@ import imageCompression from "browser-image-compression";
 import { useRouter } from "next/navigation";
 import { faPlusSquare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { postCollectionInLogs } from "@/lib/dbActions";
+import {
+  postCollectionInLogs,
+  patchCheckoutProgramIds,
+  patchReward,
+} from "@/lib/dbActions";
 import { postLogEvent } from "@/lib/firebase/client";
 import Image from "next/image";
+import ModalComponent from "./modal";
+import { useSearchParams } from "next/navigation";
 
 export default function PostBiomeComponent() {
   const router = useRouter();
@@ -19,6 +25,10 @@ export default function PostBiomeComponent() {
   const [isPushButton, setIsPushButton] = useState(false);
   const [name, setName] = useState("");
   const [note, setNote] = useState("");
+  const [sendComplete, setSendComplete] = useState(false);
+  const searchParams = useSearchParams();
+  const programId = searchParams.get("programId") || "";
+  const rewardPoint = searchParams.get("rewardPoint") || "";
 
   const uploadToClient = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -95,6 +105,7 @@ export default function PostBiomeComponent() {
         const state = "postBiome";
         await postCollectionInLogs(title, "Biome", state);
         postLogEvent("Biome投稿成功");
+        setSendComplete(true);
       } else {
         setError("投稿に失敗しました");
         setIsPushButton(false);
@@ -104,6 +115,29 @@ export default function PostBiomeComponent() {
       setError("投稿に失敗しました");
       setIsPushButton(false);
     }
+  };
+
+  const modalInfo = {
+    modalTitle: "投稿完了",
+    mainMessage: "調査ありがとうございました",
+    leftTitle: "調査を完了",
+    rightTitle: "続けて投稿",
+    leftOnClick: () => {
+      (async () => {
+        await patchReward(rewardPoint);
+        await patchCheckoutProgramIds(programId);
+        router.push("/");
+      })();
+    },
+    rightOnClick: () => {
+      setPhoto(null);
+      setError("");
+      setCreateObjectURL("");
+      setIsPushButton(false);
+      setName("");
+      setNote("");
+      setSendComplete(false);
+    },
   };
 
   return (
@@ -194,6 +228,11 @@ export default function PostBiomeComponent() {
           />
         </div>
       </div>
+      {sendComplete && (
+        <div className="bg-gray-700 bg-opacity-80 absolute top-0 left-0 w-full h-full ">
+          <ModalComponent info={modalInfo} />
+        </div>
+      )}
     </main>
   );
 }

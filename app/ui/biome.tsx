@@ -2,12 +2,15 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 export default function BiomeComponent() {
-  const [isPressed, setIsPressed] = useState(false);
+  const searchParams = useSearchParams();
+  const programId = searchParams.get("programId") || "";
+  const rewardPoint = searchParams.get("rewardPoint") || "";
+  const href = `/biome/postbiome?programId=${programId}&rewardPoint=${rewardPoint}`;
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen pb-20 px-3 w-full text-center">
+    <main className="flex flex-col items-center justify-center min-h-screen pb-20 px-3 w-full text-center mt-24">
       <h1 className="text-2xl font-bold">
         集え！！
         <br />
@@ -42,11 +45,8 @@ export default function BiomeComponent() {
           />
         </Link>
       </div>
-      <Link href="/postbiome">
-        <button
-          className="m-5 p-10 bg-green-600 w-32 h-32 flex items-center justify-center text-white font-bold text-2xl hover:bg-green-500 py-2 px-4 border-b-8 hover:border-none border-green-700 hover:border-green-500 rounded-full"
-          onClick={() => setIsPressed(true)}
-        >
+      <Link href={href} className="no-underline">
+        <button className="m-5 p-10 bg-green-600 w-32 h-32 flex items-center justify-center text-white font-bold text-2xl hover:bg-green-500 py-2 px-4 border-b-8 hover:border-none border-green-700 hover:border-green-500 rounded-full">
           投稿
         </button>
       </Link>
