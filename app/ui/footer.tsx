@@ -44,7 +44,7 @@ export default function FooterComponent() {
               <div
                 className={`text-xs mb-2 ${
                   selectedIcon === index
-                    ? "text-green-600 font-bold"
+                    ? "text-green-700 font-bold"
                     : "text-black"
                 }`}
               >

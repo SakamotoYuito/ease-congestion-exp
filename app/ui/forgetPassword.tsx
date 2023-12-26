@@ -6,6 +6,7 @@ import { useState } from "react";
 import AlertModalComponent from "./alertModal";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 
 const initialState = {
   message: "",
@@ -18,6 +19,14 @@ export default function ForgetPasswordComponent() {
 
   return (
     <main className="flex flex-col items-center justify-center min-h-screen py-2">
+      <div className="grid grid-cols-3 items-center shadow-md fixed top-0 w-full z-10 bg-white h-20">
+        <div className="col-start-2 font-mono text-xl place-content-center text-center w-full">
+          <Image src="/title.jpg" width={160} height={65} alt="title" />
+        </div>
+        <div className="col-start-3 font-mono text-sm justify-self-end mr-3">
+          <div className="text-lg"></div>
+        </div>
+      </div>
       <h1 className="text-2xl font-bold mb-4">パスワードリセット</h1>
       <form action={action} className="w-full max-w-xs space-y-4">
         <div className="flex flex-col">
@@ -46,7 +55,7 @@ export default function ForgetPasswordComponent() {
           <button
             onClick={() => setAlertModal(true)}
             type="submit"
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+            className="px-4 py-2 bg-green-700 text-white rounded hover:bg-green-900"
           >
             送信
           </button>

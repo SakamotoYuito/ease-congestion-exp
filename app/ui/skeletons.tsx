@@ -1,4 +1,5 @@
 import ProgressBar from "react-bootstrap/ProgressBar";
+import Image from "next/image";
 
 // Loading animation
 const shimmer =
@@ -19,7 +20,7 @@ export function CardSkeleton() {
     >
       <div className="md:flex justify-center text-center border-spacing-3">
         <div className="p-3">
-          <div className="uppercase tracking-wide text-sm text-indigo-500 font-semibold">
+          <div className="uppercase tracking-wide text-sm text-green-700 font-semibold">
             ローディング...
           </div>
           <p className="mt-2 text-gray-500">データを取得中...</p>
@@ -34,11 +35,11 @@ export function CardSkeleton() {
 
 export function HeaderSkeleton() {
   return (
-    <div className="flex justify-between shadow-md fixed top-0 w-full z-10 bg-[#b8e986] h-20">
-      <div className="p-4 font-mono text-xl">
-        <h1>Enre</h1>
+    <div className="grid grid-cols-3 items-center shadow-md fixed top-0 w-full z-10 bg-white h-20">
+      <div className="col-start-2 font-mono text-xl place-content-center text-center w-full">
+        <Image src="/title.jpg" width={160} height={65} alt="title" />
       </div>
-      <div className="p-4 font-mono text-sm space-y-2">
+      <div className="col-start-3 font-mono text-sm justify-self-end mr-3">
         <div className="text-lg"></div>
       </div>
     </div>
@@ -57,10 +58,10 @@ export function CharacterSkeleton() {
           xmlns="http://www.w3.org/2000/svg"
           className="w-7/12 h-auto max-h-14 pl-20"
         >
-          <rect width="305" height="127" rx="10" fill="#348DE0" />
+          <rect width="305" height="127" rx="10" fill="#ffffff" />
           <path
             d="M69.118 138.921L55.0857 124.844L82.7964 124.5L69.118 138.921Z"
-            fill="#348DE0"
+            fill="#ffffff"
           />
         </svg>
       </div>

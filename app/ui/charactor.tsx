@@ -23,17 +23,17 @@ export default async function CharactorComponent() {
           xmlns="http://www.w3.org/2000/svg"
           className="w-7/12 h-auto max-h-14 pl-20"
         >
-          <rect width="305" height="127" rx="10" fill="#348DE0" />
+          <rect width="305" height="127" rx="10" fill="#ffffff" />
           <path
             d="M69.118 138.921L55.0857 124.844L82.7964 124.5L69.118 138.921Z"
-            fill="#348DE0"
+            fill="#ffffff"
           />
           <text
             x="50%"
             y="50%"
             dominantBaseline="middle"
             textAnchor="middle"
-            fill="white"
+            fill="black"
             className="text-4xl font-bold"
           >
             {quote}
@@ -64,7 +64,7 @@ export default async function CharactorComponent() {
       </div>
       <div className="flex justify-center items-center p-2 w-full">
         <div className="w-9/12">
-          <ProgressBar animated now={currentReward} max={400} />
+          <ProgressBar variant="success" now={currentReward} max={400} />
         </div>
       </div>
       <div className="grid grid-rows-2 grid-cols-2 justify-items-center items-center p-2 bg-white rounded-xl shadow-md">
