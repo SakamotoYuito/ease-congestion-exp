@@ -205,11 +205,12 @@ export async function fetchProgramInfo(programId: string) {
 
 export async function fetchReward() {
   const user = await getUserFromCookie();
-  if (!user) return;
+  if (!user) return { currentReward: 0, prevReward: 0 };
   const uid = user.uid;
   const userRef = await adminDB.collection("users").doc(uid).get();
-  const currentReward = userRef.data().reward;
-  return currentReward;
+  const currentReward: number = userRef.data().reward || 0;
+  const prevReward: number = userRef.data().prevReward || 0;
+  return { currentReward, prevReward };
 }
 
 export async function patchReward(rewardPoint: string, rewardField?: string) {
@@ -217,7 +218,7 @@ export async function patchReward(rewardPoint: string, rewardField?: string) {
   if (!user) return;
   const uid = user.uid;
   try {
-    const currentReward = await fetchReward();
+    const { currentReward } = await fetchReward();
     await adminDB
       .collection("users")
       .doc(uid)

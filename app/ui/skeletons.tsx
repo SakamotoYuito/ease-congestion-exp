@@ -15,7 +15,7 @@ export function LoadingAnimation() {
 export function CardSkeleton() {
   return (
     <div
-      className={`${shimmer} w-full mx-1 bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl m-2`}
+      className={`${shimmer} w-full bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl`}
     >
       <div className="md:flex justify-center text-center border-spacing-3">
         <div className="p-3">
@@ -65,14 +65,21 @@ export function CharacterSkeleton() {
         </svg>
       </div>
       <div className="px-20 flex justify-center items-center">
-        <div className="max-w-xs min-h-full h-24">
+        <div className="max-w-xs h-40">
           <LoadingAnimation />
         </div>
       </div>
       <div className="flex justify-center items-center p-2 w-full">
-        <label className="text-sm font-bold pr-3">ポイント</label>
         <div className="w-9/12">
           <ProgressBar animated now={0} max={400} label={0} />
+        </div>
+      </div>
+      <div className="grid grid-rows-2 grid-cols-2 justify-items-center items-center p-2 bg-white rounded-xl shadow-md">
+        <div className="row-start-1 col-start-1 text-sm">合計獲得ポイント</div>
+        <div className="row-start-2 col-start-1 text-xl font-bold">--pt</div>
+        <div className="row-start-1 col-start-2 text-sm">直近獲得ポイント</div>
+        <div className="row-start-2 col-start-2 text-lg font-bold pl-3">
+          <span className="text-black">--pt</span>
         </div>
       </div>
     </div>

@@ -7,7 +7,7 @@ export default async function CheckinEventsCardComponent() {
   const text = checkinProgramIds.length !== 0 ? "イベントあり" : "イベントなし";
   const isContentExist = checkinProgramIds.length !== 0 ? true : false;
   return (
-    <div className="w-full mx-1 bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl m-2">
+    <div className="w-full bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">
       <div className="md:flex justify-center text-center">
         <div className="p-3">
           <div className="uppercase tracking-wide text-sm text-indigo-500 font-semibold">

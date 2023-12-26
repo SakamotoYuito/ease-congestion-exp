@@ -30,7 +30,7 @@ export default function MenuComponent({ nickName }: { nickName: string }) {
         type="button"
         className="flex flex-col z-10 space-y-2 text-center items-center"
       >
-        <a>Menu</a>
+        Menu
         <div className="w-8 h-0.5 bg-black" />
         <div className="w-8 h-0.5 bg-black" />
         <div className="w-8 h-0.5 bg-black" />
