@@ -18,7 +18,10 @@ export default function WatchCardComponent() {
           />
         </div>
         <div className="row-start-2 col-start-2">
-          <Link href="https://jweb.kyoto-su.ac.jp/webcam/" className="m-0">
+          <Link
+            href="https://jweb.kyoto-su.ac.jp/webcam/"
+            className="m-0 text-blue-600 underline"
+          >
             バスプールをアイキャッチ | 学生生活 | 京都産業大学 (kyoto-su.ac.jp)
           </Link>
         </div>
