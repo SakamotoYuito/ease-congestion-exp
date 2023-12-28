@@ -90,6 +90,7 @@ export default function BiomeComponent() {
           >
             設定
           </button>
+          <p>{error.message}</p>
         </form>
       </div>
       {canSubmit ? (
