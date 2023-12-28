@@ -380,3 +380,49 @@ export async function fetchBiomeUserName() {
     return "";
   }
 }
+
+export async function fetchParticipatedEvents() {
+  const initialParticipatedEvents: { [key: number]: number } = {
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 0,
+    5: 0,
+    6: 0,
+    7: 0,
+    8: 0,
+    9: 0,
+    10: 0,
+    11: 0,
+    12: 0,
+  };
+  const user = await getUserFromCookie();
+  if (!user) return initialParticipatedEvents;
+  const uid = user.uid;
+  try {
+    const userRef = await adminDB.collection("users").doc(uid).get();
+    const participatedEvents: { [key: number]: number } =
+      userRef.data().participated || initialParticipatedEvents;
+    return participatedEvents;
+  } catch (error) {
+    console.log(error);
+    return initialParticipatedEvents;
+  }
+}
+
+export async function patchParticipatedEvents(eventId: string) {
+  const user = await getUserFromCookie();
+  if (!user) return;
+  const uid = user.uid;
+  try {
+    const participatedEvents = await fetchParticipatedEvents();
+    participatedEvents[Number(eventId)] += 1;
+    await adminDB
+      .collection("users")
+      .doc(uid)
+      .set({ participated: participatedEvents }, { merge: true });
+  } catch (error) {
+    console.log(error);
+    return;
+  }
+}
