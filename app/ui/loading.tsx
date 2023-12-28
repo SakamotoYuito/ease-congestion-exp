@@ -66,7 +66,7 @@ export default function LoadingComponent() {
         }
         await patchReward(`${qrInfo.rewardPoint}`);
         router.push(
-          `${qrInfo.type}?programId=${qrInfo.programId}&place=${place}`
+          `${qrInfo.type}?programId=${qrInfo.programId}&place=${place}&rewardPoint=${programInfo.rewardPoint}`
         );
       }
     })();

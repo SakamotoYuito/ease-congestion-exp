@@ -426,3 +426,32 @@ export async function patchParticipatedEvents(eventId: string) {
     return;
   }
 }
+
+export async function fetchCurrentPlace() {
+  const user = await getUserFromCookie();
+  if (!user) return "none";
+  const uid = user.uid;
+  try {
+    const userRef = await adminDB.collection("users").doc(uid).get();
+    const biomeUserName: string = userRef.data().currentPlace || "none";
+    return biomeUserName;
+  } catch (error) {
+    console.log(error);
+    return "none";
+  }
+}
+
+export async function patchCurrentPlace(place: string) {
+  const user = await getUserFromCookie();
+  if (!user) return null;
+  const uid = user.uid;
+  try {
+    await adminDB
+      .collection("users")
+      .doc(uid)
+      .set({ currentPlace: place }, { merge: true });
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
