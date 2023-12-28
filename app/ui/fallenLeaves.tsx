@@ -106,7 +106,7 @@ export default function FallenLeavesComponent() {
     <main className="flex min-h-screen flex-col justify-between pb-20">
       <div className="justify-center mt-24">
         <div className="flex justify-between items-center w-full p-5">
-          <h1 className="text-left text-xl">集めた落ち葉を投稿</h1>
+          <h1 className="text-left text-2xl m-0">集めた落ち葉</h1>
           {isPushButton ? (
             <button className="flex justify-center items-center bg-gray-600 text-white font-bold py-2 px-4 rounded">
               投稿
