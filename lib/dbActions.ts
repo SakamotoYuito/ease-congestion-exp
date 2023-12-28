@@ -343,3 +343,40 @@ export async function fetchMode(uid: string) {
     console.log(error);
   }
 }
+
+export async function patchBiomeUserName(prevState: any, formData: FormData) {
+  const user = await getUserFromCookie();
+  if (!user) return { message: "ログインしてください" };
+  const uid = user.uid;
+  const schema = z.object({
+    userName: z.string(),
+  });
+  try {
+    const { userName } = schema.parse({
+      userName: formData.get("biomeName"),
+    } as z.infer<typeof schema>);
+    const trimmedUserName = userName.trimStart();
+    await adminDB
+      .collection("users")
+      .doc(uid)
+      .set({ biomeUserName: trimmedUserName }, { merge: true });
+    return { message: "success" };
+  } catch (error) {
+    console.log(error);
+    return { message: "ユーザー名の登録に失敗しました" };
+  }
+}
+
+export async function fetchBiomeUserName() {
+  const user = await getUserFromCookie();
+  if (!user) return "";
+  const uid = user.uid;
+  try {
+    const userRef = await adminDB.collection("users").doc(uid).get();
+    const biomeUserName = userRef.data().biomeUserName || "";
+    return biomeUserName;
+  } catch (error) {
+    console.log(error);
+    return "";
+  }
+}
