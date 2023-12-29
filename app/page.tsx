@@ -23,11 +23,11 @@ export default async function Home() {
   return (
     <>
       {(mode?.webMode && mode?.userMode) || !mode?.webMode ? (
-        <main className="grid grid-rows-base-layout min-h-screen w-full pb-40 overflow-auto justify-items-center items-center pl-2 pr-2">
+        <main className="grid grid-rows-base-layout min-h-screen w-full pb-40 overflow-auto justify-items-center items-center">
           <Suspense fallback={<HeaderSkeleton />}>
             <HeaderComponent />
           </Suspense>
-          <div className="row-start-2 pt-2">
+          <div className="row-start-2 pt-2 ml-2 mr-2">
             <div className="grid grid-rows-max-content-layout-3 grid-cols-2 gap-2 w-full">
               <div className="row-start-1 col-start-1 col-end-3">
                 <Suspense fallback={<CharacterSkeleton />}>
