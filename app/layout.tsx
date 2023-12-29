@@ -20,7 +20,11 @@ export default function RootLayout({
     <html lang="ja">
       <head>
         <link rel="manifest" href="/manifest.json" />
-        <link rel="apple-touch-icon" href="/icon2.png"></link>
+        <link rel="apple-touch-icon" href="/applicationIcon_512.png"></link>
+        <link
+          rel="apple-touch-startup-image"
+          href="/applicationIcon_512.png"
+        ></link>
         <meta name="theme-color" content="#fbe5d6" />
       </head>
       <body id="body" className={`inter ${inter.className} grid`}>
