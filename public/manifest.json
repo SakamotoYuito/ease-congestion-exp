@@ -10,13 +10,8 @@
   "description": "京都産業大学グリーンインフラプロジェクト",
   "icons": [
     {
-      "src": "/icon1.png",
-      "sizes": "199x172",
-      "type": "image/png"
-    },
-    {
-      "src": "/icon2.png",
-      "sizes": "196x196",
+      "src": "/applicationIcon.png",
+      "sizes": "512x512",
       "type": "image/png"
     }
   ]

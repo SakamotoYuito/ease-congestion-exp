@@ -11,6 +11,7 @@ import {
   postCollectionInLogs,
   patchCheckoutProgramIds,
   patchReward,
+  patchParticipatedEvents,
 } from "@/lib/dbActions";
 import { postLogEvent } from "@/lib/firebase/client";
 import Image from "next/image";
@@ -124,6 +125,7 @@ export default function PostBiomeComponent() {
     rightTitle: "続けて投稿",
     leftOnClick: () => {
       (async () => {
+        await patchParticipatedEvents(programId);
         await patchReward(rewardPoint);
         await patchCheckoutProgramIds(programId);
         router.push("/");

@@ -11,9 +11,11 @@ import {
   postCollectionInLogs,
   fetchParticipatedEvents,
   patchParticipatedEvents,
+  patchCurrentPlace,
 } from "@/lib/dbActions";
 import { LoadingAnimation } from "./skeletons";
 import Link from "next/link";
+import { useBudouX } from "../hooks/useBudouX";
 
 export default function LoadingComponent() {
   const router = useRouter();
@@ -25,6 +27,7 @@ export default function LoadingComponent() {
   const [link, setLink] = useState("");
   const ref = useRef(false);
   const [participated, setParticipated] = useState(false);
+  const { parse } = useBudouX();
 
   useEffect(() => {
     if (ref.current) return;
@@ -36,6 +39,7 @@ export default function LoadingComponent() {
       setContent(programInfo.content);
       const place = `${qrInfo.placeId}-${qrInfo.placeNumber}`;
       await postCollectionInLogs(programInfo.title, place, "QRコード読み取り");
+      await patchCurrentPlace(place);
       const participatedEvents = await fetchParticipatedEvents();
       if (qrInfo.type === "checkin") {
         if (participatedEvents[Number(qrId)] > 0) {
@@ -58,6 +62,7 @@ export default function LoadingComponent() {
         }
         await patchReward(`${qrInfo.rewardPoint}`);
         await patchCheckoutProgramIds(`${qrInfo.programId}`);
+        await patchParticipatedEvents(qrId);
         setCheckout(true);
       } else {
         if (participatedEvents[Number(qrId)] > 0) {
@@ -117,9 +122,10 @@ export default function LoadingComponent() {
           )}
           {checkout && (
             <div className="flex min-h-screen flex-col items-center justify-center pb-20">
-              <h1 className="text-2xl font-bold text-center mb-10">
-                {title}
-                <br />
+              <h1 className="text-2xl font-bold mb-10 text-center">
+                {parse(title)}
+              </h1>
+              <h1 className="text-lg font-bold text-center mb-10">
                 へのご参加
                 <br />
                 ありがとうございます

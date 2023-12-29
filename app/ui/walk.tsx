@@ -5,6 +5,7 @@ import {
   fetchCurrentPlace,
   patchCurrentPlace,
   patchReward,
+  patchParticipatedEvents,
 } from "@/lib/dbActions";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -14,6 +15,7 @@ export default function WalkComponent() {
   const [isFinished, setIsFinished] = useState<boolean | null>(null);
   const searchParams = useSearchParams();
   const reward = searchParams.get("rewardPoint") || "";
+  const programId = searchParams.get("programId") || "";
 
   useEffect(() => {
     (async () => {
@@ -40,6 +42,7 @@ export default function WalkComponent() {
 
   const handleFinishWalking = () => {
     (async () => {
+      await patchParticipatedEvents(programId);
       await patchCurrentPlace("Home");
       await patchReward(reward);
       setIsWalking(false);
@@ -68,17 +71,22 @@ export default function WalkComponent() {
             </button>
           )}
           {isWalking && (
-            <button
-              onClick={handleFinishWalking}
-              className="text-sm bg-green-700 p-2 rounded-md text-white"
-            >
-              帰宅したら押してください
-            </button>
+            <>
+              <p className="text-sm text-green-700 font-bold m-0 p-2">
+                帰宅中...
+              </p>
+              <button
+                onClick={handleFinishWalking}
+                className="text-sm bg-green-700 p-2 rounded-md text-white"
+              >
+                帰宅したら押してください
+              </button>
+            </>
           )}
           {isFinished && (
             <Link href="/">
               <button className="text-sm bg-green-700 p-2 rounded-md no-underline text-white">
-                参加できません（ホームに戻る）
+                お疲れ様でした（ホームに戻る）
               </button>
             </Link>
           )}
