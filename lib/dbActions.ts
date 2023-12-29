@@ -343,3 +343,115 @@ export async function fetchMode(uid: string) {
     console.log(error);
   }
 }
+
+export async function patchBiomeUserName(prevState: any, formData: FormData) {
+  const user = await getUserFromCookie();
+  if (!user) return { message: "ログインしてください" };
+  const uid = user.uid;
+  const schema = z.object({
+    userName: z.string(),
+  });
+  try {
+    const { userName } = schema.parse({
+      userName: formData.get("biomeName"),
+    } as z.infer<typeof schema>);
+    const trimmedUserName = userName.trimStart();
+    await adminDB
+      .collection("users")
+      .doc(uid)
+      .set({ biomeUserName: trimmedUserName }, { merge: true });
+    return { message: "success" };
+  } catch (error) {
+    console.log(error);
+    return { message: "ユーザー名の登録に失敗しました" };
+  }
+}
+
+export async function fetchBiomeUserName() {
+  const user = await getUserFromCookie();
+  if (!user) return "";
+  const uid = user.uid;
+  try {
+    const userRef = await adminDB.collection("users").doc(uid).get();
+    const biomeUserName = userRef.data().biomeUserName || "";
+    return biomeUserName;
+  } catch (error) {
+    console.log(error);
+    return "";
+  }
+}
+
+export async function fetchParticipatedEvents() {
+  const initialParticipatedEvents: { [key: number]: number } = {
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 0,
+    5: 0,
+    6: 0,
+    7: 0,
+    8: 0,
+    9: 0,
+    10: 0,
+    11: 0,
+    12: 0,
+  };
+  const user = await getUserFromCookie();
+  if (!user) return initialParticipatedEvents;
+  const uid = user.uid;
+  try {
+    const userRef = await adminDB.collection("users").doc(uid).get();
+    const participatedEvents: { [key: number]: number } =
+      userRef.data().participated || initialParticipatedEvents;
+    return participatedEvents;
+  } catch (error) {
+    console.log(error);
+    return initialParticipatedEvents;
+  }
+}
+
+export async function patchParticipatedEvents(eventId: string) {
+  const user = await getUserFromCookie();
+  if (!user) return;
+  const uid = user.uid;
+  try {
+    const participatedEvents = await fetchParticipatedEvents();
+    participatedEvents[Number(eventId)] += 1;
+    await adminDB
+      .collection("users")
+      .doc(uid)
+      .set({ participated: participatedEvents }, { merge: true });
+  } catch (error) {
+    console.log(error);
+    return;
+  }
+}
+
+export async function fetchCurrentPlace() {
+  const user = await getUserFromCookie();
+  if (!user) return "none";
+  const uid = user.uid;
+  try {
+    const userRef = await adminDB.collection("users").doc(uid).get();
+    const biomeUserName: string = userRef.data().currentPlace || "none";
+    return biomeUserName;
+  } catch (error) {
+    console.log(error);
+    return "none";
+  }
+}
+
+export async function patchCurrentPlace(place: string) {
+  const user = await getUserFromCookie();
+  if (!user) return null;
+  const uid = user.uid;
+  try {
+    await adminDB
+      .collection("users")
+      .doc(uid)
+      .set({ currentPlace: place }, { merge: true });
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}

@@ -3,14 +3,38 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { useState, useEffect } from "react";
+import { patchBiomeUserName, fetchBiomeUserName } from "@/lib/dbActions";
+import { useFormState } from "react-dom";
+
+const initialState = {
+  message: "",
+};
 
 export default function BiomeComponent() {
+  const [userName, setUserName] = useState("");
+  const [canSubmit, setCanSubmit] = useState(false);
+  const [error, action] = useFormState(patchBiomeUserName, initialState);
   const searchParams = useSearchParams();
   const programId = searchParams.get("programId") || "";
   const rewardPoint = searchParams.get("rewardPoint") || "";
   const href = `/biome/postbiome?programId=${programId}&rewardPoint=${rewardPoint}`;
+
+  useEffect(() => {
+    if (error.message === "success" || userName !== "") {
+      setCanSubmit(true);
+    }
+  }, [error, userName]);
+
+  useEffect(() => {
+    (async () => {
+      const userName = await fetchBiomeUserName();
+      setUserName(userName);
+    })();
+  }, []);
+
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen pb-20 px-3 w-full text-center mt-24">
+    <main className="flex flex-col items-center justify-center min-h-screen pb-40 px-3 w-full text-center mt-52">
       <h1 className="text-2xl font-bold">
         集え！！
         <br />
@@ -45,11 +69,43 @@ export default function BiomeComponent() {
           />
         </Link>
       </div>
-      <Link href={href} className="no-underline">
-        <button className="m-5 p-10 bg-green-600 w-32 h-32 flex items-center justify-center text-white font-bold text-2xl hover:bg-green-500 py-2 px-4 border-b-8 hover:border-none border-green-700 hover:border-green-500 rounded-full">
-          投稿
-        </button>
-      </Link>
+      <div>
+        <form action={action}>
+          <div>
+            <label htmlFor="biomeName" className="text-lg font-bold mt-5">
+              Biomeアプリのユーザーネーム
+            </label>
+            <input
+              id="biomeName"
+              type="text"
+              name="biomeName"
+              defaultValue={userName}
+              className="border-2 border-gray-500 rounded-md"
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            className="mt-2 px-4 py-2 bg-green-700 text-white rounded hover:bg-green-900"
+          >
+            設定
+          </button>
+          <p>{error.message}</p>
+        </form>
+      </div>
+      {canSubmit ? (
+        <Link href={href} className="no-underline">
+          <button className="m-5 p-10 bg-green-600 w-32 h-32 flex items-center justify-center text-white font-bold text-2xl hover:bg-green-500 py-2 px-4 border-b-8 hover:border-none border-green-700 hover:border-green-500 rounded-full">
+            投稿
+          </button>
+        </Link>
+      ) : (
+        <div>
+          <button className="m-5 p-10 bg-gray-600 w-32 h-32 flex items-center justify-center text-white font-bold text-2xl rounded-full">
+            投稿
+          </button>
+        </div>
+      )}
     </main>
   );
 }

@@ -11,6 +11,7 @@ import {
   postCollectionInLogs,
   fetchProgramInfo,
   patchReward,
+  patchParticipatedEvents,
 } from "@/lib/dbActions";
 import { postLogEvent } from "@/lib/firebase/client";
 import Image from "next/image";
@@ -46,8 +47,8 @@ export default function UploadImage() {
       const options = {
         maxSizeMB: 1,
         useWebWorker: true,
-        initialQuality: 0.8,
-        maxWidthOrHeight: 1280,
+        initialQuality: 0.85,
+        maxWidthOrHeight: 1920,
       };
       const compressedFile = await imageCompression(file, options);
       setPhoto(compressedFile);
@@ -90,6 +91,7 @@ export default function UploadImage() {
         const title = "写真を投稿しました";
         const state = "postPhoto";
         await postCollectionInLogs(title, place, state);
+        await patchParticipatedEvents(`${programId}`);
         postLogEvent("写真投稿成功");
         router.push("/photoalbum");
       } else {
