@@ -19,12 +19,18 @@ export default async function CheckinDetailComponent() {
       return {
         title: item.title,
         content: item.content,
+        process: item.process,
+        caution: item.caution,
+        condition: item.condition,
         link: item.link,
       };
     }
     return {
       title: item.title,
       content: item.content,
+      process: item.process,
+      caution: item.caution,
+      condition: item.condition,
     };
   });
 
