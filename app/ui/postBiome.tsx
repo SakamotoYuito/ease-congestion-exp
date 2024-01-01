@@ -5,7 +5,7 @@ import { storage } from "@/lib/firebase/client";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import imageCompression from "browser-image-compression";
 import { useRouter } from "next/navigation";
-import { faPlusSquare } from "@fortawesome/free-solid-svg-icons";
+import { faPlusSquare, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   postCollectionInLogs,
@@ -17,6 +17,7 @@ import { postLogEvent } from "@/lib/firebase/client";
 import Image from "next/image";
 import ModalComponent from "./modal";
 import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 export default function PostBiomeComponent() {
   const router = useRouter();
@@ -30,6 +31,7 @@ export default function PostBiomeComponent() {
   const searchParams = useSearchParams();
   const programId = searchParams.get("programId") || "";
   const rewardPoint = searchParams.get("rewardPoint") || "";
+  const href = `/biome?programId=${programId}&rewardPoint=${rewardPoint}`;
 
   const uploadToClient = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -145,6 +147,15 @@ export default function PostBiomeComponent() {
   return (
     <main className="flex min-h-screen flex-col justify-between pb-40 overflow-auto">
       <div className="justify-center mt-24">
+        <Link href={href} className="text-green-700 hover:text-green-900">
+          <button className="items-center justify-center underline">
+            <FontAwesomeIcon
+              icon={faArrowLeft}
+              style={{ width: "20px", height: "20px", margin: "0 5px" }}
+            />
+            詳細に戻る
+          </button>
+        </Link>
         <div className="flex justify-between items-center w-full p-3">
           <h1 className="text-left text-2xl">新規投稿</h1>
           {isPushButton ? (
