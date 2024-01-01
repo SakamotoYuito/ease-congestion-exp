@@ -152,7 +152,7 @@ export default function LoadingComponent() {
           {checkout && (
             <div className="flex min-h-screen flex-col items-center justify-center pb-20">
               <h1 className="text-2xl font-bold mb-10 text-center">
-                {parse(title)}
+                {parse ? parse(title) : title}
               </h1>
               <h1 className="text-lg font-bold text-center mb-10">
                 ご参加

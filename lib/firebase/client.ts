@@ -35,17 +35,12 @@ export const functions = getFunctions(app);
 export let analytics: Analytics;
 isSupported().then((supported) => {
   if (supported) {
-    analytics = getAnalytics();
+    analytics = getAnalytics(app);
   }
 });
 
 export function postLogEvent(title: string, options?: object) {
-  isSupported().then((supported) => {
-    if (supported) {
-      analytics = getAnalytics();
-      logEvent(analytics, title, options);
-    }
-  });
+  logEvent(analytics, title, options);
 }
 
 // export async function requestNotificationPermission(uid: string) {
