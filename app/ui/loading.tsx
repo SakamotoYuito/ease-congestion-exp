@@ -48,12 +48,12 @@ export default function LoadingComponent() {
       await patchCurrentPlace(place);
       const participatedEvents = await fetchParticipatedEvents();
       if (qrInfo.type === "checkin") {
-        // if (participatedEvents[Number(qrId)] > 0) {
-        //   setParticipated(true);
-        //   return;
-        // }
-        // await patchReward(`${qrInfo.rewardPoint}`);
-        // await patchCheckinProgramIds(`${qrInfo.programId}`);
+        if (participatedEvents[Number(qrId)] > 0) {
+          setParticipated(true);
+          return;
+        }
+        await patchReward(`${qrInfo.rewardPoint}`);
+        await patchCheckinProgramIds(`${qrInfo.programId}`);
         setCheckin(true);
         setLink(
           programInfo.link === null
