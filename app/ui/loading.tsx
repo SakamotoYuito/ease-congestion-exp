@@ -25,6 +25,9 @@ export default function LoadingComponent() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [link, setLink] = useState("");
+  const [process, setProcess] = useState<string[]>([]);
+  const [caution, setCaution] = useState<string[]>([]);
+  const [condition, setCondition] = useState<string[]>([]);
   const ref = useRef(false);
   const [participated, setParticipated] = useState(false);
   const { parse } = useBudouX();
@@ -37,6 +40,9 @@ export default function LoadingComponent() {
       const programInfo = await fetchProgramInfo(`${qrInfo.programId}`);
       setTitle(programInfo.title);
       setContent(programInfo.content);
+      setProcess(programInfo.process);
+      setCaution(programInfo.caution);
+      setCondition(programInfo.condition);
       const place = `${qrInfo.placeId}-${qrInfo.placeNumber}`;
       await postCollectionInLogs(programInfo.title, place, "QRコード読み取り");
       await patchCurrentPlace(place);
@@ -103,16 +109,39 @@ export default function LoadingComponent() {
             </div>
           )}
           {checkin && (
-            <div className="flex min-h-screen flex-col items-center justify-center pb-20">
-              <h1 className="text-2xl font-bold text-center mb-10">
+            <div className="flex min-h-screen flex-col items-center  mt-24 pb-20">
+              <h1 className="text-xl font-bold text-center mb-3">
                 {title}
                 <br />
                 にチェックインしました
               </h1>
-              <h1 className="text-lg font-bold text-center mb-10">
+              <h1 className="text-lg font-bold text-center mb-2">
                 ホーム画面からいつでも確認できます
               </h1>
-              <p className="text-sm text-center mb-10">{content}</p>
+              <p className="text-lg mb-0 font-bold">手順</p>
+              <div className="mb-2 text-left">
+                {process.map((process, index) => (
+                  <p key={index} className="text-sm mb-0 ml-3">
+                    {`${index + 1}. ${process}`}
+                  </p>
+                ))}
+              </div>
+              <p className="text-lg mb-0 font-bold">注意事項</p>
+              <div className="mb-2">
+                {caution.map((caution, index) => (
+                  <p key={index} className="text-sm mb-0 ml-3">
+                    {caution}
+                  </p>
+                ))}
+              </div>
+              <p className="text-lg mb-0 font-bold">付与条件</p>
+              <div className="mb-2">
+                {condition.map((condition, index) => (
+                  <p key={index} className="text-sm mb-0 ml-3">
+                    {condition}
+                  </p>
+                ))}
+              </div>
               <Link href={link} className="no-underline">
                 <button className="flex justify-center items-center bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded">
                   イベント詳細
@@ -126,7 +155,7 @@ export default function LoadingComponent() {
                 {parse(title)}
               </h1>
               <h1 className="text-lg font-bold text-center mb-10">
-                へのご参加
+                ご参加
                 <br />
                 ありがとうございます
               </h1>

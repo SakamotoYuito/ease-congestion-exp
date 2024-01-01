@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import {
   fetchCurrentPlace,
+  fetchProgramInfo,
   patchCurrentPlace,
   patchReward,
   patchParticipatedEvents,
@@ -11,6 +12,11 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
 export default function WalkComponent() {
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [process, setProcess] = useState<string[]>([]);
+  const [caution, setCaution] = useState<string[]>([]);
+  const [condition, setCondition] = useState<string[]>([]);
   const [isWalking, setIsWalking] = useState<boolean | null>(null);
   const [isFinished, setIsFinished] = useState<boolean | null>(null);
   const searchParams = useSearchParams();
@@ -19,6 +25,12 @@ export default function WalkComponent() {
 
   useEffect(() => {
     (async () => {
+      const programInfo = await fetchProgramInfo(programId);
+      setTitle(programInfo.title);
+      setContent(programInfo.content);
+      setProcess(programInfo.process);
+      setCaution(programInfo.caution);
+      setCondition(programInfo.condition);
       const currentPlace = await fetchCurrentPlace();
       if (currentPlace === "walking") {
         setIsWalking(true);
@@ -52,10 +64,7 @@ export default function WalkComponent() {
 
   return (
     <main className="flex flex-col items-center justify-center min-h-screen px-3">
-      <h2 className="text-2xl font-bold">今日は歩いて帰ろう！</h2>
-      <p className="text-lg">
-        健康のために上賀茂の緑を楽しみながら、歩いて帰りませんか？（自転車も可）
-      </p>
+      <h2 className="text-2xl font-bold">{title}</h2>
       {isWalking === null || isFinished === null ? (
         <p className="text-sm text-green-700 font-bold m-0 p-2">
           読み込み中...
@@ -92,6 +101,33 @@ export default function WalkComponent() {
           )}
         </>
       )}
+      <div className="p-2 overflow-auto">
+        <p className="text-sm mb-0 text-left">{content}</p>
+        <p className="text-lg mb-0 font-bold mt-2">手順</p>
+        <div className="mb-2 text-left">
+          {process.map((process, index) => (
+            <p key={index} className="text-sm mb-0 ml-3">
+              {`${index + 1}. ${process}`}
+            </p>
+          ))}
+        </div>
+        <p className="text-lg mb-0 font-bold">注意事項</p>
+        <div className="mb-2 text-left">
+          {caution.map((caution, index) => (
+            <p key={index} className="text-sm mb-0 ml-3">
+              {caution}
+            </p>
+          ))}
+        </div>
+        <p className="text-lg mb-0 font-bold">付与条件</p>
+        <div className="mb-2">
+          {condition.map((condition, index) => (
+            <p key={index} className="text-sm mb-0 ml-3">
+              {condition}
+            </p>
+          ))}
+        </div>
+      </div>
     </main>
   );
 }

@@ -23,6 +23,9 @@ type Spots = {
     content: string;
     place: string;
     link?: string;
+    process: string[];
+    caution: string[];
+    condition: string[];
   }[];
 };
 

@@ -4,7 +4,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
-import { patchBiomeUserName, fetchBiomeUserName } from "@/lib/dbActions";
+import {
+  patchBiomeUserName,
+  fetchBiomeUserName,
+  fetchProgramInfo,
+} from "@/lib/dbActions";
 import { useFormState } from "react-dom";
 
 const initialState = {
@@ -13,6 +17,10 @@ const initialState = {
 
 export default function BiomeComponent() {
   const [userName, setUserName] = useState("");
+  const [content, setContent] = useState("");
+  const [process, setProcess] = useState<string[]>([]);
+  const [caution, setCaution] = useState<string[]>([]);
+  const [condition, setCondition] = useState<string[]>([]);
   const [canSubmit, setCanSubmit] = useState(false);
   const [error, action] = useFormState(patchBiomeUserName, initialState);
   const searchParams = useSearchParams();
@@ -28,25 +36,51 @@ export default function BiomeComponent() {
 
   useEffect(() => {
     (async () => {
+      const programInfo = await fetchProgramInfo(programId);
+      setContent(programInfo.content);
+      setProcess(programInfo.process);
+      setCaution(programInfo.caution);
+      setCondition(programInfo.condition);
       const userName = await fetchBiomeUserName();
       setUserName(userName);
     })();
   }, []);
 
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen pb-40 px-3 w-full text-center mt-52">
+    <main className="flex flex-col items-center justify-center min-h-screen pb-52 px-3 w-full text-center mt-52">
       <h1 className="text-2xl font-bold">
         集え！！
         <br />
         デジタル生物調査隊！！！
       </h1>
-      <p>
-        いきものコレクションアプリ「Biome（バイオーム）」を使って生き物を集めよう!
-      </p>
-      <p>
-        Biomeに生き物を登録したら、そのスクリーンショットと生き物の名前を投稿せよ!
-      </p>
-      <p className="text-lg font-bold mt-5">Biomeのダウンロードはこちら</p>
+      <div>
+        <p className="text-sm mb-0 text-left">{content}</p>
+        <p className="text-lg mb-0 font-bold mt-2">手順</p>
+        <div className="mb-2 text-left">
+          {process.map((process, index) => (
+            <p key={index} className="text-sm mb-0 ml-3">
+              {`${index + 1}. ${process}`}
+            </p>
+          ))}
+        </div>
+        <p className="text-lg mb-0 font-bold">注意事項</p>
+        <div className="mb-2 text-left">
+          {caution.map((caution, index) => (
+            <p key={index} className="text-sm mb-0 ml-3">
+              {caution}
+            </p>
+          ))}
+        </div>
+        <p className="text-lg mb-0 font-bold">付与条件</p>
+        <div className="mb-2">
+          {condition.map((condition, index) => (
+            <p key={index} className="text-sm mb-0 ml-3">
+              {condition}
+            </p>
+          ))}
+        </div>
+      </div>
+      <p className="text-lg font-bold mt-2">Biomeのダウンロードはこちら</p>
       <div className="grid grid-cols-2">
         <Link href="https://apps.apple.com/jp/app/biome-%E3%83%90%E3%82%A4%E3%82%AA%E3%83%BC%E3%83%A0-%E3%81%84%E3%81%8D%E3%82%82%E3%81%AEai%E5%9B%B3%E9%91%91/id1459658355">
           <Image
@@ -72,7 +106,7 @@ export default function BiomeComponent() {
       <div>
         <form action={action}>
           <div>
-            <label htmlFor="biomeName" className="text-lg font-bold mt-5">
+            <label htmlFor="biomeName" className="text-lg font-bold mt-2">
               Biomeアプリのユーザーネーム
             </label>
             <input
@@ -95,13 +129,13 @@ export default function BiomeComponent() {
       </div>
       {canSubmit ? (
         <Link href={href} className="no-underline">
-          <button className="m-5 p-10 bg-green-600 w-32 h-32 flex items-center justify-center text-white font-bold text-2xl hover:bg-green-500 py-2 px-4 border-b-8 hover:border-none border-green-700 hover:border-green-500 rounded-full">
+          <button className="m-2 p-10 bg-green-600 w-32 h-32 flex items-center justify-center text-white font-bold text-2xl hover:bg-green-500 py-2 px-4 border-b-8 hover:border-none border-green-700 hover:border-green-500 rounded-full">
             投稿
           </button>
         </Link>
       ) : (
         <div>
-          <button className="m-5 p-10 bg-gray-600 w-32 h-32 flex items-center justify-center text-white font-bold text-2xl rounded-full">
+          <button className="m-2 p-10 bg-gray-600 w-32 h-32 flex items-center justify-center text-white font-bold text-2xl rounded-full">
             投稿
           </button>
         </div>

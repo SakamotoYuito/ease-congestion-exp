@@ -9,6 +9,9 @@ type Spots = {
   content: string;
   place?: string;
   link?: string;
+  process: string[];
+  caution: string[];
+  condition: string[];
 };
 
 type Props = {
@@ -23,38 +26,47 @@ export default function DetailCardComponent({
   textColor,
 }: Props) {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [displayContent, setDisplayContent] = useState(spotInfo.content);
 
-  useEffect(() => {
-    if (spotInfo.content.length > 20 && !isExpanded) {
-      setDisplayContent(`${spotInfo.content.substring(0, 20)}...`);
-    } else {
-      setDisplayContent(spotInfo.content);
-    }
-  }, [spotInfo.content, isExpanded]);
   return (
     <Card border="success" bg={thema} text={textColor} className="w-full">
-      <Card.Header className="text-sm font-bold p-2">
+      <Card.Header className="text-sm font-bold p-1">
         {spotInfo.title}
       </Card.Header>
-      <Card.Body className="p-2">
+      <Card.Body className="p-1">
         <blockquote className="blockquote mb-0">
-          <p className="text-sm"> {displayContent} </p>
+          <p className="text-xs mb-0 ml-2 font-bold">手順:</p>
+          <div className="mb-2">
+            {spotInfo.process.map((process, index) => (
+              <p key={index} className="text-xs mb-0 ml-3">
+                {`${index + 1}. ${process}`}
+              </p>
+            ))}
+          </div>
+          {isExpanded && (
+            <>
+              <p className="text-xs mb-0 ml-2 font-bold">付与条件:</p>
+              <div className="mb-2">
+                {spotInfo.condition.map((condition, index) => (
+                  <p key={index} className="text-xs mb-0 ml-3">
+                    {condition}
+                  </p>
+                ))}
+              </div>
+            </>
+          )}
           <footer>
             <div className="flex justify-between">
               {spotInfo.place && (
-                <span className="text-sm">
-                  --場所: <cite>{spotInfo.place}</cite>
+                <span className="text-xs font-bold ml-2">
+                  場所: <cite>{spotInfo.place}</cite>
                 </span>
               )}
-              {spotInfo.content.length > 20 && (
-                <button
-                  className="text-sm underline"
-                  onClick={() => setIsExpanded(!isExpanded)}
-                >
-                  {isExpanded ? "詳細を隠す" : "詳細を表示"}
-                </button>
-              )}
+              <button
+                className="text-xs underline"
+                onClick={() => setIsExpanded(!isExpanded)}
+              >
+                {isExpanded ? "付与条件を隠す" : "付与条件を表示"}
+              </button>
             </div>
           </footer>
           {spotInfo.link && (
