@@ -41,6 +41,9 @@ async function getSpots() {
     return {
       title: item.title,
       content: item.content,
+      process: item.process,
+      caution: item.caution,
+      condition: item.condition,
       place: place.name,
     };
   });
