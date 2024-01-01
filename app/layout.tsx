@@ -30,7 +30,13 @@ export default function RootLayout({
         window.matchMedia("(display-mode: standalone)").matches)
     );
   };
-  if (isPWA()) postLogEvent("PWA");
+  if (isPWA()) {
+    postLogEvent("PWA");
+    console.log("PWA");
+  } else {
+    postLogEvent("Not PWA");
+    console.log("Not PWA");
+  }
 
   return (
     <html lang="ja">
