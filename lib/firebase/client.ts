@@ -40,7 +40,12 @@ isSupported().then((supported) => {
 });
 
 export function postLogEvent(title: string, options?: object) {
-  logEvent(analytics, title, options);
+  isSupported().then((supported) => {
+    if (supported) {
+      analytics = getAnalytics();
+      logEvent(analytics, title, options);
+    }
+  });
 }
 
 // export async function requestNotificationPermission(uid: string) {
