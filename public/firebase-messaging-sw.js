@@ -4,12 +4,12 @@ importScripts(
 );
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBuM-PSRIXKeCDRruZ9dX7h7V6rQLXAW3A",
-  authDomain: "ksu-solve-congestion.firebaseapp.com",
-  projectId: "ksu-solve-congestion",
-  storageBucket: "ksu-solve-congestion.appspot.com",
-  messagingSenderId: 1026118046498,
-  appId: "1:1026118046498:web:400e71c179f7e1186ecb7b",
+  apiKey: process.env.NEXT_PUBLIC_APIKEY,
+  authDomain: process.env.NEXT_PUBLIC_AUTHDOMAIN,
+  projectId: process.env.NEXT_PUBLIC_PROJECTID,
+  storageBucket: process.env.NEXT_PUBLIC_STORAGEBUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_MESSAGINGSENDERID,
+  appId: process.env.NEXT_PUBLIC_APPID,
 };
 
 firebase.initializeApp(firebaseConfig);
