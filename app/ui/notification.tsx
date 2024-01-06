@@ -1,9 +1,11 @@
 "use client"
-import { fetchNotificationInfo, patchNotificationReadUser } from "@/lib/dbActions";
+import { fetchNotificationInfo} from "@/lib/dbActions";
 import { onMessageListener, requestForToken } from "@/lib/firebase/fcm";
 import { isSupported } from "firebase/messaging";
 import { useState, useEffect } from "react";
 import { getUserFromCookie } from "@/lib/session";
+import { arrayUnion, doc, updateDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase/client";
 
 const checkSupport = async () => {
     const isSupportedThis = await isSupported();
@@ -39,7 +41,15 @@ export function NotificationView() {
             console.log("既読");
         } else {
             // DB更新
-            let _ = await patchNotificationReadUser(notification.id);
+            const user = await getUserFromCookie();
+            if (!user) return false;
+            const uid = user.uid;
+            
+            const notificationRef = await doc(db, "notificationInfo", notification.id);
+
+            await updateDoc(notificationRef, {
+              readUser: arrayUnion(uid),
+            });
         }
     };
 
@@ -52,7 +62,7 @@ export function NotificationView() {
             if (notificationList.length === 0){
                 const notifications = await fetchNotificationInfo();
                 const uid = (await getUserFromCookie()).uid;
-                notifications.forEach((notification) => {
+                notifications.forEach((notification: any) => {
                     if (notification.readUser.includes(uid)){
                         notification.isRead = true;
                     }
