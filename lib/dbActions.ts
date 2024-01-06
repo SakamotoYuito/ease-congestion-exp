@@ -4,7 +4,6 @@ import { adminDB } from "@/lib/firebase/server";
 import { getUserFromCookie } from "@/lib/session";
 import { z } from "zod";
 import type { Place } from "@/lib/type";
-import { FieldValue } from "firebase-admin/firestore";
 
 export async function fetchPhotosInfo() {
   const photosCollection = await adminDB
@@ -498,21 +497,4 @@ export async function fetchNotificationInfo() {
   );
 
   return notificationsList;
-}
-
-export async function patchNotificationReadUser(notificationId: string) {
-  const user = await getUserFromCookie();
-  if (!user) return false;
-  const uid = user.uid;
-
-  const notificationRef = await adminDB.collection("notificationInfo").doc(notificationId);
-
-  notificationRef.update({
-    readUser: FieldValue.arrayUnion(uid),
-  }).catch((error: Error) => {
-    console.error(error);
-    return false;
-  });
-
-  return true;
 }
