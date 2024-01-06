@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-type Props = {
+type Modal = {
   info: {
     modalTitle: string;
     mainMessage: string;
@@ -14,7 +14,7 @@ type Props = {
   };
 };
 
-export default function ModalComponent({ info }: Props) {
+export default function ModalComponent({ info }: Modal) {
   const [leftClicked, setLeftClicked] = useState(false);
   const [rightClicked, setRightClicked] = useState(false);
 
