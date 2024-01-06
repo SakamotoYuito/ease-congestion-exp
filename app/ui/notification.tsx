@@ -1,9 +1,8 @@
 "use client"
-import { fetchNotificationInfo } from "@/lib/dbActions";
+import { fetchNotificationInfo, patchNotificationReadUser } from "@/lib/dbActions";
 import { onMessageListener, requestForToken } from "@/lib/firebase/fcm";
 import { isSupported } from "firebase/messaging";
 import { useState, useEffect } from "react";
-import NotificationDetailsCardComponent from "./notificationDetailsCard";
 import { getUserFromCookie } from "@/lib/session";
 
 const checkSupport = async () => {
@@ -14,9 +13,34 @@ const checkSupport = async () => {
 export function NotificationView() {
     const [notificationList, setNotificationList] = useState<any[]>([]);
     const [selectedNotification, setSelectedNotification] = useState("");
+    const [changeNotificationList, setChangeNotificationList] = useState(false);
 
-    const handleNotificationClick = (notification: any) => {
+    const handleNotificationClick = async (notification: any) => {
         setSelectedNotification(notification);
+        
+        if (notification === "") return null;
+
+        // UIの更新処理
+        const index = notificationList.findIndex((not) => {
+          return notification.id === not.id
+        });
+        // 検索に引っかからなければリターン
+        if (index < 0) {return;}
+        notificationList[index].isRead = true;
+        setNotificationList(notificationList);
+        setChangeNotificationList(!changeNotificationList);
+
+        // DBの既読更新処理
+        const userInfo = await getUserFromCookie();
+
+        // readUserにuidが含まれている場合は何もしない
+        if (notification.readUser.includes(userInfo.uid)) {
+            // skip
+            console.log("既読");
+        } else {
+            // DB更新
+            let _ = await patchNotificationReadUser(notification.id);
+        }
     };
 
     const handleOnClose = () => {
@@ -45,32 +69,31 @@ export function NotificationView() {
             <h1 className="text-center">通知</h1>
           </div>
           <div
-            className="grid grid-cols-1 gap-5 p-1 w-full overflow-auto mt-20 min-h-full"
-            style={{ maxHeight: "calc(100vh - 192px - 4rem)" }} // フッターの高さを考慮して修正
+            className="grid grid-cols-1 w-full overflow-scroll mt-20 min-h-[74%]"
+            style={{ maxHeight: "calc(100vh - 1000px - 4rem)" }} // フッターの高さを考慮して修正
           >
             {/* 通知データをループして表示する */}
             {notificationList.map((notification, index) => (
-              <div key={index} className="border border-gray-700 z-0">
+              <div key={index} className="z-0">
                 {notification !== "" ? (
                 <div
-                  className="relative overflow-scroll w-full h-0 pb-[100%] border border-white"
+                  className="relative w-full p-[3%]"
                   onClick={() => handleNotificationClick(notification)}
                 >
-                    <div className="max-w-sm w-full lg:max-w-full lg:flex">
-                      <div className="border-r border-b border-l border-gray-400 lg:border-l-0 lg:border-t lg:border-gray-400 bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal">
-                        <div className="mb-8">
-                          <div className="text-gray-900 font-bold text-xl mb-2">{notification.title}</div>
-                          <p className="text-gray-700 text-base">{notification.body}</p>
-                          {notification.isRead ? (
-                            <div>既読</div>
-                          )
-                          :(
-                            <div>未読</div>
-                          )}
+                    <div className="w-full lg:max-w-full lg:flex">
+                      <div className={`lg:border-l-0 lg:border-t lg:border-gray-400 ${notification.isRead ? "bg-gray-400" : "bg-white"} rounded lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal`}>
+                        <div className="w-full">
+                          <div className="text-gray-900 font-bold text-xl text-left w-full">{notification.title}</div>
+                          <p className="text-gray-700 text-base text-left">{notification.body}</p>
                         </div>
                         <div className="flex items-right">
-                            <div className="text-sm">
+                            <div className="flex text-sm">
                                 <p className="text-gray-600">{notification.postDate}</p>
+                                {notification.isRead ? (
+                                  <p className="pl-2">既読</p>
+                                  ):(
+                                  <p className="pl-2">未読</p>
+                                )}
                             </div>
                         </div>
                       </div>
@@ -79,16 +102,12 @@ export function NotificationView() {
                 ) : (
                     <div
                       key={index}
-                      className="relative overflow-scroll w-full h-0 pb-[100%] bg-gray-200 opacity-70 border border-white"
+                      className="relative overflow-scroll w-full h-0 pb-[100%] bg-gray-200 opacity-70"
                     ></div>
                 )}
               </div>
             ))}
         </div>
-          <NotificationDetailsCardComponent
-            notification={selectedNotification}
-            onClose={() => handleOnClose()}
-          />
         </div>
         </main>
     );
