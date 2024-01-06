@@ -21,7 +21,7 @@ export default function ForgetPasswordComponent() {
     <main className="flex flex-col items-center justify-center min-h-screen py-2">
       <div className="grid grid-cols-3 items-center shadow-md fixed top-0 w-full z-10 bg-white h-20">
         <div className="col-start-2 font-mono text-xl place-content-center text-center w-full">
-          <Image src="/title.jpg" width={160} height={65} alt="title" />
+          <Image src="/title.png" width={180} height={80} alt="title" />
         </div>
         <div className="col-start-3 font-mono text-sm justify-self-end mr-3">
           <div className="text-lg"></div>
