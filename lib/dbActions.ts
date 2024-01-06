@@ -4,6 +4,7 @@ import { adminDB } from "@/lib/firebase/server";
 import { getUserFromCookie } from "@/lib/session";
 import { z } from "zod";
 import type { Place } from "@/lib/type";
+import { FieldValue } from "firebase-admin/firestore";
 
 export async function fetchPhotosInfo() {
   const photosCollection = await adminDB
@@ -454,4 +455,64 @@ export async function patchCurrentPlace(place: string) {
     console.log(error);
     return null;
   }
+}
+
+export async function fetchNotificationInfo() {
+  const notificationsCollection = await adminDB
+    .collection("notificationInfo")
+    .orderBy("createdAt", "desc")
+    .get();
+  
+  const notificationsList = await Promise.all(
+    notificationsCollection.docs.map(async (notification: any) => {
+      const id = notification.id;
+      const title = notification.data().title;
+      const body = notification.data().body;
+      const readUser = notification.data().readUser;
+      const createdAt = notification.data().createdAt.toDate();
+      const currentDate = new Date();
+
+      const setPostDateString = (postDate: Date) => {
+        const diffDate = currentDate.getTime() - postDate.getTime();
+        if (diffDate < 3600000) {
+          return `${Math.floor(diffDate / 60000)}分前`;
+        } else if (diffDate < 86400000) {
+          return `${Math.floor(diffDate / 3600000)}時間前`;
+        } else if (diffDate < 604800000) {
+          return `${Math.floor(diffDate / 86400000)}日前`;
+        }
+        return `${postDate.getFullYear()}年${postDate.getMonth()}月${postDate.getDate()}日`;
+      };
+
+      const postDateString = setPostDateString(createdAt);
+
+      return {
+        id: id,
+        title: title,
+        body: body,
+        postDate: postDateString,
+        isRead: false,
+        readUser: readUser,
+      };
+    })
+  );
+
+  return notificationsList;
+}
+
+export async function patchNotificationReadUser(notificationId: string) {
+  const user = await getUserFromCookie();
+  if (!user) return false;
+  const uid = user.uid;
+
+  const notificationRef = await adminDB.collection("notificationInfo").doc(notificationId);
+
+  notificationRef.update({
+    readUser: FieldValue.arrayUnion(uid),
+  }).catch((error: Error) => {
+    console.error(error);
+    return false;
+  });
+
+  return true;
 }
