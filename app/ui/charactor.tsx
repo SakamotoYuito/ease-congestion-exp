@@ -42,7 +42,7 @@ export default async function CharactorComponent() {
       </div>
       <div className="px-20 flex justify-center items-center">
         <div className="max-w-xs">
-          {currentReward < 30 && (
+          {currentReward <= 0 && (
             <Image
               src="/icon1.png"
               width={400}
@@ -51,9 +51,27 @@ export default async function CharactorComponent() {
               priority
             />
           )}
-          {30 <= currentReward && currentReward < 60 && (
+          {0 < currentReward && currentReward <= 150 && (
             <Image
               src="/icon2.png"
+              width={400}
+              height={400}
+              alt="charactor"
+              priority
+            />
+          )}
+          {150 < currentReward && currentReward <= 300 && (
+            <Image
+              src="/icon3.png"
+              width={400}
+              height={400}
+              alt="charactor"
+              priority
+            />
+          )}
+          {300 < currentReward && (
+            <Image
+              src="/icon4.png"
               width={400}
               height={400}
               alt="charactor"
@@ -64,7 +82,7 @@ export default async function CharactorComponent() {
       </div>
       <div className="flex justify-center items-center p-2 w-full">
         <div className="w-9/12">
-          <ProgressBar variant="success" now={currentReward} max={400} />
+          <ProgressBar variant="success" now={currentReward} max={500} />
         </div>
       </div>
       <div className="grid grid-rows-2 grid-cols-2 justify-items-center items-center p-2 bg-white rounded-xl shadow-md">
