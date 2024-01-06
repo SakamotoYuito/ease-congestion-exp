@@ -54,6 +54,7 @@ export default function FooterComponent() {
           </Link>
         ))}
       </div>
+      <NotificationComponent />
     </div>
   );
 }
