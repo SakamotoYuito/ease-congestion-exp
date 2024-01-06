@@ -1,36 +1,32 @@
 import DetailCardComponent from "./detailCard";
-import {
-  fetchCheckinProgramIds,
-  fetchPlace,
-  fetchProgramInfo,
-} from "@/lib/dbActions";
+import { fetchCheckinProgramIds, fetchProgramInfo } from "@/lib/dbActions";
 
 export default async function CheckinDetailComponent() {
   const checkinProgramIdList = await fetchCheckinProgramIds();
-  const allPlaceList = await fetchPlace();
   const checkinProgramList = await Promise.all(
     checkinProgramIdList.map(async (programId) => {
       const programInfo = await fetchProgramInfo(programId);
-      return programInfo;
+      return { programId, programInfo };
     })
   );
+  console.log("checkinProgramList: ", checkinProgramList);
   const spotsInfo = checkinProgramList.map((item) => {
-    if (item.link !== null) {
+    if (item.programInfo.link !== null) {
       return {
-        title: item.title,
-        content: item.content,
-        process: item.process,
-        caution: item.caution,
-        condition: item.condition,
-        link: item.link,
+        title: item.programInfo.title,
+        content: item.programInfo.content,
+        process: item.programInfo.process,
+        caution: item.programInfo.caution,
+        condition: item.programInfo.condition,
+        link: `${item.programInfo.link}?programId=${item.programId}&rewardPoint=${item.programInfo.rewardPoint}`,
       };
     }
     return {
-      title: item.title,
-      content: item.content,
-      process: item.process,
-      caution: item.caution,
-      condition: item.condition,
+      title: item.programInfo.title,
+      content: item.programInfo.content,
+      process: item.programInfo.process,
+      caution: item.programInfo.caution,
+      condition: item.programInfo.condition,
     };
   });
 
