@@ -2,8 +2,8 @@
   "theme_color": "#b8e986",
   "background_color": "#b8e986",
   "display": "standalone",
-  "scope": "https://ease-congestion-exp.vercel.app/",
-  "start_url": "https://ease-congestion-exp.vercel.app/",
+  "scope": "/",
+  "start_url": "/",
   "id": "?pwa=true",
   "name": "Enre",
   "short_name": "Enre",
@@ -19,5 +19,6 @@
       "sizes": "512x512",
       "type": "image/png"
     }
-  ]
+  ],
+  "gcm_sender_id": "1026118046498"
 }

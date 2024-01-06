@@ -11,7 +11,6 @@ import {
   postCollectionInLogs,
   patchCheckoutProgramIds,
   patchReward,
-  patchParticipatedEvents,
 } from "@/lib/dbActions";
 import { postLogEvent } from "@/lib/firebase/client";
 import Image from "next/image";
@@ -71,16 +70,6 @@ export default function PostBiomeComponent() {
       setIsPushButton(false);
       return;
     }
-    if (name === "") {
-      setError("生き物の名前を入力してください");
-      setIsPushButton(false);
-      return;
-    }
-    if (note === "") {
-      setError("備考を入力してください");
-      setIsPushButton(false);
-      return;
-    }
     try {
       const storageRef = ref(storage);
       const ext = photo.name.split(".").pop();
@@ -127,7 +116,6 @@ export default function PostBiomeComponent() {
     rightTitle: "続けて投稿",
     leftOnClick: () => {
       (async () => {
-        await patchParticipatedEvents(programId);
         await patchReward(rewardPoint);
         await patchCheckoutProgramIds(programId);
         router.push("/");
@@ -197,7 +185,6 @@ export default function PostBiomeComponent() {
                   type="text"
                   name="name"
                   placeholder="生き物の名前を入力"
-                  required
                   onChange={(e) => setName(e.target.value)}
                   className="appearance-none rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 />
@@ -212,7 +199,6 @@ export default function PostBiomeComponent() {
                   name="note"
                   placeholder="生き物の状態・場所・感想など"
                   onChange={(e) => setNote(e.target.value)}
-                  required
                   className="appearance-none rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 />
               </div>

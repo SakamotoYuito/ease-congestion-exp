@@ -455,3 +455,66 @@ export async function patchCurrentPlace(place: string) {
     return null;
   }
 }
+
+export async function fetchNotificationInfo() {
+  const notificationsCollection = await adminDB
+    .collection("notificationInfo")
+    .orderBy("createdAt", "desc")
+    .get();
+
+  const notificationsList = await Promise.all(
+    notificationsCollection.docs.map(async (notification: any) => {
+      const id = notification.id;
+      const title = notification.data().title;
+      const body = notification.data().body;
+      const readUser = notification.data().readUser;
+      const createdAt = notification.data().createdAt.toDate();
+      const currentDate = new Date();
+
+      const setPostDateString = (postDate: Date) => {
+        const diffDate = currentDate.getTime() - postDate.getTime();
+        if (diffDate < 3600000) {
+          return `${Math.floor(diffDate / 60000)}分前`;
+        } else if (diffDate < 86400000) {
+          return `${Math.floor(diffDate / 3600000)}時間前`;
+        } else if (diffDate < 604800000) {
+          return `${Math.floor(diffDate / 86400000)}日前`;
+        }
+        return `${postDate.getFullYear()}年${postDate.getMonth()}月${postDate.getDate()}日`;
+      };
+
+      const postDateString = setPostDateString(createdAt);
+
+      return {
+        id: id,
+        title: title,
+        body: body,
+        postDate: postDateString,
+        isRead: false,
+        readUser: readUser,
+      };
+    })
+  );
+
+  return notificationsList;
+}
+
+export async function fetchBoardInfo(): Promise<any | null> {
+  const user = await getUserFromCookie();
+  if (!user) return null;
+  const uid = user.uid;
+  try {
+    const boardRef = await adminDB
+      .collection("board")
+      .orderBy("createdAt", "desc")
+      .limit(1)
+      .get();
+    const boardInfo = boardRef.docs[0].data();
+    const targetUids: string[] = boardInfo.uids;
+    if (!targetUids.includes(uid)) return null;
+    return boardInfo;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
