@@ -8,12 +8,14 @@ import {
   faQrcode,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { NotificationComponent } from "./notification";
 import { getUserFromCookie } from "@/lib/session";
 import { fetchNotificationInfo } from "@/lib/dbActions";
+import { collection, onSnapshot, query } from "firebase/firestore";
+import { db } from "@/lib/firebase/client";
 
 export default function FooterComponent() {
   const currentPath = usePathname();
@@ -25,24 +27,40 @@ export default function FooterComponent() {
   const selectedIndex = paths.indexOf(currentPath);
   const [selectedIcon, setSelectedIcon] = useState(selectedIndex);
 
+  const [notificationUpdateFlag, setNotificationUpdateFlag] = useState(true);
   const [isReadAllNotification, setIsReadAllNotification] = useState(true);
+
+  const checkReadAllNotification = async (uid: string) => {
+    const notifications = await fetchNotificationInfo();
+    notifications.forEach((notification: any) => {
+      // 未読の通知が存在すればfalseに設定
+      if (!notification.readUser.includes(uid)) {
+        setIsReadAllNotification(false);
+      }
+    });
+  }
+
+  useEffect(() => {
+    const notificationInfoCollectionRef = query(collection(db, "notificationInfo"));
+    const unsubscribe = () => onSnapshot(notificationInfoCollectionRef, (querySnapshot) => {
+      setNotificationUpdateFlag(true);
+    });
+    return () => {
+      unsubscribe();
+    }
+  }, []);
 
   useEffect(() => {
     (async () => {
       const user = await getUserFromCookie();
       if (!user) return;
       const uid = user.uid;
-      const notificationList = await fetchNotificationInfo();
-
-      notificationList.forEach((notification: any) => {
-        // 未読の通知が存在すればfalseに設定
-        if (!notification.readUser.includes(uid)) {
-          console.log("set false!");
-          setIsReadAllNotification(false);
-        }
-      });
+      if (notificationUpdateFlag) {
+        await checkReadAllNotification(uid);
+        setNotificationUpdateFlag(false);
+      }
     })();
-  }, []);
+  }, [notificationUpdateFlag]);
 
   return (
     <div className="fixed bottom-0 w-full border-t border-gray-300 z-10 bg-[#f5ffec] h-20">
