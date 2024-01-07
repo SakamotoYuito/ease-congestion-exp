@@ -7,7 +7,6 @@ export default function Notification() {
     <main className="flex min-h-screen flex-col items-center justify-between p-0 text-center">
       <HeaderComponent />
       <NotificationView />
-      <NotificationComponent />
       <FooterComponent />
     </main>
   );

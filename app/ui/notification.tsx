@@ -59,18 +59,28 @@ export function NotificationView() {
     
     useEffect(() => {
         (async () => {
-            if (notificationList.length === 0){
-                const notifications = await fetchNotificationInfo();
-                const uid = (await getUserFromCookie()).uid;
-                notifications.forEach((notification: any) => {
-                    if (notification.readUser.includes(uid)){
-                        notification.isRead = true;
-                    }
-                })
-                setNotificationList(notifications);
+          const notifications = await fetchNotificationInfo();
+          const uid = (await getUserFromCookie()).uid;
+          const pushedNotifications = notifications.filter((notification) => {
+            if (notification.pushUser.length === 0) {
+              // 特定のユーザが指定されていなければ通知対象
+              return true;
             }
+            if (notification.pushUser.includes(uid)) { 
+              // 通知対象に入っていれば通知
+              return true;
+            }
+            // それ以外は通知対象外
+            return false;
+          });
+          pushedNotifications.forEach((notification: any) => {
+              if (notification.readUser.includes(uid)){
+                  notification.isRead = true;
+              }
+          })
+          setNotificationList(pushedNotifications);
         })();
-    });
+    }, []);
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-between p-0 text-center w-full">
