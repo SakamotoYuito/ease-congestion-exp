@@ -32,7 +32,19 @@ export default function FooterComponent() {
 
   const checkReadAllNotification = async (uid: string) => {
     const notifications = await fetchNotificationInfo();
-    notifications.forEach((notification: any) => {
+    const pushedNotifications = notifications.filter((notification) => {
+      if (notification.pushUser.length === 0) {
+        // 特定のユーザが指定されていなければ通知対象
+        return true;
+      }
+      if (notification.pushUser.includes(uid)) { 
+        // 通知対象に入っていれば通知
+        return true;
+      }
+      // それ以外は通知対象外
+      return false;
+    });
+    pushedNotifications.forEach((notification: any) => {
       // 未読の通知が存在すればfalseに設定
       if (!notification.readUser.includes(uid)) {
         setIsReadAllNotification(false);

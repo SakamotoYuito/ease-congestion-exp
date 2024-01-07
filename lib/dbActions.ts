@@ -468,6 +468,7 @@ export async function fetchNotificationInfo() {
       const title = notification.data().title;
       const body = notification.data().body;
       const readUser = notification.data().readUser;
+      const pushUser = notification.data().pushUser ? notification.data().pushUser : [];
       const createdAt = notification.data().createdAt.toDate();
       const currentDate = new Date();
 
@@ -492,6 +493,7 @@ export async function fetchNotificationInfo() {
         postDate: postDateString,
         isRead: false,
         readUser: readUser,
+        pushUser: pushUser,
       };
     })
   );
