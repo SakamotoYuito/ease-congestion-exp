@@ -1,30 +1,11 @@
 import GoogleMapComponent from "./googleMap";
-import {
-  fetchAllOnlinePrograms,
-  fetchPlace,
-  fetchCheckinProgramIds,
-  fetchProgramInfo,
-} from "@/lib/dbActions";
+import { fetchAllOnlinePrograms, fetchPlace } from "@/lib/dbActions";
+import { getUserFromCookie } from "@/lib/session";
+import { redirect } from "next/navigation";
 
 export default async function EventDetailComponent() {
-  const { spotsCenter, spotsInfo } = await getSpots();
-
-  return (
-    <div className="grid row-start-2 h-hull w-full overflow-hidden">
-      {spotsCenter.length === 0 ? (
-        <div>
-          <h1 className="text-2xl font-bold text-center mb-10">
-            イベントはありません
-          </h1>
-        </div>
-      ) : (
-        <GoogleMapComponent spotsCenter={spotsCenter} spotsInfo={spotsInfo} />
-      )}
-    </div>
-  );
-}
-
-async function getSpots() {
+  const user = await getUserFromCookie();
+  user === null && redirect("/login");
   const onlineProgramList = await fetchAllOnlinePrograms();
   const allPlaceList = await fetchPlace();
   const placeIdList = onlineProgramList.map((item) => item.place);
@@ -47,8 +28,18 @@ async function getSpots() {
       place: place.name,
     };
   });
-  return {
-    spotsCenter,
-    spotsInfo,
-  };
+
+  return (
+    <div className="grid row-start-2 h-hull w-full overflow-hidden">
+      {spotsCenter?.length === 0 ? (
+        <div>
+          <h1 className="text-2xl font-bold text-center mb-10">
+            イベントはありません
+          </h1>
+        </div>
+      ) : (
+        <GoogleMapComponent spotsCenter={spotsCenter} spotsInfo={spotsInfo} />
+      )}
+    </div>
+  );
 }
