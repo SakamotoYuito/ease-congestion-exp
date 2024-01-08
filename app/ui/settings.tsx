@@ -20,7 +20,7 @@ export default function SettingsComponent() {
   const [error, action] = useFormState(postUserSettings, initialState);
   const [settings, setSettings] = useState<UserSettings | null>(null);
   const [selected, setSelected] = useState("");
-  const [canNotification, setCanNotification] = useState(true);
+  // const [canNotification, setCanNotification] = useState(true);
   const router = useRouter();
 
   const options = [
@@ -76,7 +76,7 @@ export default function SettingsComponent() {
     <main className="flex flex-col items-center justify-center min-h-screen py-2">
       <h1 className="text-2xl font-bold mb-4">設定</h1>
       <form action={action} className="w-full max-w-xs space-y-4">
-        <div className="flex flex-row justify-between items-center">
+        {/* <div className="flex flex-row justify-between items-center">
           <label htmlFor="notification" className="mr-2 text-lg font-bold">
             プッシュ通知:
           </label>
@@ -101,7 +101,7 @@ export default function SettingsComponent() {
               OFF
             </span>
           )}
-        </div>
+        </div> */}
         <div className="flex flex-col">
           <label htmlFor="nickName" className="mb-2 text-lg font-bold">
             ニックネーム:

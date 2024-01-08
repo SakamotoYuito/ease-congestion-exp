@@ -23,7 +23,7 @@ export default function AboutComponent() {
       </p>
       <h2 className="text-2xl font-bold mt-3">制作</h2>
       <p className="text-lg">
-        京都産業大学 生命科学部 産業生命科学科 環境政策学研究室
+        京都産業大学 生命科学部 産業生命科学科 西田研究室
       </p>
       <p className="text-lg">
         京都産業大学 情報理工学部 情報理工学科 棟方研究室
