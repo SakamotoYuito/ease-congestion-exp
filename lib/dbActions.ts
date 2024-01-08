@@ -155,7 +155,7 @@ export async function postUserSettings(prevState: any, formData: FormData) {
     } as z.infer<typeof schema>);
 
     const settings = {
-      notification: formData.get("notification") === "true" ? true : false,
+      notification: true,
       nickName: nickName,
       modeOfTransportation:
         formData.get("modeOfTransportation")?.toString() || "",
@@ -468,7 +468,9 @@ export async function fetchNotificationInfo() {
       const title = notification.data().title;
       const body = notification.data().body;
       const readUser = notification.data().readUser;
-      const pushUser = notification.data().pushUser ? notification.data().pushUser : [];
+      const pushUser = notification.data().pushUser
+        ? notification.data().pushUser
+        : [];
       const createdAt = notification.data().createdAt.toDate();
       const currentDate = new Date();
 
