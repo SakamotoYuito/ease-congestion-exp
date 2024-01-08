@@ -520,3 +520,128 @@ export async function fetchBoardInfo(): Promise<any | null> {
     return null;
   }
 }
+
+export async function getBiomeCollection() {
+  const biomeCollection = await adminDB
+      .collection("biome")
+      .orderBy("date", "desc")
+      .get();
+  const biomes = await Promise.all(
+    biomeCollection.docs.map(async (biome: any) => {
+        const data = biome.data();
+        const date = data.date
+        return {
+          date: date.toDate().toLocaleString(),
+          fullPath: data.fullPath,
+          name: data.name,
+          note: data.note,
+          reward: data.reward,
+          uid: data.uid,
+          url: data.url,
+        }
+      }
+    ));
+  return biomes;
+}
+
+export async function getLeavesCollection() {
+  const leavesCollection = await adminDB
+    .collection("fallenLeaves").
+    orderBy("date", "desc")
+    .get();
+  const leaves = await Promise.all(
+    leavesCollection.docs.map(async (leave: any) => {
+      const data = leave.data();
+      const date = data.date;
+      const fullPath = data.fullPath;
+      const place = data.place;
+      const reward = data.reward;
+      const uid = data.uid;
+      const url = data.url;
+
+      return {
+        date: date.toDate().toLocaleString(),
+        fullPath: fullPath,
+        place: place,
+        reward: reward,
+        uid: uid,
+        url: url,
+      };
+    })
+  );
+
+  return leaves;
+}
+
+export async function getUsers() {
+  const usersCollection = await adminDB
+    .collection("users")
+    .orderBy("createdAt", "desc")
+    .get();
+  const users = await Promise.all(
+    usersCollection.docs.map(async (user: any) => {
+      const uid = user.id;
+      const biomeName = user.data().biomeUserName? user.data().biomeUserName : "";
+      
+      const checkinProgramIds = user.data().checkinProgramIds;
+      const reward = user.data().reward;
+      const settings = user.data().settings
+      const modeOfTransportation = settings.modeOfTransportation;
+      const nickName = settings.nickName;
+      const university = user.data().university;
+
+      return {
+        uid: uid,
+        biomeUserName: biomeName,
+        checkinProgramIds: checkinProgramIds,
+        reward: reward,
+        modeOfTransportation: modeOfTransportation,
+        nickName: nickName,
+        university: university,
+      };
+    }));
+
+  return users;
+}
+
+export async function getPlace() {
+  const placeCollection = await adminDB
+    .collection("place")
+    .orderBy("id", "asc")
+    .get();
+  const places = await Promise.all(
+    placeCollection.docs.map(async (place: any) => {
+      const data = place.data();
+      const center = data.center;
+      const congestion = data.congestion;
+      const id = data.id;
+      const name = data.name;
+      const updatedAt = data.updatedAt
+      if (updatedAt === undefined)
+        return;
+
+      const currentDate = new Date();
+
+      const setPostDateString = (postDate: Date) => {
+        const diffDate = currentDate.getTime() - postDate.getTime();
+        if (diffDate < 3600000) {
+          return `${Math.floor(diffDate / 60000)}分前`;
+        } else if (diffDate < 86400000) {
+          return `${Math.floor(diffDate / 3600000)}時間前`;
+        } else if (diffDate < 604800000) {
+          return `${Math.floor(diffDate / 86400000)}日前`;
+        }
+        return `${postDate.getFullYear()}年${postDate.getMonth()}月${postDate.getDate()}日`;
+      };
+      const dateString = setPostDateString(updatedAt.toDate());
+
+      return {
+        congestion: congestion,
+        id: id,
+        name: name,
+        updatedAt: dateString,
+      };
+    }));
+
+  return places;
+}
