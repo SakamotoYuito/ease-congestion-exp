@@ -7,10 +7,6 @@ import { getUserFromCookie } from "@/lib/session";
 import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase/client";
 
-const checkSupport = async () => {
-    const isSupportedThis = await isSupported();
-    return isSupportedThis;
-};
 
 export function NotificationView() {
     const [notificationList, setNotificationList] = useState<any[]>([]);
@@ -133,6 +129,11 @@ export function NotificationView() {
     );
 }
 
+const checkSupport = async () => {
+  const isSupportedThis = await isSupported();
+  return isSupportedThis;
+};
+
 export const NotificationComponent = () => {
     const [notification, setNotification] = useState<{
         title: string | undefined;
@@ -153,6 +154,6 @@ export const NotificationComponent = () => {
                 });
             })
             .catch((err) => console.log("failed: ", err));
-    });
-    return <div />;
+    },[isSupportedMessage]);
+    return <div></div>
 }
