@@ -44,7 +44,7 @@ export default function PhotoDetailsCardComponent({
     <div className="absolute top-0 left-0 w-full h-full bg-gray-700 bg-opacity-90 flex flex-col items-center justify-center overflow-auto">
       <button
         onClick={onClose}
-        className="absolute top-14 right-3 text-lg text-white p-5"
+        className="absolute top-14 right-3 text-lg text-white p-5 underline"
       >
         閉じる
       </button>
@@ -63,38 +63,46 @@ export default function PhotoDetailsCardComponent({
         {isError ? (
           <p className="text-red-500 mt-5">情報の取得に失敗しました</p>
         ) : (
-          <div className="mt-1 flex justify-between w-full p-5">
+          <div className="mt-1 flex justify-between w-full p-4">
             <div className="text-left">
-              <p className="text-white">{photo.postDate}</p>
-              <p className="text-white">{photo.nickName}による投稿</p>
-            </div>
-            <div className="flex items-center">
-              {likes.includes(photo.id) ? (
-                <button onClick={() => handleLikeClick(photo.id)}>
-                  <FontAwesomeIcon
-                    icon={blackHeart}
-                    style={{
-                      width: "20px",
-                      height: "20px",
-                      paddingRight: "5px",
-                      color: "red",
-                    }}
-                  />
-                </button>
-              ) : (
-                <button onClick={() => handleLikeClick(photo.id)}>
-                  <FontAwesomeIcon
-                    icon={whiteHeart}
-                    style={{
-                      width: "20px",
-                      height: "20px",
-                      paddingRight: "5px",
-                      color: "white",
-                    }}
-                  />
-                </button>
-              )}
-              <p className="text-xl text-white">{photo.fav}</p>
+              <div className="flex items-center">
+                {likes.includes(photo.id) ? (
+                  <button
+                    onClick={() => handleLikeClick(photo.id)}
+                    className="flex items-center justify-center"
+                  >
+                    <FontAwesomeIcon
+                      icon={blackHeart}
+                      style={{
+                        width: "20px",
+                        height: "20px",
+                        paddingRight: "5px",
+                        color: "red",
+                      }}
+                    />
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => handleLikeClick(photo.id)}
+                    className="flex items-center justify-center"
+                  >
+                    <FontAwesomeIcon
+                      icon={whiteHeart}
+                      style={{
+                        width: "20px",
+                        height: "20px",
+                        paddingRight: "5px",
+                        color: "white",
+                      }}
+                    />
+                  </button>
+                )}
+                <p className="text-xl text-white mb-0">{photo.fav}</p>
+              </div>
+              <p className="text-white mt-2 mb-0 text-xs">
+                {photo.nickName}による投稿
+              </p>
+              <p className="text-white mb-0 text-xs">{photo.postDate}</p>
             </div>
           </div>
         )}

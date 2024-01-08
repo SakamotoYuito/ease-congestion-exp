@@ -126,7 +126,7 @@ export async function login(prevState: any, formData: FormData) {
       message: "パスワードが間違っているか、アカウントが存在しません",
     };
   }
-  redirect("/");
+  redirect("/settings");
 }
 
 export async function logout() {
