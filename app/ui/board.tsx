@@ -22,7 +22,7 @@ export default function BoardComponent({ info }: Board) {
       {canceled ? (
         <></>
       ) : (
-        <div className="bg-gray-700 bg-opacity-80 absolute top-0 left-0 w-full h-full">
+        <div className="bg-gray-700 bg-opacity-80 fixed top-0 left-0 w-full h-full">
           <div className="flex flex-col items-center justify-center min-h-screen">
             <div className="p-4 bg-white rounded shadow-xl flex flex-col w-11/12 items-center justify-center">
               <h2 className="text-lg font-bold mb-2">{info.title}</h2>
