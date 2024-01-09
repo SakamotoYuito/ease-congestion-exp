@@ -30,7 +30,7 @@ export default function AboutComponent() {
         </span>
         」を使って、毎日に新たな出会いと経験を！
       </p>
-      <h2 className="text-2xl font-bold">Enreとは?</h2>
+      <h2 className="text-2xl font-bold mt-5">Enre（ver. 1.1.0）の概要</h2>
       <p className="text-lg">
         Enre（ver1.1.0）は、2024年1月10日〜12日に開催される
         <span className="font-bold no-underline text-green-700">
@@ -49,7 +49,7 @@ export default function AboutComponent() {
       <p className="text-lg">
         皆さんの意見や参加をもとに、改良を重ねたいと思いますので、ぜひご協力ください。
       </p>
-      <h2 className="text-2xl font-bold mt-3">企画・制作</h2>
+      <h2 className="text-2xl font-bold mt-5">企画・制作</h2>
       <p className="text-lg">
         本取組は、グリーンインフラの社会実装に向けた研究活動として、以下の２つの研究室が協働しておこなっています。
       </p>
@@ -64,7 +64,7 @@ export default function AboutComponent() {
       <p className="text-sm">
         なお、本取組は、内閣府SIPスマートインフラマネジメントシステムの構築e-1「魅力的な国土・都市・地域づくりを評価するグリーンインフラに関する省庁連携基盤」の研究活動の一環です。
       </p>
-      <h2 className="text-2xl font-bold mt-3">お問い合わせ先</h2>
+      <h2 className="text-2xl font-bold mt-5">お問い合わせ先</h2>
       <p className="text-lg">nisidalab@gmail.com</p>
       <Link href={"/"} className="no-underline text-white mt-4">
         <button className="text-lg bg-green-700 p-2 rounded-md">

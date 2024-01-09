@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Favicon from "/public/applicationIcon_512.png";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -32,6 +33,7 @@ export default function RootLayout({
       <body id="body" className={`inter ${inter.className} grid`}>
         {children}
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

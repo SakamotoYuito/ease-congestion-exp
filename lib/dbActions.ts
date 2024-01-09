@@ -219,16 +219,20 @@ export async function patchReward(rewardPoint: string, rewardField?: string) {
   const uid = user.uid;
   try {
     const { currentReward } = await fetchReward();
-    await adminDB
-      .collection("users")
-      .doc(uid)
-      .set(
-        {
-          reward: currentReward + Number(rewardPoint),
-          prevReward: currentReward,
-        },
-        { merge: true }
-      );
+    const nextReward = currentReward + Number(rewardPoint);
+    if (currentReward === 0 && nextReward > 0) {
+      await postCollectionInLogs("初回報酬", "start", "start");
+    }
+    if (nextReward >= 500 && currentReward < 500) {
+      await postCollectionInLogs("500ポイント達成", "500", "500");
+    }
+    await adminDB.collection("users").doc(uid).set(
+      {
+        reward: nextReward,
+        prevReward: currentReward,
+      },
+      { merge: true }
+    );
   } catch (error) {
     console.log(error);
   }
@@ -525,71 +529,67 @@ export async function fetchBoardInfo(): Promise<any | null> {
 
 export async function getBiomeCollection() {
   const biomeCollection = await adminDB
-      .collection("biome")
-      .orderBy("date", "desc")
-      .get();
-  const biomes = 
-    biomeCollection.docs.map((biome: any) => {
-        const data = biome.data();
-        const date = data.date.toDate();
+    .collection("biome")
+    .orderBy("date", "desc")
+    .get();
+  const biomes = biomeCollection.docs.map((biome: any) => {
+    const data = biome.data();
+    const date = data.date.toDate();
 
-        const year = date.getFullYear().toString().padStart(4, '0');
-        const month = (date.getMonth() + 1).toString().padStart(2, '0');
-        const day = date.getDate().toString().padStart(2, '0');
-        const hour = date.getHours().toString().padStart(2, '0');
-        const minute = date.getMinutes().toString().padStart(2, '0');
-        const second = date.getSeconds().toString().padStart(2, '0');
+    const year = date.getFullYear().toString().padStart(4, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
+    const hour = date.getHours().toString().padStart(2, "0");
+    const minute = date.getMinutes().toString().padStart(2, "0");
+    const second = date.getSeconds().toString().padStart(2, "0");
 
-        const datestring = `${year}年${month}月${day}日 ${hour}:${minute}:${second}`
+    const datestring = `${year}年${month}月${day}日 ${hour}:${minute}:${second}`;
 
-        return {
-          date: datestring,
-          fullPath: data.fullPath,
-          name: data.name,
-          note: data.note,
-          reward: data.reward,
-          uid: data.uid,
-          url: data.url,
-        }
-      }
-    );
+    return {
+      date: datestring,
+      fullPath: data.fullPath,
+      name: data.name,
+      note: data.note,
+      reward: data.reward,
+      uid: data.uid,
+      url: data.url,
+    };
+  });
   return biomes;
 }
 
 export async function getLeavesCollection() {
   const leavesCollection = await adminDB
-    .collection("fallenLeaves").
-    orderBy("date", "desc")
+    .collection("fallenLeaves")
+    .orderBy("date", "desc")
     .get();
-  const leaves = 
-    leavesCollection.docs.map((leave: any) => {
-      const data = leave.data();
-      const date = data.date.toDate();
-      const fullPath = data.fullPath;
-      const place = data.place;
-      const reward = data.reward;
-      const uid = data.uid;
-      const url = data.url;
+  const leaves = leavesCollection.docs.map((leave: any) => {
+    const data = leave.data();
+    const date = data.date.toDate();
+    const fullPath = data.fullPath;
+    const place = data.place;
+    const reward = data.reward;
+    const uid = data.uid;
+    const url = data.url;
 
-      const year = date.getFullYear().toString().padStart(4, '0');
-      const month = (date.getMonth() + 1).toString().padStart(2, '0');
-      const day = date.getDate().toString().padStart(2, '0');
-      const hour = date.getHours().toString().padStart(2, '0');
-      const minute = date.getMinutes().toString().padStart(2, '0');
-      const second = date.getSeconds().toString().padStart(2, '0');
+    const year = date.getFullYear().toString().padStart(4, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
+    const hour = date.getHours().toString().padStart(2, "0");
+    const minute = date.getMinutes().toString().padStart(2, "0");
+    const second = date.getSeconds().toString().padStart(2, "0");
 
-      const datestring = `${year}年${month}月${day}日 ${hour}:${minute}:${second}`        
+    const datestring = `${year}年${month}月${day}日 ${hour}:${minute}:${second}`;
 
-
-      return {
-        date: datestring,
-        fullPath: fullPath,
-        place: place,
-        reward: reward,
-        uid: uid,
-        url: url,
-      };
-    });
+    return {
+      date: datestring,
+      fullPath: fullPath,
+      place: place,
+      reward: reward,
+      uid: uid,
+      url: url,
+    };
+  });
 
   return leaves;
 }
@@ -599,28 +599,29 @@ export async function getUsers() {
     .collection("users")
     .orderBy("createdAt", "desc")
     .get();
-  const users =
-    usersCollection.docs.map((user: any) => {
-      const uid = user.id;
-      const biomeName = user.data().biomeUserName? user.data().biomeUserName : "";
-      
-      const checkinProgramIds = user.data().checkinProgramIds;
-      const reward = user.data().reward;
-      const settings = user.data().settings
-      const modeOfTransportation = settings.modeOfTransportation;
-      const nickName = settings.nickName;
-      const university = user.data().university;
+  const users = usersCollection.docs.map((user: any) => {
+    const uid = user.id;
+    const biomeName = user.data().biomeUserName
+      ? user.data().biomeUserName
+      : "";
 
-      return {
-        uid: uid,
-        biomeUserName: biomeName,
-        checkinProgramIds: checkinProgramIds,
-        reward: reward,
-        modeOfTransportation: modeOfTransportation,
-        nickName: nickName,
-        university: university,
-      };
-    });
+    const checkinProgramIds = user.data().checkinProgramIds;
+    const reward = user.data().reward;
+    const settings = user.data().settings;
+    const modeOfTransportation = settings.modeOfTransportation;
+    const nickName = settings.nickName;
+    const university = user.data().university;
+
+    return {
+      uid: uid,
+      biomeUserName: biomeName,
+      checkinProgramIds: checkinProgramIds,
+      reward: reward,
+      modeOfTransportation: modeOfTransportation,
+      nickName: nickName,
+      university: university,
+    };
+  });
 
   return users;
 }
@@ -630,39 +631,37 @@ export async function getPlace() {
     .collection("place")
     .orderBy("id", "asc")
     .get();
-  const places = 
-    placeCollection.docs.map((place: any) => {
-      const data = place.data();
-      const center = data.center;
-      const congestion = data.congestion;
-      const id = data.id;
-      const name = data.name;
-      const updatedAt = data.updatedAt
-      if (updatedAt === undefined)
-        return;
+  const places = placeCollection.docs.map((place: any) => {
+    const data = place.data();
+    const center = data.center;
+    const congestion = data.congestion;
+    const id = data.id;
+    const name = data.name;
+    const updatedAt = data.updatedAt;
+    if (updatedAt === undefined) return;
 
-      const currentDate = new Date();
+    const currentDate = new Date();
 
-      const setPostDateString = (postDate: Date) => {
-        const diffDate = currentDate.getTime() - postDate.getTime();
-        if (diffDate < 3600000) {
-          return `${Math.floor(diffDate / 60000)}分前`;
-        } else if (diffDate < 86400000) {
-          return `${Math.floor(diffDate / 3600000)}時間前`;
-        } else if (diffDate < 604800000) {
-          return `${Math.floor(diffDate / 86400000)}日前`;
-        }
-        return `${postDate.getFullYear()}年${postDate.getMonth()}月${postDate.getDate()}日`;
-      };
-      const dateString = setPostDateString(updatedAt.toDate());
+    const setPostDateString = (postDate: Date) => {
+      const diffDate = currentDate.getTime() - postDate.getTime();
+      if (diffDate < 3600000) {
+        return `${Math.floor(diffDate / 60000)}分前`;
+      } else if (diffDate < 86400000) {
+        return `${Math.floor(diffDate / 3600000)}時間前`;
+      } else if (diffDate < 604800000) {
+        return `${Math.floor(diffDate / 86400000)}日前`;
+      }
+      return `${postDate.getFullYear()}年${postDate.getMonth()}月${postDate.getDate()}日`;
+    };
+    const dateString = setPostDateString(updatedAt.toDate());
 
-      return {
-        congestion: congestion,
-        id: id,
-        name: name,
-        updatedAt: dateString,
-      };
-    });
+    return {
+      congestion: congestion,
+      id: id,
+      name: name,
+      updatedAt: dateString,
+    };
+  });
 
   const result = places.filter((place: any) => place !== undefined);
   return result;
@@ -670,8 +669,8 @@ export async function getPlace() {
 
 export async function getNotificationToken() {
   const notificationTokenCollection = await adminDB
-  .collection("notificationToken")
-  .get();
+    .collection("notificationToken")
+    .get();
 
   const tokens = notificationTokenCollection.docs.map((doc: any) => {
     const uid = doc.data().uid;
