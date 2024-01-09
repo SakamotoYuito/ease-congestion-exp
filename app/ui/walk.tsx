@@ -7,6 +7,8 @@ import {
   patchCurrentPlace,
   patchReward,
   patchParticipatedEvents,
+  patchCheckinProgramIds,
+  patchCheckoutProgramIds,
 } from "@/lib/dbActions";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -47,6 +49,7 @@ export default function WalkComponent() {
 
   const handleStartWalking = () => {
     (async () => {
+      await patchCheckinProgramIds(programId);
       await patchCurrentPlace("walking");
       setIsWalking(true);
     })();
@@ -54,6 +57,7 @@ export default function WalkComponent() {
 
   const handleFinishWalking = () => {
     (async () => {
+      await patchCheckoutProgramIds(programId);
       await patchParticipatedEvents(programId);
       await patchCurrentPlace("Home");
       await patchReward(reward);
