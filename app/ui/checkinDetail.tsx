@@ -9,7 +9,6 @@ export default async function CheckinDetailComponent() {
       return { programId, programInfo };
     })
   );
-  console.log("checkinProgramList: ", checkinProgramList);
   const spotsInfo = checkinProgramList.map((item) => {
     if (item.programInfo.link !== null) {
       return {

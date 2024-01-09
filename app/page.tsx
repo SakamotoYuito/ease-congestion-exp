@@ -15,6 +15,7 @@ import {
   CardSkeleton,
 } from "./ui/skeletons";
 import BoardComponent from "./ui/board";
+import QuestionnaireComponent from "./ui/questionnaire";
 
 export default async function Home() {
   const user = await getUserFromCookie();
@@ -37,7 +38,7 @@ export default async function Home() {
               <HeaderComponent />
             </Suspense>
             <div className="row-start-2 pt-2 ml-2 mr-2">
-              <div className="grid grid-rows-max-content-layout-3 grid-cols-2 gap-2 w-full">
+              <div className="grid grid-rows-max-content-layout-4 grid-cols-2 gap-2 w-full">
                 <div className="row-start-1 col-start-1 col-end-3">
                   <Suspense fallback={<CharacterSkeleton />}>
                     <CharactorComponent />
@@ -55,6 +56,9 @@ export default async function Home() {
                 </div>
                 <div className="row-start-3 col-start-1 col-end-3">
                   <WatchCardComponent />
+                </div>
+                <div className="row-start-4 col-start-1 col-end-3">
+                  <QuestionnaireComponent />
                 </div>
               </div>
             </div>

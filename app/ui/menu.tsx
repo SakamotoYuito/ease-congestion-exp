@@ -57,7 +57,7 @@ export default function MenuComponent({ nickName }: { nickName: string }) {
                 className="inline-block px-4 py-2 text-sm text-black hover:bg-white text-right"
                 role="menuitem"
               >
-                アプリについて
+                Enreについて
               </button>
             </Link>
             <Link href="/settings" className="text-right">
