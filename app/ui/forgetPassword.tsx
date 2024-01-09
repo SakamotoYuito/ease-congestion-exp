@@ -68,7 +68,7 @@ export default function ForgetPasswordComponent() {
           {!error && (
             <AlertModalComponent
               title="パスワードリセットを受け付けました。"
-              message="メールを確認して、パスワードをリセットしてください。"
+              message="メールを確認して、パスワードをリセットしてください。メールが届かない場合は迷惑メールフォルダを確認してください。"
               handleOk={() => router.push("/login")}
             />
           )}
