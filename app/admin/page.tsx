@@ -2,13 +2,33 @@
 
 import { fetchNotificationInfo, getBiomeCollection, getLeavesCollection, getNotificationToken, getPlace, getUsers } from "@/lib/dbActions";
 import { db } from "@/lib/firebase/client";
-import { addDoc, collection, onSnapshot, orderBy, query, serverTimestamp } from "firebase/firestore";
+import { getUserFromCookie } from "@/lib/session";
+import { addDoc, collection, doc, getDoc, onSnapshot, orderBy, query, serverTimestamp, where } from "firebase/firestore";
 import { useEffect, useRef, useState } from "react";
 
 export default function Admin() {
+    const [isAdmin, setIsAdmin] = useState(false);
+
+    useEffect(() => {
+    (async () => {
+        const user = await getUserFromCookie();
+        const uid = user.uid;
+        if (!uid) return;
+
+        const userDocRef = doc(db, "users", uid);
+        const docSnap = await getDoc(userDocRef);
+
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+            setIsAdmin(data.dev);
+        }
+    })();
+    }, []);
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-0 text-center">
-        <div className="justify-center mt-24 w-full h-full">
+        {isAdmin ? (
+            <div className="justify-center mt-24 w-full h-full">
             <div className="text-2xl font-bold top-24 w-full">
                 <h1 className="text-center">管理画面</h1>
             </div>
@@ -28,6 +48,11 @@ export default function Admin() {
                 <NotificationView />
             </div>
         </div>
+        ) : (
+            <></>
+        )}
+
+
     </main>
   );
 }
@@ -534,7 +559,7 @@ export function NotifyView() {
         const message = {
             title: title,
             body: body,
-            pushUser: ["tghzpyzKREcQ113HARZzESfdfC73"],
+            pushUser: [],
             readUser: [],
             createdAt: serverTimestamp(),
         }
