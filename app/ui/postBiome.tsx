@@ -122,13 +122,16 @@ export default function PostBiomeComponent() {
       })();
     },
     rightOnClick: () => {
-      setPhoto(null);
-      setError("");
-      setCreateObjectURL("");
-      setIsPushButton(false);
-      setName("");
-      setNote("");
-      setSendComplete(false);
+      (async () => {
+        await patchReward(rewardPoint);
+        setPhoto(null);
+        setError("");
+        setCreateObjectURL("");
+        setIsPushButton(false);
+        setName("");
+        setNote("");
+        setSendComplete(false);
+      })();
     },
   };
 
