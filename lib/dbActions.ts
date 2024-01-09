@@ -526,12 +526,22 @@ export async function getBiomeCollection() {
       .collection("biome")
       .orderBy("date", "desc")
       .get();
-  const biomes = await Promise.all(
-    biomeCollection.docs.map(async (biome: any) => {
+  const biomes = 
+    biomeCollection.docs.map((biome: any) => {
         const data = biome.data();
-        const date = data.date
+        const date = data.date.toDate();
+
+        const year = date.getFullYear().toString().padStart(4, '0');
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        const hour = date.getHours().toString().padStart(2, '0');
+        const minute = date.getMinutes().toString().padStart(2, '0');
+        const second = date.getSeconds().toString().padStart(2, '0');
+
+        const datestring = `${year}年${month}月${day}日 ${hour}:${minute}:${second}`
+
         return {
-          date: date.toDate().toLocaleString(),
+          date: datestring,
           fullPath: data.fullPath,
           name: data.name,
           note: data.note,
@@ -540,7 +550,7 @@ export async function getBiomeCollection() {
           url: data.url,
         }
       }
-    ));
+    );
   return biomes;
 }
 
@@ -549,26 +559,35 @@ export async function getLeavesCollection() {
     .collection("fallenLeaves").
     orderBy("date", "desc")
     .get();
-  const leaves = await Promise.all(
-    leavesCollection.docs.map(async (leave: any) => {
+  const leaves = 
+    leavesCollection.docs.map((leave: any) => {
       const data = leave.data();
-      const date = data.date;
+      const date = data.date.toDate();
       const fullPath = data.fullPath;
       const place = data.place;
       const reward = data.reward;
       const uid = data.uid;
       const url = data.url;
 
+      const year = date.getFullYear().toString().padStart(4, '0');
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const day = date.getDate().toString().padStart(2, '0');
+      const hour = date.getHours().toString().padStart(2, '0');
+      const minute = date.getMinutes().toString().padStart(2, '0');
+      const second = date.getSeconds().toString().padStart(2, '0');
+
+      const datestring = `${year}年${month}月${day}日 ${hour}:${minute}:${second}`        
+
+
       return {
-        date: date.toDate().toLocaleString(),
+        date: datestring,
         fullPath: fullPath,
         place: place,
         reward: reward,
         uid: uid,
         url: url,
       };
-    })
-  );
+    });
 
   return leaves;
 }
@@ -578,8 +597,8 @@ export async function getUsers() {
     .collection("users")
     .orderBy("createdAt", "desc")
     .get();
-  const users = await Promise.all(
-    usersCollection.docs.map(async (user: any) => {
+  const users =
+    usersCollection.docs.map((user: any) => {
       const uid = user.id;
       const biomeName = user.data().biomeUserName? user.data().biomeUserName : "";
       
@@ -599,7 +618,7 @@ export async function getUsers() {
         nickName: nickName,
         university: university,
       };
-    }));
+    });
 
   return users;
 }
@@ -609,8 +628,8 @@ export async function getPlace() {
     .collection("place")
     .orderBy("id", "asc")
     .get();
-  const places = await Promise.all(
-    placeCollection.docs.map(async (place: any) => {
+  const places = 
+    placeCollection.docs.map((place: any) => {
       const data = place.data();
       const center = data.center;
       const congestion = data.congestion;
@@ -641,7 +660,20 @@ export async function getPlace() {
         name: name,
         updatedAt: dateString,
       };
-    }));
+    });
 
-  return places;
+  const result = places.filter((place: any) => place !== undefined);
+  return result;
+}
+
+export async function getNotificationToken() {
+  const notificationTokenCollection = await adminDB
+  .collection("notificationToken")
+  .get();
+
+  const tokens = notificationTokenCollection.docs.map((doc: any) => {
+    const uid = doc.data().uid;
+    return uid;
+  });
+  return tokens;
 }
