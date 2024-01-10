@@ -515,12 +515,17 @@ export async function fetchBoardInfo(): Promise<any | null> {
     const boardRef = await adminDB
       .collection("board")
       .orderBy("createdAt", "desc")
-      .limit(1)
       .get();
-    const boardInfo = boardRef.docs[0].data();
-    const targetUids: string[] = boardInfo.uids;
-    if (!targetUids.includes(uid)) return null;
-    return boardInfo;
+    const boardInfo = boardRef.docs.map((doc: any) => {
+      const boardData = doc.data();
+      if (!boardData.uids.includes(uid)) {
+        return null;
+      }
+      return boardData;
+    });
+    const fileteredBoardInfo = boardInfo.filter((board: any) => board !== null);
+    if (fileteredBoardInfo.length === 0) return null;
+    return fileteredBoardInfo[0];
   } catch (error) {
     console.log(error);
     return null;

@@ -78,8 +78,13 @@ export async function createUser(prevState: any, formData: FormData) {
         message: error.issues[0].message,
       };
     }
+    if (error instanceof FirebaseError) {
+      return {
+        message: error.message,
+      };
+    }
     return {
-      message: "すでに登録済みのメールアドレスです",
+      message: "アカウントの作成に失敗しました",
     };
   }
   redirect("/settings");
