@@ -60,7 +60,6 @@ export default function LoadingComponent() {
             ? "/"
             : `${programInfo.link}?programId=${qrInfo.programId}&rewardPoint=${programInfo.rewardPoint}`
         );
-        await patchParticipatedEvents(qrId);
       } else if (qrInfo.type === "checkout") {
         if (participatedEvents[Number(qrId)] > 0) {
           setParticipated(true);

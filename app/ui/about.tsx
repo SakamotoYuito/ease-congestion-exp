@@ -21,7 +21,7 @@ export default function AboutComponent() {
         <span className="font-bold no-underline text-green-700">
           Enre（ver1.1.0）
         </span>
-        」をつくりました… 」を使って新しい発見で毎日にゆとりと出会いを!
+        」をつくりました…
       </p>
       <p className="text-lg">
         「
