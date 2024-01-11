@@ -49,7 +49,7 @@ export default function PostBiomeComponent() {
         "HEIC",
       ];
       if (!ext || !allowedExtensions.includes(ext)) {
-        setError("許可されていないファイル形式です。");
+        setError(`許可されていないファイル形式です。(${ext})`);
         return;
       }
       const options = {

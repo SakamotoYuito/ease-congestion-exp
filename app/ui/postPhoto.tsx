@@ -51,7 +51,7 @@ export default function UploadImage() {
         "jpeg",
         "png",
         "gif",
-        "hiec",
+        "heic",
         "JPG",
         "JPEG",
         "PNG",
@@ -59,7 +59,7 @@ export default function UploadImage() {
         "HEIC",
       ];
       if (!ext || !allowedExtensions.includes(ext)) {
-        setError("許可されていないファイル形式です。");
+        setError(`許可されていないファイル形式です。(${ext})`);
         return;
       }
       const options = {
