@@ -13,26 +13,44 @@ export default function SubmitButton(props: Props) {
   return (
     <>
       {props.onClick ? (
-        <button
-          onClick={() => props.onClick}
-          type="submit"
-          aria-disabled={pending}
-          className={`${
-            pending ? "bg-gray-600" : "bg-green-700 hover:bg-green-900"
-          } text-white font-bold py-2 px-4 rounded`}
-        >
-          {props.title}
-        </button>
+        <>
+          {pending ? (
+            <button
+              type="submit"
+              disabled
+              className="bg-gray-600 text-white font-bold py-2 px-4 rounded"
+            >
+              {props.title}
+            </button>
+          ) : (
+            <button
+              onClick={() => props.onClick}
+              type="submit"
+              className="bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded"
+            >
+              {props.title}
+            </button>
+          )}
+        </>
       ) : (
-        <button
-          type="submit"
-          aria-disabled={pending}
-          className={`${
-            pending ? "bg-gray-600" : "bg-green-700 hover:bg-green-900"
-          } text-white font-bold py-2 px-4 rounded`}
-        >
-          {props.title}
-        </button>
+        <>
+          {pending ? (
+            <button
+              type="submit"
+              disabled
+              className="bg-gray-600 text-white font-bold py-2 px-4 rounded"
+            >
+              {props.title}
+            </button>
+          ) : (
+            <button
+              type="submit"
+              className="bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded"
+            >
+              {props.title}
+            </button>
+          )}
+        </>
       )}
     </>
   );
