@@ -15,7 +15,6 @@ import {
 import { FirebaseError } from "firebase/app";
 import { session, sessionLogout } from "./session";
 import { redirect } from "next/navigation";
-import { revalidatePath, revalidateTag } from "next/cache";
 import { z } from "zod";
 import { postUserInfo, postSignature, postCollectionInLogs } from "./dbActions";
 
