@@ -15,7 +15,6 @@ import {
 import { FirebaseError } from "firebase/app";
 import { session, sessionLogout } from "./session";
 import { redirect } from "next/navigation";
-import { revalidatePath, revalidateTag } from "next/cache";
 import { z } from "zod";
 import { postUserInfo, postSignature, postCollectionInLogs } from "./dbActions";
 
@@ -125,6 +124,11 @@ export async function login(prevState: any, formData: FormData) {
     if (error instanceof z.ZodError) {
       return {
         message: error.issues[0].message,
+      };
+    }
+    if (error instanceof FirebaseError) {
+      return {
+        message: error.message,
       };
     }
     return {
