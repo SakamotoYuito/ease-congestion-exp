@@ -127,6 +127,11 @@ export async function login(prevState: any, formData: FormData) {
         message: error.issues[0].message,
       };
     }
+    if (error instanceof FirebaseError) {
+      return {
+        message: error.message,
+      };
+    }
     return {
       message: "パスワードが間違っているか、アカウントが存在しません",
     };
