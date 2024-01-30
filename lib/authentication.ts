@@ -86,7 +86,7 @@ export async function createUser(prevState: any, formData: FormData) {
       message: "アカウントの作成に失敗しました",
     };
   }
-  redirect("/settings");
+  redirect("/");
 }
 
 export async function login(prevState: any, formData: FormData) {
@@ -135,7 +135,7 @@ export async function login(prevState: any, formData: FormData) {
       message: "パスワードが間違っているか、アカウントが存在しません",
     };
   }
-  redirect("/settings");
+  redirect("/");
 }
 
 export async function logout() {

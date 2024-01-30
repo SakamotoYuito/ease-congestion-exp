@@ -57,8 +57,17 @@ export default async function Home() {
                 <div className="row-start-3 col-start-1 col-end-3">
                   <WatchCardComponent />
                 </div>
-                <div className="row-start-4 col-start-1 col-end-3">
-                  <QuestionnaireComponent />
+                <div className="row-start-4 col-start-1 col-end-2">
+                  <QuestionnaireComponent
+                    link="https://docs.google.com/forms/d/1h0VJ0yfx5Sw5Ks0ftVfy3aZjaDNbTPi3HPFdfrwkCu4/viewform?edit_requested=true"
+                    title="アンケート①"
+                  />
+                </div>
+                <div className="row-start-4 col-start-2 col-end-3">
+                  <QuestionnaireComponent
+                    link="https://docs.google.com/forms/d/1Uf7H2nsNujnZYsq2_HuytNph2C0Bv_BaHWB9UxB14xg/viewform?ts=659b50bc&edit_requested=true"
+                    title="アンケート②"
+                  />
                 </div>
               </div>
             </div>
