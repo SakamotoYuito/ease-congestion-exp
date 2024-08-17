@@ -1,9 +1,10 @@
 import Link from "next/link";
 
 export default function AboutComponent() {
+  // test
   return (
     <main className="flex flex-col items-center justify-center min-h-screen px-3">
-      <h2 className="text-2xl font-bold">Enreとは?</h2>
+      <h2 className="text-2xl font-bold">Enreとは?</h2>ß
       <p className="text-lg text-center font-bold text-green-700 mb-0">
         京都産業大学は、とても広いです。
       </p>
